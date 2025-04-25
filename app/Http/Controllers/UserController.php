@@ -1,8 +1,14 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Data\Admin\User\UserCreateData;
+use App\Data\Admin\User\UserUpdateData;
+use App\Models\User;
+use App\Resource\UserResource;
 use App\Services\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
 {
@@ -10,32 +16,32 @@ class UserController extends Controller
         protected UserService $userService
     ) {}
 
-    public function index()
+    public function index(): AnonymousResourceCollection|JsonResponse
     {
-        return response()->json($this->userService->getAll());
+        return UserResource::collection(
+            $this->userService->all()
+        );
     }
 
-    public function show($id)
+    public function show(User $user): UserResource|JsonResponse
     {
-        return response()->json($this->userService->getById($id));
+        return new UserResource(
+            $user
+        );
     }
 
-    public function store(Request $request)
+    public function store(UserCreateData $data): UserResource|JsonResponse
     {
-        $data = $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:6',
-        ]);
-        $data['password'] = bcrypt($data['password']);
-
-        return response()->json($this->userService->create($data));
+        return new UserResource(
+            $this->userService->create($data)
+        );
     }
 
-    public function update(Request $request, $id)
+    public function update(User $user, UserUpdateData $data): UserResource|JsonResponse
     {
-        $data = $request->only(['name', 'email']);
-        return response()->json(['updated' => $this->userService->update($id, $data)]);
+        return new UserResource(
+            $this->userService->update($user, $data)
+        );
     }
 
     public function destroy($id)

@@ -1,34 +1,50 @@
 <?php
 namespace App\Services;
 
+use App\Data\Admin\User\UserCreateData;
+use App\Data\Admin\User\UserUpdateData;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserService
 {
-    public function __construct(
-        protected UserRepositoryInterface $userRepository
-    ) {}
+    protected UserRepositoryInterface $userRepository;
 
-    public function getAll(): Collection
+    public function __construct(UserRepositoryInterface $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
+    public function all(): Collection
     {
         return $this->userRepository->all();
     }
 
-    public function getById(int $id): ?User
+    public function create(UserCreateData $data): User
     {
-        return $this->userRepository->find($id);
-    }
+        $data = [
+            'email' => $data->email,
+            'name' => $data->name,
+            'password' => bcrypt($data->password),
+            //'role' => $data->role,
+            //'email_verified_at' => $data->emailVerifiedAt ?? now(),
+        ];
 
-    public function create(array $data): User
-    {
         return $this->userRepository->create($data);
     }
 
-    public function update(int $id, array $data): bool
+    public function update(User $user, UserUpdateData $data): User
     {
-        return $this->userRepository->update($id, $data);
+        $data = [
+            'email' => $data->email,
+            'name' => $data->name,
+            'password' => bcrypt($data->password),
+            //'role' => $data->role,
+            //'email_verified_at' => $data->emailVerifiedAt ?? now(),
+        ];
+
+        return $this->userRepository->update($user, $data);
     }
 
     public function delete(int $id): bool
