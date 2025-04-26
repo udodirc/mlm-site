@@ -37,12 +37,8 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         return $model instanceof User ? $model : null;
     }
 
-    public function delete(int $id): bool
+    public function delete(Model $model): bool
     {
-        $user = $this->model->find($id);
-        if ($user) {
-            return $user->delete();
-        }
-        return false;
+        return (bool) $model->delete();
     }
 }

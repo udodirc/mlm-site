@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 
 interface UserRepositoryInterface
 {
-    public function all(): array;
+    public function all(): Collection;
 
-    public function find(int $id): ?array;
+    public function find(int $id): null|Model|User;
 
-    public function create(array $data): int;
+    public function create(array $data): null|Model|User;
 
-    public function update(User $model, array $data): array;
+    public function update(User $model, array $data): null|Model|User;
 
-    public function delete(int $id): bool;
+    public function delete(User $model): bool;
 }

@@ -47,8 +47,8 @@ class UserService
         return $this->userRepository->update($user, $data);
     }
 
-    public function delete(int $id): bool
+    public function delete(User $model): bool
     {
-        return $this->userRepository->delete($id);
+        return $this->userRepository->delete($model);
     }
 }

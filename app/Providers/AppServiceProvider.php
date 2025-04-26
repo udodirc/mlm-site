@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\UserQueryBuilderRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
 

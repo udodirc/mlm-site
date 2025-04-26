@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Resource\UserResource;
 use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class UserController extends Controller
@@ -44,8 +43,8 @@ class UserController extends Controller
         );
     }
 
-    public function destroy($id)
+    public function destroy(User $user): bool
     {
-        return response()->json(['deleted' => $this->userService->delete($id)]);
+        return $this->userService->delete($user);
     }
 }
