@@ -34,7 +34,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
     {
         $model->update($data);
 
-        return $model instanceof User ? $model : null;
+        return $model instanceof Model ? $model : null;
     }
 
     public function delete(Model $model): bool

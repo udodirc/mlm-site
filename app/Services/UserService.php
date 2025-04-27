@@ -1,54 +1,44 @@
 <?php
+
 namespace App\Services;
 
 use App\Data\Admin\User\UserCreateData;
 use App\Data\Admin\User\UserUpdateData;
+use Spatie\LaravelData\Data;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 
-class UserService
+/**
+ * @extends BaseService<UserRepositoryInterface, UserCreateData, UserUpdateData, User>
+ */
+class UserService extends BaseService
 {
-    protected UserRepositoryInterface $userRepository;
-
-    public function __construct(UserRepositoryInterface $userRepository)
+    public function __construct(UserRepositoryInterface $repository)
     {
-        $this->userRepository = $userRepository;
+        parent::__construct($repository);
     }
 
-    public function all(): Collection
+    protected function toCreateArray(Data $data): array
     {
-        return $this->userRepository->all();
-    }
-
-    public function create(UserCreateData $data): User
-    {
-        $data = [
+        /** @var UserCreateData $data */
+        return [
             'email' => $data->email,
             'name' => $data->name,
             'password' => bcrypt($data->password),
-            //'role' => $data->role,
-            //'email_verified_at' => $data->emailVerifiedAt ?? now(),
+            // 'role' => $data->role,
+            // 'email_verified_at' => $data->emailVerifiedAt ?? now(),
         ];
-
-        return $this->userRepository->create($data);
     }
 
-    public function update(User $user, UserUpdateData $data): User
+    protected function toUpdateArray(Data $data): array
     {
-        $data = [
+        /** @var UserUpdateData $data */
+        return [
             'email' => $data->email,
             'name' => $data->name,
             'password' => bcrypt($data->password),
-            //'role' => $data->role,
-            //'email_verified_at' => $data->emailVerifiedAt ?? now(),
+            // 'role' => $data->role,
+            // 'email_verified_at' => $data->emailVerifiedAt ?? now(),
         ];
-
-        return $this->userRepository->update($user, $data);
-    }
-
-    public function delete(User $model): bool
-    {
-        return $this->userRepository->delete($model);
     }
 }
