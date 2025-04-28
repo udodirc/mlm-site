@@ -14,6 +14,12 @@ class UserController extends BaseController
 {
     public function __construct(UserService $service)
     {
-        parent::__construct($service, UserResource::class);
+        parent::__construct(
+            $service,
+            UserResource::class,
+            User::class,
+            UserCreateData::class,
+            UserUpdateData::class
+        );
     }
 }

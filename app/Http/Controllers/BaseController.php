@@ -1,10 +1,11 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Spatie\LaravelData\Data;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
@@ -26,10 +27,39 @@ abstract class BaseController extends Controller
      */
     protected string $resourceClass;
 
-    public function __construct(mixed $service, string $resourceClass)
+    /**
+     * @var class-string<TModel>
+     */
+    protected string $modelClass;
+
+    /**
+     * @var class-string<TCreateData>
+     */
+    protected string $createDataClass;
+
+    /**
+     * @var class-string<TUpdateData>
+     */
+    protected string $updateDataClass;
+
+    public function __construct(
+        mixed $service,
+        string $resourceClass,
+        string $modelClass,
+        string $createDataClass,
+        string $updateDataClass,
+    )
     {
         $this->service = $service;
         $this->resourceClass = $resourceClass;
+        $this->modelClass = $modelClass;
+        $this->createDataClass = $createDataClass;
+        $this->updateDataClass = $updateDataClass;
+    }
+
+    protected function resolveModel(mixed $key): Model
+    {
+        return $this->modelClass::findOrFail($key);
     }
 
     public function index(): AnonymousResourceCollection|JsonResponse
@@ -39,27 +69,47 @@ abstract class BaseController extends Controller
         );
     }
 
-    public function show(Model $model): JsonResource|JsonResponse
+    public function show(mixed $model): JsonResource|JsonResponse
     {
+        if (!$model instanceof Model) {
+            $model = $this->resolveModel($model);
+        }
+
         return new $this->resourceClass($model);
     }
 
-    public function store(Data $data): JsonResource|JsonResponse
+    public function store(Request $request): JsonResource|JsonResponse
     {
+        /** @var TCreateData $data */
+        $data = $this->createDataClass::from($request);
         $model = $this->service->create($data);
 
         return new $this->resourceClass($model);
     }
 
-    public function update(Model $model, Data $data): JsonResource|JsonResponse
+    public function update(mixed $model, Request $request): JsonResource|JsonResponse
     {
+        if (!$model instanceof Model) {
+            $model = $this->resolveModel($model);
+        }
+
+        /** @var TUpdateData $data */
+        $data = $this->updateDataClass::from($request);
         $model = $this->service->update($model, $data);
 
         return new $this->resourceClass($model);
     }
 
-    public function destroy(Model $model): bool
+    public function destroy(mixed $model): JsonResponse
     {
-        return $this->service->delete($model);
+        if (!$model instanceof Model) {
+            $model = $this->resolveModel($model);
+        }
+
+        $deleted = $this->service->delete($model);
+
+        return response()->json([
+            'success' => $deleted,
+        ]);
     }
 }
