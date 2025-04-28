@@ -48,8 +48,7 @@ abstract class BaseController extends Controller
         string $modelClass,
         string $createDataClass,
         string $updateDataClass,
-    )
-    {
+    ) {
         $this->service = $service;
         $this->resourceClass = $resourceClass;
         $this->modelClass = $modelClass;

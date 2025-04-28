@@ -5506,3 +5506,17 @@
 2025/04/26 03:57:35 [notice] 1#1: start worker process 25
 2025/04/26 03:57:35 [notice] 1#1: start worker process 26
 2025/04/26 04:01:48 [warn] 20#20: *3 an upstream response is buffered to a temporary file /var/cache/nginx/fastcgi_temp/1/00/0000000001 while reading upstream, client: 172.18.0.1, server: ${docker_project_domain}, request: "GET /api/admin/users HTTP/1.1", upstream: "fastcgi://172.18.0.3:9000", host: "mlm-site.local:8084"
+2025/04/28 15:41:48 [notice] 1#1: using the "epoll" event method
+2025/04/28 15:41:48 [notice] 1#1: nginx/1.27.3
+2025/04/28 15:41:48 [notice] 1#1: built by gcc 12.2.0 (Debian 12.2.0-14) 
+2025/04/28 15:41:48 [notice] 1#1: OS: Linux 5.4.0-214-generic
+2025/04/28 15:41:48 [notice] 1#1: getrlimit(RLIMIT_NOFILE): 1048576:1048576
+2025/04/28 15:41:48 [notice] 1#1: start worker processes
+2025/04/28 15:41:48 [notice] 1#1: start worker process 20
+2025/04/28 15:41:48 [notice] 1#1: start worker process 21
+2025/04/28 15:41:48 [notice] 1#1: start worker process 22
+2025/04/28 15:41:48 [notice] 1#1: start worker process 23
+2025/04/28 15:41:48 [notice] 1#1: start worker process 24
+2025/04/28 15:41:48 [notice] 1#1: start worker process 25
+2025/04/28 15:41:48 [notice] 1#1: start worker process 26
+2025/04/28 15:41:48 [notice] 1#1: start worker process 27

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Data\Admin\User;
 
 use Carbon\Carbon;
