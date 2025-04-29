@@ -11,23 +11,26 @@ use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
-class AdminCreateData extends Data
+class UserCreateData extends Data
 {
     public string $email;
     public string $name;
     public string $password;
+    public string $role;
     public Carbon|Optional|null $emailVerifiedAt;
 
     public function __construct(
         string $email,
         string $name,
         string $password,
+        string $role,
         Carbon|Optional|null $emailVerifiedAt = new Optional()
     ) {
         $this->emailVerifiedAt = $emailVerifiedAt;
         $this->password = $password;
         $this->name = $name;
         $this->email = $email;
+        $this->role = $role;
     }
 
     public static function rules(...$args): array
@@ -61,6 +64,11 @@ class AdminCreateData extends Data
                 new Max(100),
                 new Min(8),
             ],
+            'role' => [
+                new Required(),
+                new StringType(),
+                new Max(100)
+            ]
         ];
     }
 }
