@@ -1,8 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\UserController as AdminUserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::apiResource('users', UserController::class);
+    Route::post('/login', [LoginController::class, 'store'])->name('login');
+    Route::middleware(['auth:sanctum'])->group(function () {
+        Route::apiResource('users', AdminUserController::class);
+    });
 });
