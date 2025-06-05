@@ -2,11 +2,22 @@
 
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::post('/login', [LoginController::class, 'store'])->name('login');
-    Route::middleware(['auth:sanctum'])->group(function () {
-        Route::apiResource('users', AdminUserController::class);
+    Route::group([
+        'middleware' => 'api',
+        'prefix' => 'auth'
+    ], function ($router) {
+        Route::post('/login', [AdminAuthController::class, 'login'])->name('auth.login');
+        Route::post('logout', [AdminAuthController::class, 'logout'])->name('auth.logout');
+        Route::post('refresh', [AdminAuthController::class, 'refresh'])->name('auth.refresh-token');
+        Route::post('me', [AdminAuthController::class, 'me'])->name('auth.me');
     });
+
+    // Route::post('/login', [LoginController::class, 'store'])->name('login');
+    // Route::middleware(['auth:sanctum'])->group(function () {
+    //     Route::apiResource('users', AdminUserController::class);
+    // });
 });
