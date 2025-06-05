@@ -13,16 +13,10 @@ return [
     |
     */
 
-    // 'defaults' => [
-    //     'guard' => env('AUTH_GUARD', 'web'),
-    //     'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
-    // ],
-
     'defaults' => [
-        'guard' => 'api',
-        'passwords' => 'users',
+        'guard' => env('AUTH_GUARD', 'web'),
+        'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
-
 
     /*
     |--------------------------------------------------------------------------
@@ -41,16 +35,9 @@ return [
     |
     */
 
-    // 'guards' => [
-    //     'web' => [
-    //         'driver' => 'session',
-    //         'provider' => 'users',
-    //     ],
-    // ],
-
     'guards' => [
-        'api' => [
-            'driver' => 'jwt',
+        'web' => [
+            'driver' => 'session',
             'provider' => 'users',
         ],
     ],
