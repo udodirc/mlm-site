@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Data\Admin\Role\RoleAssignPermissionsData;
 use App\Data\Admin\Role\RoleCreateData;
 use App\Data\Admin\Role\RoleUpdateData;
 use Spatie\LaravelData\Data;
@@ -32,5 +33,15 @@ class RoleService extends BaseService
         return [
             'name' => $data->name
         ];
+    }
+
+    public function existRole(string $role): Role|null
+    {
+        return $this->repository->existRole($role);
+    }
+
+    public function assignPermissions(RoleAssignPermissionsData $data, Role $role): ?bool
+    {
+        return $this->repository->assignPermissions($data, $role);
     }
 }

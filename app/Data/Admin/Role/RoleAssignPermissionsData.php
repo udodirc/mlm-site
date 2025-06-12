@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Data\Role;
+namespace App\Data\Admin\Role;
 
 use Spatie\LaravelData\Attributes\Validation\ArrayType;
 use Spatie\LaravelData\Attributes\Validation\Max;
