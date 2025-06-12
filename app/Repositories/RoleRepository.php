@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Data\Admin\Role\AssignRoleData;
 use App\Data\Admin\Role\RoleAssignPermissionsData;
+use App\Models\User;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -31,5 +33,12 @@ class RoleRepository extends AbstractRepository implements RoleRepositoryInterfa
         }
 
         return false;
+    }
+
+    public function assignRole(User $user, AssignRoleData $data): bool
+    {
+        $user->assignRole($data->role);
+
+        return true;
     }
 }

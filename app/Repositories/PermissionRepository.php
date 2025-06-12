@@ -17,7 +17,6 @@ class PermissionRepository extends AbstractRepository implements PermissionRepos
         foreach (PermissionsEnum::cases() as $permissionEnum) {
             $permissionName = $permissionEnum->value;
 
-            // например, создаём Permission, если не существует
             $this->model->firstOrCreate([
                 'name' => $permissionName,
             ]);
