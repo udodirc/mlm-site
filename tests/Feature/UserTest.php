@@ -5,19 +5,33 @@ namespace Tests\Feature;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
 
 class UserTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * Тестируем создание пользователя.
-     *
+    protected function setUp(): void
+    {
+        parent::setUp();
+        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+    }
+
+    /*
      * @return void
      */
-    public function test_create_user()
+    public function testCreateUser()
     {
+        Permission::create([
+            'name' => 'create-users',
+            'guard_name' => 'api',
+        ]);
+
+        $admin = User::factory()->create();
+        $admin->givePermissionTo('create-users');
+        $this->actingAs($admin);
+
         $data = [
             'name' => 'Test User',
             'email' => 'user@test.test',
@@ -31,15 +45,19 @@ class UserTest extends TestCase
         $response->assertJsonFragment(['name' => 'Test User']);
     }
 
-    /**
-     * Тестируем обновление пользователя.
-     *
+    /*
      * @return void
      */
-    public function test_update_user()
+    public function testUpdateUser()
     {
-        // Создаем тестового пользователя
+        Permission::create([
+            'name' => 'update-users',
+            'guard_name' => 'api',
+        ]);
+
         $user = User::factory()->create();
+        $user->givePermissionTo('update-users');
+        $this->actingAs($user);
 
         $data = [
             'name' => 'Updated User',
@@ -55,44 +73,62 @@ class UserTest extends TestCase
     }
 
     /**
-     * Тестируем удаление пользователя.
-     *
      * @return void
      */
     public function testDeleteUser()
     {
-        $user = User::factory()->create();  // Создаем пользователя
+        Permission::create([
+            'name' => 'delete-users',
+            'guard_name' => 'api',
+        ]);
+        $user = User::factory()->create();
+        $user->givePermissionTo('delete-users');
+        $this->actingAs($user);
 
-        $response = $this->deleteJson(route('users.destroy', $user));  // Отправляем запрос на удаление
+        $response = $this->deleteJson(route('users.destroy', $user));
 
-        $response->assertStatus(200);  // Проверяем, что статус код 204
+        $response->assertStatus(200);
     }
 
 
     /**
-     * Тестируем получение списка пользователей.
-     *
      * @return void
      */
-    public function test_get_users_list()
+    public function testUsersList()
     {
-        // Создаем несколько пользователей
+        Permission::create([
+            'name' => 'view-users',
+            'guard_name' => 'api',
+        ]);
+
+        $admin = User::factory()->create();
+        $admin->givePermissionTo('view-users');
+
+        $this->actingAs($admin, 'api');
+
         User::factory()->count(3)->create();
 
         $response = $this->getJson(route('users.index'));
 
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(3, 'data'); // Проверяем, что возвращено 3 пользователя
+        $response->assertJsonCount(4, 'data'); // Проверяем, что возвращено 3 пользователя
     }
 
     /**
-     * Тестируем получение одного пользователя.
-     *
      * @return void
      */
-    public function test_get_single_user()
+    public function testSingleUser()
     {
-        // Создаем пользователя
+        Permission::create([
+            'name' => 'view-users',
+            'guard_name' => 'api',
+        ]);
+
+        $admin = User::factory()->create();
+        $admin->givePermissionTo('view-users');
+
+        $this->actingAs($admin, 'api');
+
         $user = User::factory()->create();
 
         $response = $this->getJson(route('users.show', $user->id));
