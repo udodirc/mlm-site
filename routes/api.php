@@ -25,7 +25,6 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('/roles/permissions', [AdminRoleController::class, 'assignPermissions'])->name('roles.assign-permissions');
             Route::post('/permissions', [AdminPermissionController::class, 'createPermissions'])->name('permissions.create-permissions');
         });
-
     });
 
     // Route::post('/login', [LoginController::class, 'store'])->name('login');

@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
 class UserTest extends TestCase
@@ -15,13 +16,13 @@ class UserTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
+        app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
     /*
      * @return void
      */
-    public function testCreateUser()
+    public function testCreateUser(): void
     {
         Permission::create([
             'name' => 'create-users',
@@ -48,7 +49,7 @@ class UserTest extends TestCase
     /*
      * @return void
      */
-    public function testUpdateUser()
+    public function testUpdateUser(): void
     {
         Permission::create([
             'name' => 'update-users',
@@ -75,7 +76,7 @@ class UserTest extends TestCase
     /**
      * @return void
      */
-    public function testDeleteUser()
+    public function testDeleteUser(): void
     {
         Permission::create([
             'name' => 'delete-users',
@@ -94,7 +95,7 @@ class UserTest extends TestCase
     /**
      * @return void
      */
-    public function testUsersList()
+    public function testUsersList(): void
     {
         Permission::create([
             'name' => 'view-users',
@@ -111,13 +112,13 @@ class UserTest extends TestCase
         $response = $this->getJson(route('users.index'));
 
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(4, 'data'); // Проверяем, что возвращено 3 пользователя
+        $response->assertJsonCount(4, 'data');
     }
 
     /**
      * @return void
      */
-    public function testSingleUser()
+    public function testSingleUser(): void
     {
         Permission::create([
             'name' => 'view-users',
