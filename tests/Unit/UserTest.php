@@ -7,12 +7,17 @@ use App\Data\Admin\User\UserUpdateData;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\MockObject\MockObject;
+use Spatie\Permission\Models\Permission;
 use Tests\TestCase;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @var UserRepository|MockObject */
     protected $userRepository;
 
@@ -23,16 +28,11 @@ class UserTest extends TestCase
     {
         parent::setUp();
 
-        // Мокируем репозиторий
         $this->userRepository = $this->createMock(UserRepository::class);
 
-        // Создаем экземпляр UserService, передавая мок репозитория
         $this->userService = new UserService($this->userRepository);
     }
 
-    /*
-     * @return void
-     */
     public function testCreateUser(): void
     {
         $data = new UserCreateData(
@@ -69,10 +69,6 @@ class UserTest extends TestCase
         $this->assertEquals('user@test.test', $createdUser->email);
     }
 
-
-    /*
-     * @return void
-     */
     public function testUpdateUser(): void
     {
         $data = new UserUpdateData(
@@ -107,9 +103,6 @@ class UserTest extends TestCase
         $this->assertSame($user, $updatedUser);
     }
 
-    /*
-    * @return void
-    */
     public function testDeleteUser(): void
     {
         $user = new User([
@@ -128,5 +121,61 @@ class UserTest extends TestCase
         $result = $this->userService->delete($user);
 
         $this->assertTrue($result);
+    }
+
+
+    public function testListUsers(): void
+    {
+        $users = new Collection([
+            new User([
+                'id' => 1,
+                'name' => 'Alice',
+                'email' => 'alice@test.test',
+                'role' => 'admin'
+            ]),
+            new User([
+                'id' => 2,
+                'name' => 'Bob',
+                'email' => 'bob@test.test',
+                'role' => 'manager'
+            ]),
+        ]);
+
+        $this->userRepository
+            ->expects($this->once())
+            ->method('all')
+            ->willReturn($users);
+
+        $result = $this->userService->all();
+
+        $this->assertCount(2, $result);
+        $this->assertEquals('Alice', $result[0]->name);
+        $this->assertEquals('Bob', $result[1]->name);
+    }
+
+    public function testShowUser(): void
+    {
+        Permission::create([
+            'name' => 'view-users',
+            'guard_name' => 'api',
+        ]);
+
+        $user = User::factory()->create([
+            'name' => 'Alice',
+            'email' => 'alice@test.test'
+        ]);
+        $user->givePermissionTo('view-users');
+        $this->actingAs($user, 'api');
+
+        $response = $this->getJson(route('users.show', $user->id));
+
+        $response->assertOk();
+        $response->assertJson([
+            'data' => [
+                'id' => $user->id,
+                'name' => 'Alice',
+                'email' => 'alice@test.test',
+            ]
+        ]);
     }
 }
