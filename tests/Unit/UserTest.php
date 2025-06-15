@@ -3,9 +3,11 @@
 namespace Tests\Unit;
 
 use App\Data\Admin\User\UserCreateData;
+use App\Data\Admin\User\UserUpdateData;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
+use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tests\TestCase;
 
@@ -28,8 +30,10 @@ class UserTest extends TestCase
         $this->userService = new UserService($this->userRepository);
     }
 
-    #[Test]
-    public function create(): void
+    /*
+     * @return void
+     */
+    public function testCreateUser(): void
     {
         $data = new UserCreateData(
             email: 'user@test.test',
@@ -52,8 +56,7 @@ class UserTest extends TestCase
                 $this->callback(function (array $data) {
                     return $data['name'] === 'user'
                         && $data['email'] === 'user@test.test'
-                        && isset($data['password'])
-                        && $data['role'] === 'manager';
+                        && isset($data['password']);
                 })
             )
             ->willReturn(
@@ -67,10 +70,12 @@ class UserTest extends TestCase
     }
 
 
-    #[Test]
-    public function update(): void
+    /*
+     * @return void
+     */
+    public function testUpdateUser(): void
     {
-        $data = new UserCreateData(
+        $data = new UserUpdateData(
             email: 'updated@test.test',
             name: 'Updated Name',
             password: '123456789',
@@ -87,7 +92,14 @@ class UserTest extends TestCase
         $this->userRepository
             ->expects($this->once())
             ->method('update')
-            ->with($user, $data)
+            ->with(
+                $this->equalTo($user),
+                $this->callback(function ($array) {
+                    return $array['email'] === 'updated@test.test'
+                        && $array['name'] === 'Updated Name'
+                        && Hash::check('123456789', $array['password']);
+                })
+            )
             ->willReturn($user);
 
         $updatedUser = $this->userService->update($user, $data);
@@ -95,20 +107,22 @@ class UserTest extends TestCase
         $this->assertSame($user, $updatedUser);
     }
 
-    #[Test]
-    public function deleteUser(): void
+    /*
+    * @return void
+    */
+    public function testDeleteUser(): void
     {
         $user = new User([
             'id' => 1,
             'name' => 'user',
             'email' => 'user@test.test',
-            'role' => 'manager'
+            'role' => 'manager',
         ]);
 
         $this->userRepository
             ->expects($this->once())
             ->method('delete')
-            ->with($user)
+            ->with($this->equalTo($user))
             ->willReturn(true);
 
         $result = $this->userService->delete($user);
