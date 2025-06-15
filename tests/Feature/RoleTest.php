@@ -139,4 +139,67 @@ class RoleTest extends TestCase
             ],
         ]);
     }
+
+    /**
+     * @return void
+     */
+    public function testRolePermissions(): void
+    {
+        Permission::create([
+            'name' => 'create-roles',
+            'guard_name' => 'api',
+        ]);
+
+        $role = Role::create([
+            'name' => 'admin',
+            'guard_name' => 'api',
+        ]);
+        $role->givePermissionTo('create-roles');
+        $user = User::factory()->create();
+        $user->assignRole($role);
+
+        $this->actingAs($user, 'api');
+
+        $data = [
+            'role' => 'admin',
+            'permission' => [
+                ['name' => 'create-roles'],
+                ['name' => 'update-roles'],
+                ['name' => 'delete-roles'],
+            ],
+        ];
+
+        $response = $this->postJson(route('roles.assign-permissions'), $data);
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    /**
+     * @return void
+     */
+    public function testRoleAssign(): void
+    {
+        Permission::create([
+            'name' => 'create-roles',
+            'guard_name' => 'api',
+        ]);
+
+        $role = Role::create([
+            'name' => 'admin',
+            'guard_name' => 'api',
+        ]);
+        $role->givePermissionTo('create-roles');
+        $user = User::factory()->create();
+        $user->assignRole($role);
+
+        $this->actingAs($user, 'api');
+
+        $data = [
+            'role' => 'admin'
+        ];
+
+        $response = $this->postJson(route('roles.assign-role'), $data);
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
 }
