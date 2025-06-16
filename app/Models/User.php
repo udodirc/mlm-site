@@ -81,4 +81,9 @@ class User extends Authenticatable implements JWTSubject
     {
         return [];
     }
+
+    public function guardName(): string
+    {
+        return 'api';
+    }
 }

@@ -37,8 +37,16 @@ class RoleRepository extends AbstractRepository implements RoleRepositoryInterfa
 
     public function assignRole(User $user, AssignRoleData $data): bool
     {
-        $user->assignRole($data->role);
+        $role = Role::where('name', $data->role)
+            ->where('guard_name', 'api')
+            ->first();
 
-        return true;
+        if (! $role) {
+            return false;
+        }
+
+        $user->assignRole($role);
+
+        return $user->hasRole($data->role, 'api');
     }
 }
