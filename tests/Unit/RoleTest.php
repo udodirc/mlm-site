@@ -174,4 +174,35 @@ class RoleTest extends TestCase
         $this->assertTrue($result, 'Метод assignRole вернул false');
         $this->assertTrue($user->hasRole('admin'), 'Роль admin не была назначена пользователю');
     }
+
+    public function testRolePermissions(): void
+    {
+        Permission::create([
+            'name' => 'view-permissions',
+            'guard_name' => 'api',
+        ]);
+
+        $admin = User::factory()->create([
+            'name' => 'Alice',
+            'email' => 'alice@test.test',
+        ]);
+
+        $role = Role::create(['name' => 'admin']);
+        $role->givePermissionTo('view-permissions');
+        $admin->assignRole('admin');
+
+        $this->actingAs($admin, 'api');
+
+        $data = [
+            'role' => 'admin',
+            'permission' => [
+                ['name' => 'create-roles'],
+                ['name' => 'update-roles'],
+                ['name' => 'delete-roles'],
+            ],
+        ];
+
+        $response = $this->postJson(route('roles.assign-permissions'), $data);
+        $response->assertOk();
+    }
 }
