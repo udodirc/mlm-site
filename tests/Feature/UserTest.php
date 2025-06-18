@@ -9,29 +9,11 @@ use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Tests\TestCase;
 
-class UserTest extends TestCase
+class UserTest extends BaseTest
 {
-    use RefreshDatabase;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-        app()->make(PermissionRegistrar::class)->forgetCachedPermissions();
-    }
-
-    /*
-     * @return void
-     */
     public function testCreateUser(): void
     {
-        Permission::create([
-            'name' => 'create-users',
-            'guard_name' => 'api',
-        ]);
-
-        $admin = User::factory()->create();
-        $admin->givePermissionTo('create-users');
-        $this->actingAs($admin);
+        $this->auth('create-users');
 
         $data = [
             'name' => 'Test User',
@@ -51,14 +33,7 @@ class UserTest extends TestCase
      */
     public function testUpdateUser(): void
     {
-        Permission::create([
-            'name' => 'update-users',
-            'guard_name' => 'api',
-        ]);
-
-        $user = User::factory()->create();
-        $user->givePermissionTo('update-users');
-        $this->actingAs($user);
+        $user = $this->auth('update-users');
 
         $data = [
             'name' => 'Updated User',
@@ -78,13 +53,7 @@ class UserTest extends TestCase
      */
     public function testDeleteUser(): void
     {
-        Permission::create([
-            'name' => 'delete-users',
-            'guard_name' => 'api',
-        ]);
-        $user = User::factory()->create();
-        $user->givePermissionTo('delete-users');
-        $this->actingAs($user);
+        $user = $this->auth('delete-users');
 
         $response = $this->deleteJson(route('users.destroy', $user));
 
@@ -97,15 +66,7 @@ class UserTest extends TestCase
      */
     public function testUsersList(): void
     {
-        Permission::create([
-            'name' => 'view-users',
-            'guard_name' => 'api',
-        ]);
-
-        $admin = User::factory()->create();
-        $admin->givePermissionTo('view-users');
-
-        $this->actingAs($admin, 'api');
+        $this->auth('view-users');
 
         User::factory()->count(3)->create();
 
@@ -120,15 +81,7 @@ class UserTest extends TestCase
      */
     public function testSingleUser(): void
     {
-        Permission::create([
-            'name' => 'view-users',
-            'guard_name' => 'api',
-        ]);
-
-        $admin = User::factory()->create();
-        $admin->givePermissionTo('view-users');
-
-        $this->actingAs($admin, 'api');
+        $this->auth('view-users');
 
         $user = User::factory()->create();
 
