@@ -16,27 +16,37 @@ use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Artisan;
 
-class RoleTest extends TestCase
+class RoleTest extends BaseTest
 {
-    use RefreshDatabase;
+//    use RefreshDatabase;
+//
+//    /** @var RoleRepository|MockObject */
+//    protected $roleRepository;
+//
+//    /** @var RoleService */
+//    protected $roleService;
+//
+//    protected function setUp(): void
+//    {
+//        parent::setUp();
+//
+//        $this->roleRepository = $this->createMock(RoleRepository::class);
+//        $this->roleService = new RoleService($this->roleRepository);
+//    }
 
-    /** @var RoleRepository|MockObject */
-    protected $roleRepository;
-
-    /** @var RoleService */
-    protected $roleService;
-
-    protected function setUp(): void
+    protected function getServiceClass(): string
     {
-        parent::setUp();
+        return RoleService::class;
+    }
 
-        $this->roleRepository = $this->createMock(RoleRepository::class);
-        $this->roleService = new RoleService($this->roleRepository);
+    protected function getRepositoryClass(): string
+    {
+        return RoleRepository::class;
     }
 
     public function testCreateRole(): void
     {
-        $data = new RoleCreateData(
+        $dto = new RoleCreateData(
             name: 'manager'
         );
 
@@ -44,43 +54,36 @@ class RoleTest extends TestCase
             'name' => 'manager'
         ]);
 
-        $this->roleRepository
-            ->expects($this->once())
-            ->method('create')
-            ->with(
-                $this->callback(fn(array $data) => $data['name'] === 'manager')
-            )
-            ->willReturn($role);
-
-        $createdRole = $this->roleService->create($data);
-
-        $this->assertEquals('manager', $createdRole->name);
+        $this->assertCreateEntity(
+            createDto: $dto,
+            expectedInput: [
+                'name' => 'manager'
+            ],
+            expectedModel: $role
+        );
     }
 
     public function testUpdateRole(): void
     {
-        $data = new RoleUpdateData(
-            name: 'manager'
+        $dto = new RoleUpdateData(
+            name: 'editor'
         );
 
         $role = new Role([
+            'id' => 1,
             'name' => 'manager'
         ]);
 
-        $this->roleRepository
-            ->expects($this->once())
-            ->method('update')
-            ->with(
-                $this->equalTo($role),
-                $this->callback(function ($array) {
-                    return $array['name'] === 'manager';
-                })
-            )
-            ->willReturn($role);
+        $role->name = 'editor';
 
-        $updateRole = $this->roleService->update($role, $data);
-
-        $this->assertSame($role, $updateRole);
+        $this->assertUpdateEntity(
+            model: $role,
+            updateDto: $dto,
+            expectedInput: [
+                'name' => 'editor'
+            ],
+            expectedModel: $role
+        );
     }
 
     public function testDeleteRole(): void
@@ -90,20 +93,14 @@ class RoleTest extends TestCase
             'name' => 'manager'
         ]);
 
-        $this->roleRepository
-            ->expects($this->once())
-            ->method('delete')
-            ->with($this->equalTo($role))
-            ->willReturn(true);
-
-        $result = $this->roleService->delete($role);
-
-        $this->assertTrue($result);
+        $this->assertDeleteEntity(
+            model: $role
+        );
     }
 
     public function testListRoles(): void
     {
-        $users = new Collection([
+        $roles = new Collection([
             new Role([
                 'name' => 'admin'
             ]),
@@ -112,45 +109,19 @@ class RoleTest extends TestCase
             ]),
         ]);
 
-        $this->roleRepository
-            ->expects($this->once())
-            ->method('all')
-            ->willReturn($users);
-
-        $result = $this->roleService->all();
-
-        $this->assertCount(2, $result);
-        $this->assertEquals('admin', $result[0]->name);
-        $this->assertEquals('manager', $result[1]->name);
+        $this->assertListItemsEntity(
+            model: $roles,
+            items: ['admin', 'manager']
+        );
     }
 
     public function testShowRole(): void
     {
-        Permission::create([
-            'name' => 'view-permissions',
-            'guard_name' => 'api',
-        ]);
-
-        $admin = User::factory()->create([
-            'name' => 'Alice',
-            'email' => 'alice@test.test',
-        ]);
-
-        $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo('view-permissions');
-        $admin->assignRole('admin');
-
-        $this->actingAs($admin, 'api');
-
-        $response = $this->getJson(route('roles.show', $role->id));
-
-        $response->assertOk();
-        $response->assertJson([
-            'data' => [
-                'id' => $role->id,
-                'name' => 'admin',
-            ]
-        ]);
+        $this->assertShowItemEntity(
+            'view-permissions',
+            'roles.show',
+            true
+        );
     }
 
     public function testAssignRoleToUser(): void
@@ -177,21 +148,7 @@ class RoleTest extends TestCase
 
     public function testRolePermissions(): void
     {
-        Permission::create([
-            'name' => 'view-permissions',
-            'guard_name' => 'api',
-        ]);
-
-        $admin = User::factory()->create([
-            'name' => 'Alice',
-            'email' => 'alice@test.test',
-        ]);
-
-        $role = Role::create(['name' => 'admin']);
-        $role->givePermissionTo('view-permissions');
-        $admin->assignRole('admin');
-
-        $this->actingAs($admin, 'api');
+        $this->auth('view-permissions', true);
 
         $data = [
             'role' => 'admin',

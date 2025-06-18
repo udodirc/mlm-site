@@ -118,27 +118,9 @@ class UserTest extends BaseTest
 
     public function testShowUser(): void
     {
-        Permission::create([
-            'name' => 'view-users',
-            'guard_name' => 'api',
-        ]);
-
-        $user = User::factory()->create([
-            'name' => 'Alice',
-            'email' => 'alice@test.test'
-        ]);
-        $user->givePermissionTo('view-users');
-        $this->actingAs($user, 'api');
-
-        $response = $this->getJson(route('users.show', $user->id));
-
-        $response->assertOk();
-        $response->assertJson([
-            'data' => [
-                'id' => $user->id,
-                'name' => 'Alice',
-                'email' => 'alice@test.test',
-            ]
-        ]);
+        $this->assertShowItemEntity(
+            'view-users',
+            'users.show'
+        );
     }
 }

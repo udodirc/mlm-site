@@ -2,9 +2,12 @@
 
 namespace Tests\Unit;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use PHPUnit\Framework\MockObject\MockObject;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 use Tests\TestCase;
 
 /**
@@ -157,5 +160,62 @@ abstract class BaseTest extends TestCase
         $this->assertCount(2, $result);
         $this->assertEquals($items[0], $result[0]->name);
         $this->assertEquals($items[1], $result[1]->name);
+    }
+
+    protected function assertShowItemEntity(
+        string $permission,
+        string $route,
+        bool $role = false,
+    ): void {
+
+        $adminRole = $this->auth($permission, $role);
+        $response = $this->getJson(route($route, $adminRole->id));
+
+        if ($role) {
+            $data = [
+                'id' => $adminRole->id,
+                'name' => 'admin',
+            ];
+        } else {
+            $data = [
+                'id' => $adminRole->id,
+                'name' => 'Alice',
+                'email' => 'alice@test.test',
+            ];
+        }
+
+        $response->assertOk();
+        $response->assertJson([
+            'data' => $data
+        ]);
+    }
+
+    protected function auth(
+        string $permission,
+        bool $role = false
+    ): Role|User {
+        Permission::create([
+            'name' => $permission,
+            'guard_name' => 'api',
+        ]);
+
+        $user = User::factory()->create([
+            'name' => 'Alice',
+            'email' => 'alice@test.test'
+        ]);
+
+        if ($role) {
+            $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'api']);
+            $adminRole->givePermissionTo($permission); // используем нужное разрешение
+            $user->assignRole('admin');
+            $this->actingAs($user, 'api'); // аутентификация
+
+        } else {
+            $user->givePermissionTo($permission);
+            $this->actingAs($user, 'api'); // аутентификация
+            $adminRole = $user;
+        }
+
+        return $adminRole;
     }
 }
