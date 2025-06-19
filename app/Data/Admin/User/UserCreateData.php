@@ -32,7 +32,6 @@ class UserCreateData extends Data
         $this->email = $email;
         $this->role = $role;
     }
-
     public static function rules(...$args): array
     {
         return [
