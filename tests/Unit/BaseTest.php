@@ -97,18 +97,15 @@ abstract class BaseTest extends TestCase
                 $this->callback(function (array $data) use ($expectedInput) {
                     foreach ($expectedInput as $key => $value) {
                         if (!array_key_exists($key, $data)) {
-                            echo "Missing key [$key]\n";
                             return false;
                         }
 
                         if ($key === 'password') {
                             if (!Hash::check($value, $data[$key])) {
-                                echo "Password hash mismatch\n";
                                 return false;
                             }
                         } else {
                             if ($data[$key] !== $value) {
-                                echo "Mismatch at [$key]: expected [$value], got [{$data[$key]}]\n";
                                 return false;
                             }
                         }

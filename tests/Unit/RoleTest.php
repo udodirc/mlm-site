@@ -5,6 +5,8 @@ namespace Tests\Unit;
 use App\Data\Admin\Role\AssignRoleData;
 use App\Data\Admin\Role\RoleCreateData;
 use App\Data\Admin\Role\RoleUpdateData;
+use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use App\Models\User;
 use App\Repositories\RoleRepository;
 use App\Services\RoleService;
@@ -18,22 +20,6 @@ use Illuminate\Support\Facades\Artisan;
 
 class RoleTest extends BaseTest
 {
-//    use RefreshDatabase;
-//
-//    /** @var RoleRepository|MockObject */
-//    protected $roleRepository;
-//
-//    /** @var RoleService */
-//    protected $roleService;
-//
-//    protected function setUp(): void
-//    {
-//        parent::setUp();
-//
-//        $this->roleRepository = $this->createMock(RoleRepository::class);
-//        $this->roleService = new RoleService($this->roleRepository);
-//    }
-
     protected function getServiceClass(): string
     {
         return RoleService::class;
@@ -118,7 +104,7 @@ class RoleTest extends BaseTest
     public function testShowRole(): void
     {
         $this->assertShowItemEntity(
-            'view-permissions',
+            PermissionsEnum::RoleView->value,
             'roles.show',
             true
         );
@@ -132,18 +118,18 @@ class RoleTest extends BaseTest
         Artisan::call('permission:cache-reset');
 
         Role::create([
-            'name' => 'admin',
-            'guard_name' => 'api',
+            'name' => RolesEnum::Admin->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
         $user = User::factory()->create();
 
-        $data = new AssignRoleData(role: 'admin');
+        $data = new AssignRoleData(role: RolesEnum::Admin->value);
 
         $result = $roleService->assignRole($user, $data);
 
-        $this->assertTrue($result, 'Метод assignRole вернул false');
-        $this->assertTrue($user->hasRole('admin'), 'Роль admin не была назначена пользователю');
+        $this->assertTrue($result, __('messages.assign_role'));
+        $this->assertTrue($user->hasRole(RolesEnum::Admin->value), __('messages.assign_admin_role'));
     }
 
     public function testRolePermissions(): void
@@ -151,11 +137,11 @@ class RoleTest extends BaseTest
         $this->auth('view-permissions', true);
 
         $data = [
-            'role' => 'admin',
+            'role' => RolesEnum::Admin->value,
             'permission' => [
-                ['name' => 'create-roles'],
-                ['name' => 'update-roles'],
-                ['name' => 'delete-roles'],
+                ['name' => PermissionsEnum::RoleCreate->value],
+                ['name' => PermissionsEnum::RoleUpdate->value],
+                ['name' => PermissionsEnum::RoleDelete->value],
             ],
         ];
 
