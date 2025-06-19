@@ -2,22 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionsEnum;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
-use Tests\TestCase;
 
-class UserTest extends TestCase
+class UserTest extends BaseTest
 {
-    use RefreshDatabase;
-
-    /**
-     * Тестируем создание пользователя.
-     *
-     * @return void
-     */
-    public function test_create_user()
+    public function testCreateUser(): void
     {
+        $this->auth(PermissionsEnum::UserCreate->value);
+
         $data = [
             'name' => 'Test User',
             'email' => 'user@test.test',
@@ -31,15 +25,12 @@ class UserTest extends TestCase
         $response->assertJsonFragment(['name' => 'Test User']);
     }
 
-    /**
-     * Тестируем обновление пользователя.
-     *
+    /*
      * @return void
      */
-    public function test_update_user()
+    public function testUpdateUser(): void
     {
-        // Создаем тестового пользователя
-        $user = User::factory()->create();
+        $user = $this->auth(PermissionsEnum::UserUpdate->value);
 
         $data = [
             'name' => 'Updated User',
@@ -55,44 +46,40 @@ class UserTest extends TestCase
     }
 
     /**
-     * Тестируем удаление пользователя.
-     *
      * @return void
      */
-    public function testDeleteUser()
+    public function testDeleteUser(): void
     {
-        $user = User::factory()->create();  // Создаем пользователя
+        $user = $this->auth(PermissionsEnum::UserDelete->value);
 
-        $response = $this->deleteJson(route('users.destroy', $user));  // Отправляем запрос на удаление
+        $response = $this->deleteJson(route('users.destroy', $user));
 
-        $response->assertStatus(200);  // Проверяем, что статус код 204
+        $response->assertStatus(200);
     }
 
 
     /**
-     * Тестируем получение списка пользователей.
-     *
      * @return void
      */
-    public function test_get_users_list()
+    public function testUsersList(): void
     {
-        // Создаем несколько пользователей
+        $this->auth(PermissionsEnum::UserView->value);
+
         User::factory()->count(3)->create();
 
         $response = $this->getJson(route('users.index'));
 
         $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(3, 'data'); // Проверяем, что возвращено 3 пользователя
+        $response->assertJsonCount(4, 'data');
     }
 
     /**
-     * Тестируем получение одного пользователя.
-     *
      * @return void
      */
-    public function test_get_single_user()
+    public function testSingleUser(): void
     {
-        // Создаем пользователя
+        $this->auth(PermissionsEnum::UserView->value);
+
         $user = User::factory()->create();
 
         $response = $this->getJson(route('users.show', $user->id));

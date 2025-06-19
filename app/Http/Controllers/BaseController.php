@@ -25,7 +25,7 @@ abstract class BaseController extends Controller
     /**
      * @var class-string<TResource>
      */
-    protected string $resourceClass;
+    protected ?string $resourceClass;
 
     /**
      * @var class-string<TModel>
@@ -35,19 +35,19 @@ abstract class BaseController extends Controller
     /**
      * @var class-string<TCreateData>
      */
-    protected string $createDataClass;
+    protected ?string $createDataClass;
 
     /**
      * @var class-string<TUpdateData>
      */
-    protected string $updateDataClass;
+    protected ?string $updateDataClass;
 
     public function __construct(
         mixed $service,
-        string $resourceClass,
+        ?string $resourceClass,
         string $modelClass,
-        string $createDataClass,
-        string $updateDataClass,
+        ?string $createDataClass,
+        ?string $updateDataClass,
     ) {
         $this->service = $service;
         $this->resourceClass = $resourceClass;

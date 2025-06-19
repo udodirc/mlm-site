@@ -3,35 +3,28 @@
 namespace Tests\Unit;
 
 use App\Data\Admin\User\UserCreateData;
+use App\Data\Admin\User\UserUpdateData;
+use App\Enums\PermissionsEnum;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
-use PHPUnit\Framework\MockObject\MockObject;
-use Tests\TestCase;
+use Illuminate\Database\Eloquent\Collection;
 
-class UserTest extends TestCase
+class UserTest extends BaseTest
 {
-    /** @var UserRepository|MockObject */
-    protected $userRepository;
-
-    /** @var UserService */
-    protected $userService;
-
-    protected function setUp(): void
+    protected function getServiceClass(): string
     {
-        parent::setUp();
-
-        // Мокируем репозиторий
-        $this->userRepository = $this->createMock(UserRepository::class);
-
-        // Создаем экземпляр UserService, передавая мок репозитория
-        $this->userService = new UserService($this->userRepository);
+        return UserService::class;
     }
 
-    #[Test]
-    public function create(): void
+    protected function getRepositoryClass(): string
     {
-        $data = new UserCreateData(
+        return UserRepository::class;
+    }
+
+    public function testCreateUser(): void
+    {
+        $dto = new UserCreateData(
             email: 'user@test.test',
             name: 'user',
             password: '12345678',
@@ -45,32 +38,19 @@ class UserTest extends TestCase
             'role' => 'manager'
         ]);
 
-        $this->userRepository
-            ->expects($this->once())
-            ->method('create')
-            ->with(
-                $this->callback(function (array $data) {
-                    return $data['name'] === 'user'
-                        && $data['email'] === 'user@test.test'
-                        && isset($data['password'])
-                        && $data['role'] === 'manager';
-                })
-            )
-            ->willReturn(
-                $user
-            );
-
-        $createdUser = $this->userService->create($data);
-
-        $this->assertEquals('user', $createdUser->name);
-        $this->assertEquals('user@test.test', $createdUser->email);
+        $this->assertCreateEntity(
+            createDto: $dto,
+            expectedInput: [
+                'name' => 'user',
+                'email' => 'user@test.test'
+            ],
+            expectedModel: $user
+        );
     }
 
-
-    #[Test]
-    public function update(): void
+    public function testUpdateUser(): void
     {
-        $data = new UserCreateData(
+        $dto = new UserUpdateData(
             email: 'updated@test.test',
             name: 'Updated Name',
             password: '123456789',
@@ -81,38 +61,66 @@ class UserTest extends TestCase
             'id' => 1,
             'name' => 'user',
             'email' => 'user@test.test',
-            'role' => 'manager'
+            'password' => bcrypt('old_password'),
         ]);
 
-        $this->userRepository
-            ->expects($this->once())
-            ->method('update')
-            ->with($user, $data)
-            ->willReturn($user);
+        $user->email = 'updated@test.test';
+        $user->name = 'Updated Name';
+        $user->password = bcrypt('123456789');
 
-        $updatedUser = $this->userService->update($user, $data);
-
-        $this->assertSame($user, $updatedUser);
+        $this->assertUpdateEntity(
+            model: $user,
+            updateDto: $dto,
+            expectedInput: [
+                'email' => 'updated@test.test',
+                'name' => 'Updated Name',
+                'password' => '123456789',
+            ],
+            expectedModel: $user
+        );
     }
 
-    #[Test]
-    public function deleteUser(): void
+    public function testDeleteUser(): void
     {
         $user = new User([
             'id' => 1,
             'name' => 'user',
-            'email' => 'user@test.test',
-            'role' => 'manager'
+            'email' => 'user@test.test'
         ]);
 
-        $this->userRepository
-            ->expects($this->once())
-            ->method('delete')
-            ->with($user)
-            ->willReturn(true);
+        $this->assertDeleteEntity(
+            model: $user
+        );
+    }
 
-        $result = $this->userService->delete($user);
+    public function testListUsers(): void
+    {
+        $users = new Collection([
+            new User([
+                'id' => 1,
+                'name' => 'Alice',
+                'email' => 'alice@test.test',
+                'role' => 'admin'
+            ]),
+            new User([
+                'id' => 2,
+                'name' => 'Bob',
+                'email' => 'bob@test.test',
+                'role' => 'manager'
+            ]),
+        ]);
 
-        $this->assertTrue($result);
+        $this->assertListItemsEntity(
+            model: $users,
+            items: ['Alice', 'Bob']
+        );
+    }
+
+    public function testShowUser(): void
+    {
+        $this->assertShowItemEntity(
+            PermissionsEnum::UserView->value,
+            'users.show'
+        );
     }
 }

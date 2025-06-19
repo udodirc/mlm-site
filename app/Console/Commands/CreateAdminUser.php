@@ -3,6 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Data\Admin\User\AdminCreateData;
+use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -40,6 +42,14 @@ class CreateAdminUser extends Command
             'email' => $data->email,
             'name' => $data->name,
             'password' => $password,
+        ]);
+
+        $user->assignRole(RolesEnum::Admin);
+        $user->givePermissionTo([
+            PermissionsEnum::UserCreate,
+            PermissionsEnum::UserView,
+            PermissionsEnum::UserUpdate,
+            PermissionsEnum::UserDelete
         ]);
 
         $this->info("Password: $data->password");
