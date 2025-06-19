@@ -65,8 +65,8 @@ class CreateAdminUser extends Command
     protected function promptForMissingArgumentsUsing(): array
     {
         return [
-            'name' => 'Enter name',
-            'email' => 'Enter email'
+            'name' => __('form.create_admin_name'),
+            'email' => __('form.create_admin_email')
         ];
     }
 }

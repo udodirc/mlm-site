@@ -28,7 +28,7 @@ class AdminPermissionSeeder extends Seeder
         $adminRole = Role::where('name', RolesEnum::Admin)->first();
 
         if (!$adminRole) {
-            $this->command->error('Нет доступных ролей. Запустите RoleSeeder.');
+            $this->command->error(__('messages.no_roles'));
             return;
         }
 
@@ -47,6 +47,6 @@ class AdminPermissionSeeder extends Seeder
             $adminUser->assignRole(RolesEnum::Admin);
         }
 
-        $this->command->info('Админ создан и получил первую роль со всеми разрешениями, ваш пароль '.$password.'.');
+        $this->command->info(__('messages.admin_seeder').' '.$password.'.');
     }
 }

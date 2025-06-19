@@ -50,7 +50,7 @@ class RoleController extends BaseController
 
         $user = Auth::user();
         if (!$user) {
-            return response()->json(['error' => true, 'msg' => 'Пользователь не аутентифицирован'], 400);
+            return response()->json(['error' => true, 'msg' => __('messages.unauthorized')], 400);
         }
 
         return $this->service->assignRole($user, $data);
