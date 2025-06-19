@@ -2,6 +2,8 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use App\Models\User;
 use Database\Factories\RoleFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -27,19 +29,19 @@ class RoleTest extends TestCase
     public function testCreateRole(): void
     {
         Permission::create([
-            'name' => 'create-roles',
-            'guard_name' => 'api',
+            'name' => PermissionsEnum::RoleCreate->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
         $role = Role::create([
             'name' => 'admin',
-            'guard_name' => 'api',
+            'guard_name' => RolesEnum::Guard->value,
         ]);
-        $role->givePermissionTo('create-roles');
+        $role->givePermissionTo(PermissionsEnum::RoleCreate->value);
         $user = User::factory()->create();
         $user->assignRole($role);
 
-        $this->actingAs($user, 'api');
+        $this->actingAs($user, RolesEnum::Guard->value);
 
         $data = [
             'name' => 'manager'
@@ -57,19 +59,19 @@ class RoleTest extends TestCase
     public function testUpdateRole(): void
     {
         Permission::create([
-            'name' => 'update-roles',
-            'guard_name' => 'api',
+            'name' => PermissionsEnum::RoleUpdate->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
         $role = Role::create([
             'name' => 'admin',
-            'guard_name' => 'api',
+            'guard_name' => RolesEnum::Guard->value,
         ]);
-        $role->givePermissionTo('update-roles');
+        $role->givePermissionTo(PermissionsEnum::RoleUpdate->value);
         $user = User::factory()->create();
         $user->assignRole($role);
 
-        $this->actingAs($user, 'api');
+        $this->actingAs($user, RolesEnum::Guard->value);
 
         $data = [
             'name' => 'Editor'
@@ -87,20 +89,20 @@ class RoleTest extends TestCase
     public function testDeleteRole(): void
     {
         Permission::create([
-            'name' => 'delete-roles',
-            'guard_name' => 'api',
+            'name' => PermissionsEnum::RoleDelete->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
         $role = Role::create([
             'name' => 'admin',
-            'guard_name' => 'api',
+            'guard_name' => RolesEnum::Guard->value,
         ]);
-        $role->givePermissionTo('delete-roles');
+        $role->givePermissionTo(PermissionsEnum::RoleDelete->value);
 
         $user = User::factory()->create();
         $user->assignRole($role);
 
-        $this->actingAs($user, 'api');
+        $this->actingAs($user, RolesEnum::Guard->value);
 
         $response = $this->deleteJson(route('roles.destroy', $role->id));
 
@@ -112,19 +114,19 @@ class RoleTest extends TestCase
     public function testRolesList(): void
     {
         Permission::create([
-            'name' => 'create-roles',
-            'guard_name' => 'api',
+            'name' => PermissionsEnum::RoleView->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
         $role = Role::create([
             'name' => 'admin',
-            'guard_name' => 'api',
+            'guard_name' => RolesEnum::Guard->value,
         ]);
-        $role->givePermissionTo('create-roles');
+        $role->givePermissionTo(PermissionsEnum::RoleView->value);
         $user = User::factory()->create();
         $user->assignRole($role);
 
-        $this->actingAs($user, 'api');
+        $this->actingAs($user, RolesEnum::Guard->value);
 
         RoleFactory::new()->count(3)->create();
 
@@ -146,26 +148,26 @@ class RoleTest extends TestCase
     public function testRolePermissions(): void
     {
         Permission::create([
-            'name' => 'create-roles',
-            'guard_name' => 'api',
+            'name' => PermissionsEnum::RoleCreate->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
         $role = Role::create([
-            'name' => 'admin',
-            'guard_name' => 'api',
+            'name' => RolesEnum::Admin->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
-        $role->givePermissionTo('create-roles');
+        $role->givePermissionTo(PermissionsEnum::RoleCreate->value);
         $user = User::factory()->create();
         $user->assignRole($role);
 
-        $this->actingAs($user, 'api');
+        $this->actingAs($user, RolesEnum::Guard->value);
 
         $data = [
-            'role' => 'admin',
+            'role' => RolesEnum::Admin->value,
             'permission' => [
-                ['name' => 'create-roles'],
-                ['name' => 'update-roles'],
-                ['name' => 'delete-roles'],
+                ['name' => PermissionsEnum::RoleCreate->value],
+                ['name' => PermissionsEnum::RoleUpdate->value],
+                ['name' => PermissionsEnum::RoleDelete->value],
             ],
         ];
 
@@ -180,22 +182,22 @@ class RoleTest extends TestCase
     public function testRoleAssign(): void
     {
         Permission::create([
-            'name' => 'create-roles',
-            'guard_name' => 'api',
+            'name' => PermissionsEnum::RoleCreate->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
         $role = Role::create([
-            'name' => 'admin',
-            'guard_name' => 'api',
+            'name' => RolesEnum::Admin->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
-        $role->givePermissionTo('create-roles');
+        $role->givePermissionTo(PermissionsEnum::RoleCreate->value);
         $user = User::factory()->create();
         $user->assignRole($role);
 
-        $this->actingAs($user, 'api');
+        $this->actingAs($user, RolesEnum::Guard->value);
 
         $data = [
-            'role' => 'admin'
+            'role' => RolesEnum::Admin->value
         ];
 
         $response = $this->postJson(route('roles.assign-role'), $data);

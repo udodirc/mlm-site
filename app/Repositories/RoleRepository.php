@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Data\Admin\Role\AssignRoleData;
 use App\Data\Admin\Role\RoleAssignPermissionsData;
+use App\Enums\RolesEnum;
 use App\Models\User;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use Spatie\Permission\Models\Permission;
@@ -38,7 +39,7 @@ class RoleRepository extends AbstractRepository implements RoleRepositoryInterfa
     public function assignRole(User $user, AssignRoleData $data): bool
     {
         $role = Role::where('name', $data->role)
-            ->where('guard_name', 'api')
+            ->where('guard_name', RolesEnum::Guard->value)
             ->first();
 
         if (! $role) {
@@ -47,6 +48,6 @@ class RoleRepository extends AbstractRepository implements RoleRepositoryInterfa
 
         $user->assignRole($role);
 
-        return $user->hasRole($data->role, 'api');
+        return $user->hasRole($data->role, RolesEnum::Guard->value);
     }
 }

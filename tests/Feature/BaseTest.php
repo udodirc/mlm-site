@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\RolesEnum;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
@@ -24,7 +25,7 @@ abstract class BaseTest extends TestCase
     {
         Permission::create([
             'name' => $permission,
-            'guard_name' => 'api',
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
         $admin = User::factory()->create();

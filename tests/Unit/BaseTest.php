@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Enums\RolesEnum;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -174,7 +175,7 @@ abstract class BaseTest extends TestCase
         if ($role) {
             $data = [
                 'id' => $adminRole->id,
-                'name' => 'admin',
+                'name' => RolesEnum::Admin->value,
             ];
         } else {
             $data = [
@@ -196,7 +197,7 @@ abstract class BaseTest extends TestCase
     ): Role|User {
         Permission::create([
             'name' => $permission,
-            'guard_name' => 'api',
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
         $user = User::factory()->create([
@@ -205,14 +206,14 @@ abstract class BaseTest extends TestCase
         ]);
 
         if ($role) {
-            $adminRole = Role::create(['name' => 'admin', 'guard_name' => 'api']);
-            $adminRole->givePermissionTo($permission); // используем нужное разрешение
-            $user->assignRole('admin');
-            $this->actingAs($user, 'api'); // аутентификация
+            $adminRole = Role::create(['name' => RolesEnum::Admin->value, 'guard_name' => RolesEnum::Guard->value]);
+            $adminRole->givePermissionTo($permission);
+            $user->assignRole(RolesEnum::Admin->value);
+            $this->actingAs($user, RolesEnum::Guard->value);
 
         } else {
             $user->givePermissionTo($permission);
-            $this->actingAs($user, 'api'); // аутентификация
+            $this->actingAs($user, RolesEnum::Guard->value);
             $adminRole = $user;
         }
 

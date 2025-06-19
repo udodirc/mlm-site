@@ -2,18 +2,15 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PermissionsEnum;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\Response;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\PermissionRegistrar;
-use Tests\TestCase;
 
 class UserTest extends BaseTest
 {
     public function testCreateUser(): void
     {
-        $this->auth('create-users');
+        $this->auth(PermissionsEnum::UserCreate->value);
 
         $data = [
             'name' => 'Test User',
@@ -33,7 +30,7 @@ class UserTest extends BaseTest
      */
     public function testUpdateUser(): void
     {
-        $user = $this->auth('update-users');
+        $user = $this->auth(PermissionsEnum::UserUpdate->value);
 
         $data = [
             'name' => 'Updated User',
@@ -53,7 +50,7 @@ class UserTest extends BaseTest
      */
     public function testDeleteUser(): void
     {
-        $user = $this->auth('delete-users');
+        $user = $this->auth(PermissionsEnum::UserDelete->value);
 
         $response = $this->deleteJson(route('users.destroy', $user));
 
@@ -66,7 +63,7 @@ class UserTest extends BaseTest
      */
     public function testUsersList(): void
     {
-        $this->auth('view-users');
+        $this->auth(PermissionsEnum::UserView->value);
 
         User::factory()->count(3)->create();
 
@@ -81,7 +78,7 @@ class UserTest extends BaseTest
      */
     public function testSingleUser(): void
     {
-        $this->auth('view-users');
+        $this->auth(PermissionsEnum::UserView->value);
 
         $user = User::factory()->create();
 

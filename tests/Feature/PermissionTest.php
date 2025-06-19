@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\PermissionsEnum;
+use App\Enums\RolesEnum;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
@@ -22,21 +23,21 @@ class PermissionTest extends TestCase
         foreach (PermissionsEnum::cases() as $permissionEnum) {
             Permission::firstOrCreate([
                 'name' => $permissionEnum->value,
-                'guard_name' => 'api',
+                'guard_name' => RolesEnum::Guard->value,
             ]);
         }
 
         $role = Role::create([
-            'name' => 'admin',
-            'guard_name' => 'api',
+            'name' => RolesEnum::Admin->value,
+            'guard_name' => RolesEnum::Guard->value,
         ]);
 
-        $role->givePermissionTo('create-roles'); // используем уже существующее
+        $role->givePermissionTo(PermissionsEnum::RoleCreate->value); // используем уже существующее
 
         $user = User::factory()->create();
         $user->assignRole($role);
 
-        $this->actingAs($user, 'api');
+        $this->actingAs($user, RolesEnum::Guard->value);
 
         $response = $this->get('/');
         $response->assertStatus(200);

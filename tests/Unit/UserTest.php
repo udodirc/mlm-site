@@ -4,10 +4,10 @@ namespace Tests\Unit;
 
 use App\Data\Admin\User\UserCreateData;
 use App\Data\Admin\User\UserUpdateData;
+use App\Enums\PermissionsEnum;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use App\Services\UserService;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserTest extends BaseTest
@@ -119,7 +119,7 @@ class UserTest extends BaseTest
     public function testShowUser(): void
     {
         $this->assertShowItemEntity(
-            'view-users',
+            PermissionsEnum::UserView->value,
             'users.show'
         );
     }

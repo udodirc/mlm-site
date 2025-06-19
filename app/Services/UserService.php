@@ -25,8 +25,6 @@ class UserService extends BaseService
             'email' => $data->email,
             'name' => $data->name,
             'password' => bcrypt($data->password),
-            // 'role' => $data->role,
-            // 'email_verified_at' => $data->emailVerifiedAt ?? now(),
         ];
     }
 
@@ -36,9 +34,7 @@ class UserService extends BaseService
         return [
             'email' => $data->email,
             'name' => $data->name,
-            'password' => bcrypt($data->password),
-            // 'role' => $data->role,
-            // 'email_verified_at' => $data->emailVerifiedAt ?? now(),
+            'password' => bcrypt($data->password)
         ];
     }
 }
