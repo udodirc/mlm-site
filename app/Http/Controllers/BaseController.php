@@ -68,7 +68,7 @@ abstract class BaseController extends Controller
         );
     }
 
-    public function show(mixed $model): JsonResource|JsonResponse
+    public function show(mixed $model): JsonResource
     {
         if (!$model instanceof Model) {
             $model = $this->resolveModel($model);
@@ -77,7 +77,7 @@ abstract class BaseController extends Controller
         return new $this->resourceClass($model);
     }
 
-    public function store(Request $request): JsonResource|JsonResponse
+    public function store(Request $request): JsonResource
     {
         /** @var TCreateData $data */
         $data = $this->createDataClass::from($request);
@@ -86,7 +86,7 @@ abstract class BaseController extends Controller
         return new $this->resourceClass($model);
     }
 
-    public function update(mixed $model, Request $request): JsonResource|JsonResponse
+    public function update(mixed $model, Request $request): JsonResource
     {
         if (!$model instanceof Model) {
             $model = $this->resolveModel($model);

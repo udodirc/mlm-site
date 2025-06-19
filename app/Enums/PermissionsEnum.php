@@ -14,4 +14,9 @@ enum PermissionsEnum: string
     case RoleUpdate = 'update-roles';
     case RoleView = 'view-roles';
     case RoleDelete = 'delete-roles';
+
+    case MenuCreate = 'create-menu';
+    case MenuUpdate = 'update-menu';
+    case MenuView = 'view-menu';
+    case MenuDelete = 'delete-menu';
 }
