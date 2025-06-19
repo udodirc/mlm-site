@@ -4,6 +4,7 @@ namespace App\Data\Admin\Menu;
 
 use Spatie\LaravelData\Attributes\Validation\IntegerType;
 use Spatie\LaravelData\Attributes\Validation\Max;
+use Spatie\LaravelData\Attributes\Validation\Nullable;
 use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Attributes\Validation\Unique;
@@ -35,6 +36,7 @@ class MenuCreateData extends Data
                 new Max(100)
             ],
             'parent_id' => [
+                new Nullable(),
                 new IntegerType()
             ]
         ];

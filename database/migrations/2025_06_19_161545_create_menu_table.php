@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('menu', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->foreignId('parent_id')
                 ->nullable()
                 ->constrained('menu')
                 ->nullOnDelete();
+            $table->string('name')->after('parent_id');
             $table->timestamps();
         });
     }
