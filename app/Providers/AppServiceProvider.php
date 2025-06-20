@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Repositories\ContentRepository;
+use App\Repositories\Contracts\ContentRepositoryInterface;
 use App\Repositories\Contracts\MenuRepositoryInterface;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
@@ -23,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
         $this->app->bind(PermissionRepositoryInterface::class, PermissionRepository::class);
         $this->app->bind(MenuRepositoryInterface::class, MenuRepository::class);
+        $this->app->bind(ContentRepositoryInterface::class, ContentRepository::class);
     }
 
     /**
