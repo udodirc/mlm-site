@@ -42,7 +42,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 }
 
                 return response()->json([
-                    'message' => _('messages.server_error'),
+                    'message' => __('messages.server_error'),
                     'exception' => config('app.debug') ? $e->getMessage() : null,
                 ], 500);
             }

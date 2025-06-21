@@ -25,9 +25,6 @@ class UserTest extends BaseTest
         $response->assertJsonFragment(['name' => 'Test User']);
     }
 
-    /*
-     * @return void
-     */
     public function testUpdateUser(): void
     {
         $user = $this->auth(PermissionsEnum::UserUpdate->value);
@@ -45,9 +42,6 @@ class UserTest extends BaseTest
         $response->assertJsonFragment(['name' => 'Updated User']);
     }
 
-    /**
-     * @return void
-     */
     public function testDeleteUser(): void
     {
         $user = $this->auth(PermissionsEnum::UserDelete->value);
@@ -57,10 +51,6 @@ class UserTest extends BaseTest
         $response->assertStatus(200);
     }
 
-
-    /**
-     * @return void
-     */
     public function testUsersList(): void
     {
         $this->auth(PermissionsEnum::UserView->value);
@@ -73,9 +63,6 @@ class UserTest extends BaseTest
         $response->assertJsonCount(4, 'data');
     }
 
-    /**
-     * @return void
-     */
     public function testSingleUser(): void
     {
         $this->auth(PermissionsEnum::UserView->value);
