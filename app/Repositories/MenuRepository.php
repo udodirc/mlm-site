@@ -7,8 +7,8 @@ use App\Repositories\Contracts\MenuRepositoryInterface;
 
 class MenuRepository extends AbstractRepository implements MenuRepositoryInterface
 {
-    public function __construct(Menu $user)
+    public function __construct(Menu $menu)
     {
-        parent::__construct($user);
+        parent::__construct($menu);
     }
 }

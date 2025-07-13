@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\MenuController as AdminMenuController;
+use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
@@ -22,6 +23,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::group(['middleware' => ['permission:create-menu|update-menu|view-menu|delete-menu']], function () {
             Route::apiResource('menu', AdminMenuController::class);
+            Route::apiResource('content', AdminContentController::class);
         });
 
         Route::group(['middleware' => ['permission:view-permissions|create-roles|update-roles|view-roles|delete-roles']], function () {

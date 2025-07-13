@@ -3,6 +3,7 @@
 namespace App\Data\Admin\Menu;
 
 use Illuminate\Database\Query\Builder;
+use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Attributes\Validation\IntegerType;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
@@ -39,7 +40,11 @@ class MenuUpdateData extends Data
             ],
             'parent_id' => [
                 new Nullable(),
-                new IntegerType()
+                new IntegerType(),
+                new Exists(
+                    table: 'menu',
+                    column: 'id'
+                )
             ]
         ];
     }
