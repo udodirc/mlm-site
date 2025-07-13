@@ -163,6 +163,7 @@ abstract class BaseTest extends TestCase
     protected function assertShowItemEntity(
         string $permission,
         string $route,
+        array $data,
         bool $role = false,
     ): void {
 
@@ -175,11 +176,7 @@ abstract class BaseTest extends TestCase
                 'name' => RolesEnum::Admin->value,
             ];
         } else {
-            $data = [
-                'id' => $adminRole->id,
-                'name' => 'Alice',
-                'email' => 'alice@test.test',
-            ];
+            $data['id'] = $adminRole->id;
         }
 
         $response->assertOk();

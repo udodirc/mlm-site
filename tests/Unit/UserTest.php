@@ -120,7 +120,11 @@ class UserTest extends BaseTest
     {
         $this->assertShowItemEntity(
             PermissionsEnum::UserView->value,
-            'users.show'
+            'users.show',
+            [
+                'name' => 'Alice',
+                'email' => 'alice@test.test'
+            ]
         );
     }
 }
