@@ -10,20 +10,19 @@ use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Support\Validation\References\RouteParameterReference;
 
 class UserUpdateData extends Data
 {
     public string $email;
     public string $name;
     public ?string $password;
-    public string $role;
+    public ?string $role;
 
     public function __construct(
         string $email,
         string $name,
         ?string $password,
-        string $role
+        ?string $role
     ) {
         $this->password = $password;
         $this->name = $name;
@@ -60,13 +59,12 @@ class UserUpdateData extends Data
                     table: 'users',
                     column: 'email',
                 ),
-                new Required(),
                 new StringType(),
                 new Max(100),
                 new Min(8),
             ],
             'role' => [
-                new Required(),
+                new Nullable(),
                 new StringType(),
                 new Max(100)
             ],

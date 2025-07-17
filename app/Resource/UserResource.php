@@ -17,10 +17,16 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $role = $this->roles->first();
+
         return [
             'id' => $this->id,
             'name' => $this->name,
             'email' => $this->email,
+            'role' => $role ? [
+                'id' => $role->id,
+                'name' => $role->name,
+            ] : null,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->created_at,
         ];

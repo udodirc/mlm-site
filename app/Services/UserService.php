@@ -30,11 +30,16 @@ class UserService extends BaseService
 
     protected function toUpdateArray(Data $data): array
     {
-        /** @var UserUpdateData $data */
-        return [
+        $user = [
             'email' => $data->email,
             'name' => $data->name,
-            'password' => bcrypt($data->password)
         ];
+
+        if($data->password){
+            $user['password'] = bcrypt($data->password);
+        }
+
+        /** @var UserUpdateData $data */
+        return $user;
     }
 }
