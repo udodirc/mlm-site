@@ -94,6 +94,7 @@ abstract class BaseController extends Controller
 
         /** @var TUpdateData $data */
         $data = $this->updateDataClass::from($request);
+
         $model = $this->service->update($model, $data);
 
         return new $this->resourceClass($model);
