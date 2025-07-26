@@ -7,6 +7,7 @@ use App\Data\Admin\Role\RoleCreateData;
 use App\Data\Admin\Role\RoleUpdateData;
 use App\Data\Admin\Role\RoleAssignPermissionsData;
 use App\Http\Controllers\BaseController;
+use App\Models\User;
 use App\Resource\RoleResource;
 use App\Services\RoleService;
 use Illuminate\Support\Facades\Auth;
@@ -48,7 +49,8 @@ class RoleController extends BaseController
             return response()->json(['error' => true], 404);
         }
 
-        $user = Auth::user();
+        $user = User::find($data->id);
+
         if (!$user) {
             return response()->json(['error' => true, 'msg' => __('messages.unauthorized')], 400);
         }
