@@ -25,6 +25,7 @@ class UserService extends BaseService
             'email' => $data->email,
             'name' => $data->name,
             'password' => bcrypt($data->password),
+            'role' => $data->role,
         ];
     }
 
@@ -33,6 +34,7 @@ class UserService extends BaseService
         $user = [
             'email' => $data->email,
             'name' => $data->name,
+            'role' => $data->role,
         ];
 
         if($data->password){

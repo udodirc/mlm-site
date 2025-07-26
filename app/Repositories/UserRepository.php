@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 
 class UserRepository extends AbstractRepository implements UserRepositoryInterface
@@ -16,17 +17,16 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
 
     public function update(Model $model, array $data): ?Model
     {
-        $model->fill([
-            'name' => $data['name'],
-            'email' => $data['email'],
-        ]);
+        $model->fill(Arr::only($data, ['name', 'email']));
 
-        if (isset($data['password'])) {
+        if (!empty($data['password'])) {
             $model->password = Hash::make($data['password']);
         }
 
-        if ($model->isDirty()) {
-            $model->save(); // вызовет updated
+        $model->save();
+
+        if (!empty($data['role'])) {
+            $model->syncRoles([$data['role']]);
         }
 
         return $model;
