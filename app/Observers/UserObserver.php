@@ -25,12 +25,7 @@ class UserObserver
      */
     public function updated(User $user): void
     {
-        $request = app(Request::class);
-        $role = $request->input('role');
 
-        if ($role) {
-            $user->syncRoles([$role]);
-        }
     }
 
     /**

@@ -46,7 +46,7 @@ class RoleRepository extends AbstractRepository implements RoleRepositoryInterfa
             return false;
         }
 
-        $user->assignRole($role);
+        $user->syncRoles([$role]);
 
         return $user->hasRole($data->role, RolesEnum::Guard->value);
     }
