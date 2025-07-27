@@ -30,6 +30,7 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('/roles/assign', [AdminRoleController::class, 'assignRole'])->name('roles.assign-role');
             Route::apiResource('roles', AdminRoleController::class);
             Route::post('/roles/permissions', [AdminRoleController::class, 'assignPermissions'])->name('roles.assign-permissions');
+            Route::get('/permissions', [AdminPermissionController::class, 'index'])->name('permissions.all');
             Route::post('/permissions', [AdminPermissionController::class, 'createPermissions'])->name('permissions.create-permissions');
         });
     });
