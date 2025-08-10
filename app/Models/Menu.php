@@ -29,4 +29,9 @@ class Menu extends Model
         'parent_id',
         'name'
     ];
+
+    public function parent()
+    {
+        return $this->belongsTo(Menu::class, 'parent_id');
+    }
 }
