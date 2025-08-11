@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
@@ -37,6 +39,22 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
             $query->whereHas('roles', function (Builder $q) use ($filters) {
                 $q->where('name', $filters['role']);
             });
+        }
+
+        if (!empty($filters['created_from']) && !empty($filters['created_to'])) {
+            $filters['created_from'] = Carbon::createFromFormat('Y-m-d', $filters['created_from'])->startOfDay();
+            $filters['created_to'] = Carbon::createFromFormat('Y-m-d', $filters['created_to'])->endOfDay();
+            $query->whereBetween('created_at', [$filters['created_from'], $filters['created_to']]);
+        } else {
+            if (!empty($filters['created_from'])) {
+                $filters['created_from'] = Carbon::createFromFormat('Y-m-d', $filters['created_from'])->startOfDay();
+                $query->where('created_at', '>=', $filters['created_from']);
+            }
+
+            if (!empty($filters['created_to'])) {
+                $filters['created_to'] = Carbon::createFromFormat('Y-m-d', $filters['created_to'])->endOfDay();
+                $query->where('created_at', '<=', $filters['created_to']);
+            }
         }
 
         return $query->get();

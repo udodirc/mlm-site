@@ -2,9 +2,12 @@
 
 namespace App\Data\Admin\User;
 
-use Spatie\LaravelData\Attributes\Validation\StringType;
+use Carbon\Carbon;
+use Spatie\LaravelData\Attributes\Validation\DateFormat;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
+use Spatie\LaravelData\Attributes\Validation\StringType;
+use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 
@@ -14,14 +17,22 @@ class UserFilterData extends Data
     public string|Optional|null $email;
     public string|Optional|null $role;
 
+    public string|Optional $created_from;
+
+   public string|Optional $created_to;
+
     public function __construct(
         string|Optional|null $name = null,
         string|Optional|null $email = null,
         string|Optional|null $role = null,
+        string|Optional|null $created_from = null,
+        string|Optional|null $created_to = null,
     ) {
         $this->name = $name ?? new Optional();
         $this->email = $email ?? new Optional();
         $this->role = $role ?? new Optional();
+        $this->created_from = $created_from ?? new Optional();
+        $this->created_to = $created_to ?? new Optional();
     }
 
     public static function rules(): array
@@ -40,6 +51,14 @@ class UserFilterData extends Data
             'role' => [
                 new StringType(),
                 new Max(100),
+                new Nullable(),
+            ],
+            'created_from' => [
+                new StringType(),
+                new Nullable(),
+            ],
+            'created_to' => [
+                new StringType(),
                 new Nullable(),
             ],
         ];
