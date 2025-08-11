@@ -3,16 +3,11 @@
 namespace App\QueryBuilders;
 
 use Illuminate\Database\Eloquent\Builder;
-use Carbon\Carbon;
 
-class UserQueryBuilder extends Builder
+class UserQueryBuilder extends BaseQueryBuilder
 {
-    public function filter(array $filters = []): UserQueryBuilder
+    protected function applyCustomFilters(array $filters): void
     {
-        if (!empty($filters['name'])) {
-            $this->where('name', 'like', '%' . $filters['name'] . '%');
-        }
-
         if (!empty($filters['email'])) {
             $this->where('email', $filters['email']);
         }
@@ -22,23 +17,5 @@ class UserQueryBuilder extends Builder
                 $q->where('name', $filters['role']);
             });
         }
-
-        if (!empty($filters['created_from']) && !empty($filters['created_to'])) {
-            $createdFrom = Carbon::createFromFormat('Y-m-d', $filters['created_from'])->startOfDay();
-            $createdTo = Carbon::createFromFormat('Y-m-d', $filters['created_to'])->endOfDay();
-            $this->whereBetween('created_at', [$createdFrom, $createdTo]);
-        } else {
-            if (!empty($filters['created_from'])) {
-                $createdFrom = Carbon::createFromFormat('Y-m-d', $filters['created_from'])->startOfDay();
-                $this->where('created_at', '>=', $createdFrom);
-            }
-
-            if (!empty($filters['created_to'])) {
-                $createdTo = Carbon::createFromFormat('Y-m-d', $filters['created_to'])->endOfDay();
-                $this->where('created_at', '<=', $createdTo);
-            }
-        }
-
-        return $this;
     }
 }
