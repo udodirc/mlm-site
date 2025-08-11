@@ -25,39 +25,10 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
      */
     public function all(array $filters = []): Collection
     {
-        $query = $this->model->newQuery();
-
-        if (!empty($filters['name'])) {
-            $query->where('name', 'like', '%' . $filters['name'] . '%');
-        }
-
-        if (!empty($filters['email'])) {
-            $query->where('email', $filters['email']);
-        }
-
-        if (!empty($filters['role'])) {
-            $query->whereHas('roles', function (Builder $q) use ($filters) {
-                $q->where('name', $filters['role']);
-            });
-        }
-
-        if (!empty($filters['created_from']) && !empty($filters['created_to'])) {
-            $filters['created_from'] = Carbon::createFromFormat('Y-m-d', $filters['created_from'])->startOfDay();
-            $filters['created_to'] = Carbon::createFromFormat('Y-m-d', $filters['created_to'])->endOfDay();
-            $query->whereBetween('created_at', [$filters['created_from'], $filters['created_to']]);
-        } else {
-            if (!empty($filters['created_from'])) {
-                $filters['created_from'] = Carbon::createFromFormat('Y-m-d', $filters['created_from'])->startOfDay();
-                $query->where('created_at', '>=', $filters['created_from']);
-            }
-
-            if (!empty($filters['created_to'])) {
-                $filters['created_to'] = Carbon::createFromFormat('Y-m-d', $filters['created_to'])->endOfDay();
-                $query->where('created_at', '<=', $filters['created_to']);
-            }
-        }
-
-        return $query->get();
+        return $this->model
+            ->newQuery()
+            ->filter($filters)  // кастомный метод из UserQueryBuilder
+            ->get();
     }
 
     public function update(Model $model, array $data): ?Model
