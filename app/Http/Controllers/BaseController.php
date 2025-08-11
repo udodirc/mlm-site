@@ -61,10 +61,12 @@ abstract class BaseController extends Controller
         return $this->modelClass::findOrFail($key);
     }
 
-    public function index(): AnonymousResourceCollection|JsonResponse
+    public function index(Request $request): AnonymousResourceCollection|JsonResponse
     {
+        $filters = $request->all();
+
         return ($this->resourceClass)::collection(
-            $this->service->all()
+            $this->service->all($filters)
         );
     }
 

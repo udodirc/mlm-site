@@ -23,9 +23,9 @@ abstract class BaseService
         $this->repository = $repository;
     }
 
-    public function all(): Collection
+    public function all(array $filters = []): Collection
     {
-        return $this->repository->all();
+        return $this->repository->all($filters);
     }
 
     /**
