@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\QueryBuilders\MenuQueryBuilder;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -33,5 +34,10 @@ class Menu extends Model
     public function parent()
     {
         return $this->belongsTo(Menu::class, 'parent_id');
+    }
+
+    public function newEloquentBuilder($query): MenuQueryBuilder
+    {
+        return new MenuQueryBuilder($query);
     }
 }
