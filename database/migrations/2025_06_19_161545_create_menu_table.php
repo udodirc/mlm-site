@@ -17,7 +17,7 @@ return new class extends Migration
                 ->nullable()
                 ->constrained('menu')
                 ->nullOnDelete();
-            $table->string('name')->after('parent_id');
+            $table->string('name');
             $table->timestamps();
         });
     }
