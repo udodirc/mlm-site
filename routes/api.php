@@ -27,7 +27,9 @@ Route::group(['prefix' => 'admin'], function () {
             Route::apiResource('content', AdminContentController::class);
         });
 
-        Route::apiResource('settings', AdminSettingController::class);
+        Route::group(['middleware' => ['permission:create-settings|update-settings|view-settings|delete-settings']], function () {
+            Route::apiResource('settings', AdminSettingController::class);
+        });
 
         Route::group(['middleware' => ['permission:view-permissions|create-roles|update-roles|view-roles|delete-roles']], function () {
             Route::post('/roles/assign', [AdminRoleController::class, 'assignRole'])->name('roles.assign-role');
