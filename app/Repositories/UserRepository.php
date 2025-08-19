@@ -4,11 +4,9 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Repositories\Contracts\UserRepositoryInterface;
-use Carbon\Carbon;
-use Carbon\CarbonInterface;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 
@@ -21,14 +19,14 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
 
     /**
      * @param array $filters
-     * @return Collection
+     * @return LengthAwarePaginator|Collection
      */
-    public function all(array $filters = []): Collection
+    public function all(array $filters = []): LengthAwarePaginator|Collection
     {
         return $this->model
             ->newQuery()
-            ->filter($filters)  // кастомный метод из UserQueryBuilder
-            ->get();
+            ->filter($filters)
+            ->paginate(10);
     }
 
     public function update(Model $model, array $data): ?Model
