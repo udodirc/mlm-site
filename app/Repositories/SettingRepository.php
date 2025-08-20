@@ -11,4 +11,9 @@ class SettingRepository extends AbstractRepository implements SettingRepositoryI
     {
         parent::__construct($setting);
     }
+
+    public function allInArray(): array
+    {
+        return Setting::pluck('value', 'key')->toArray();
+    }
 }

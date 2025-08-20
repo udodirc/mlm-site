@@ -2,19 +2,27 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Support\Facades\Auth;
+use App\Repositories\Contracts\SettingRepositoryInterface;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Config;
 
 class AuthController extends Controller
 {
+    protected $settings;
+
     /**
      * Create a new AuthController instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(SettingRepositoryInterface $settings)
     {
         $this->middleware('auth:api', ['except' => ['login']]);
+
+        $this->settings = $settings;
+
+        $allSettings = $this->settings->allInArray();
+        Config::set('app.settings', $allSettings);
     }
 
     /**

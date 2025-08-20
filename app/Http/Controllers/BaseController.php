@@ -62,7 +62,7 @@ abstract class BaseController extends Controller
     }
 
     public function index(): AnonymousResourceCollection|JsonResponse
-    {
+    {   dd(config('app.settings'));
         return ($this->resourceClass)::collection(
             $this->service->all()
         );
