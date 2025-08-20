@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Http\Middleware\LoadAdminSettings;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -17,7 +18,7 @@ class RouteServiceProvider extends ServiceProvider
         parent::boot();
 
         // Регистрируем маршруты для API
-        Route::middleware('api')
+        Route::middleware(['api', LoadAdminSettings::class])
             ->prefix('api')
             ->group(base_path('routes/api.php'));
     }
