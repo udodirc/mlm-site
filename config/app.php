@@ -125,4 +125,6 @@ return [
 
     'title' => 'Library System',
 
+    'settings' => [],
+
 ];

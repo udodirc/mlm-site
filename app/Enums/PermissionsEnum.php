@@ -19,4 +19,9 @@ enum PermissionsEnum: string
     case MenuUpdate = 'update-menu';
     case MenuView = 'view-menu';
     case MenuDelete = 'delete-menu';
+
+    case SettingsCreate = 'create-settings';
+    case SettingsUpdate = 'update-settings';
+    case SettingsView = 'view-settings';
+    case SettingsDelete = 'delete-settings';
 }

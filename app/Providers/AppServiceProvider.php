@@ -9,10 +9,12 @@ use App\Repositories\Contracts\ContentRepositoryInterface;
 use App\Repositories\Contracts\MenuRepositoryInterface;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
+use App\Repositories\Contracts\SettingRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\MenuRepository;
 use App\Repositories\PermissionRepository;
 use App\Repositories\RoleRepository;
+use App\Repositories\SettingRepository;
 use App\Repositories\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -28,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(PermissionRepositoryInterface::class, PermissionRepository::class);
         $this->app->bind(MenuRepositoryInterface::class, MenuRepository::class);
         $this->app->bind(ContentRepositoryInterface::class, ContentRepository::class);
+        $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
     }
 
     /**

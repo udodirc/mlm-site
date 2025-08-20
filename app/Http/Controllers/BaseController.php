@@ -66,7 +66,7 @@ abstract class BaseController extends Controller
         $filters = $request->all();
 
         return ($this->resourceClass)::collection(
-            $this->service->all($filters)
+            $this->service->all()
         );
     }
 
