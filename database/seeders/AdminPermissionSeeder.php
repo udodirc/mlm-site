@@ -40,8 +40,8 @@ class AdminPermissionSeeder extends Seeder
         } else {
             $password = Str::random(12);
             $adminUser = User::create([
-                'name' => 'Admin User',
-                'email' => 'admin@example.com',
+                'name' => 'admin',
+                'email' => 'admin@test.test',
                 'password' => bcrypt($password),
             ]);
             $adminUser->assignRole(RolesEnum::Admin);
