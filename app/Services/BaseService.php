@@ -29,6 +29,15 @@ abstract class BaseService
     }
 
     /**
+     * @param int $id
+     * @return TModel|null
+     */
+    public function find(int $id): ?Model
+    {
+        return $this->repository->find($id);
+    }
+
+    /**
      * @param TData $data
      * @return TModel
      */

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
+use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin'], function () {
@@ -24,6 +25,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::group(['middleware' => ['permission:create-menu|update-menu|view-menu|delete-menu']], function () {
             Route::apiResource('menu', AdminMenuController::class);
             Route::apiResource('content', AdminContentController::class);
+        });
+
+        Route::group(['middleware' => ['permission:create-settings|update-settings|view-settings|delete-settings']], function () {
+            Route::apiResource('settings', AdminSettingController::class);
         });
 
         Route::group(['middleware' => ['permission:view-permissions|create-roles|update-roles|view-roles|delete-roles']], function () {

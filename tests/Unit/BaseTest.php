@@ -147,6 +147,7 @@ abstract class BaseTest extends TestCase
         object $model,
         array $items,
         string $method = 'all',
+        string $field = 'name'
     ): void {
         $this->repository
             ->expects($this->once())
@@ -155,9 +156,11 @@ abstract class BaseTest extends TestCase
 
         $result = $this->service->$method();
 
-        $this->assertCount(2, $result);
-        $this->assertEquals($items[0], $result[0]->name);
-        $this->assertEquals($items[1], $result[1]->name);
+        $this->assertCount(count($items), $result);
+
+        foreach ($items as $i => $expected) {
+            $this->assertEquals($expected, $result[$i]->$field);
+        }
     }
 
     protected function assertShowItemEntity(
