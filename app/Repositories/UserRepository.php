@@ -26,7 +26,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
         return $this->model
             ->newQuery()
             ->filter($filters)
-            ->paginate(config('app.settings.per_page_users') ?? 10);
+            ->paginate(config('app.settings.per_page_users') ?? config('app.default_pagination'));
     }
 
     public function update(Model $model, array $data): ?Model
