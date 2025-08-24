@@ -14,9 +14,9 @@ class UserFilterData extends Data
     public string|Optional|null $email;
     public string|Optional|null $role;
 
-    public string|Optional $created_from;
+    public string|Optional|null $created_from;
 
-   public string|Optional $created_to;
+   public string|Optional|null $created_to;
 
     public function __construct(
         string|Optional|null $name = null,
