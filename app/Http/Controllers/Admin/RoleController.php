@@ -7,6 +7,7 @@ use App\Data\Admin\Role\RoleCreateData;
 use App\Data\Admin\Role\RoleFilterData;
 use App\Data\Admin\Role\RoleUpdateData;
 use App\Data\Admin\Role\RoleAssignPermissionsData;
+use App\Enums\PaginationEnum;
 use App\Http\Controllers\BaseController;
 use App\Models\User;
 use App\Resource\RoleResource;
@@ -20,7 +21,7 @@ use Illuminate\Http\JsonResponse;
 class RoleController extends BaseController
 {
     protected ?string $filterDataClass = RoleFilterData::class;
-    protected string $perPageConfigKey = 'per_page_roles';
+    protected string $perPageConfigKey = PaginationEnum::Role->value;
 
     public function __construct(RoleService $service)
     {

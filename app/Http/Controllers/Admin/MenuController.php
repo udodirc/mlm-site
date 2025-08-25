@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Data\Admin\Menu\MenuCreateData;
 use App\Data\Admin\Menu\MenuFilterData;
 use App\Data\Admin\Menu\MenuUpdateData;
+use App\Enums\PaginationEnum;
 use App\Http\Controllers\BaseController;
 use App\Models\Menu;
 use App\Resource\MenuResource;
@@ -19,7 +20,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class MenuController extends BaseController
 {
     protected ?string $filterDataClass = MenuFilterData::class;
-    protected string $perPageConfigKey = 'per_page_menus';
+    protected string $perPageConfigKey = PaginationEnum::Menu->value;
 
     public function __construct(MenuService $service)
     {
@@ -29,16 +30,6 @@ class MenuController extends BaseController
             Menu::class,
             MenuCreateData::class,
             MenuUpdateData::class
-        );
-    }
-
-    public function index(Request $request): AnonymousResourceCollection|JsonResponse
-    {
-        $filters = MenuFilterData::from($request);
-        $filtersArray = $filters->toArray();
-
-        return ($this->resourceClass)::collection(
-            $this->service->all($filtersArray)
         );
     }
 }
