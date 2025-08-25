@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\LaravelData\Data;
@@ -23,9 +24,9 @@ abstract class BaseService
         $this->repository = $repository;
     }
 
-    public function all(): Collection
+    public function all($paginate = true, array $filters = [], $paginationKey = ''): LengthAwarePaginator|Collection
     {
-        return $this->repository->all();
+        return $this->repository->all($paginate, $filters, $paginationKey);
     }
 
     /**

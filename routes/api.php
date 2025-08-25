@@ -7,11 +7,12 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Middleware\LoadAdminSettings;
 use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'admin'], function () {
     Route::group([
-        'middleware' => 'api'
+        'middleware' => ['api', LoadAdminSettings::class]
     ], function ($router) {
         Route::post('/login', [AdminAuthController::class, 'login'])->name('auth.login');
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('auth.logout');

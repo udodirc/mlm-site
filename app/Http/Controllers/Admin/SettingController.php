@@ -14,6 +14,7 @@ use App\Services\SettingService;
  */
 class SettingController extends BaseController
 {
+    protected bool $paginate = false;
     public function __construct(SettingService $service)
     {
         parent::__construct(

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Data\Admin\User\UserFilterData;
 use App\Data\Admin\User\UserCreateData;
 use App\Data\Admin\User\UserUpdateData;
+use App\Enums\PaginationEnum;
 use App\Http\Controllers\BaseController;
 use App\Models\User;
 use App\Resource\UserResource;
@@ -14,6 +16,9 @@ use App\Services\UserService;
  */
 class UserController extends BaseController
 {
+    protected ?string $filterDataClass = UserFilterData::class;
+    protected string $perPageConfigKey = PaginationEnum::User->value;
+
     public function __construct(UserService $service)
     {
         parent::__construct(

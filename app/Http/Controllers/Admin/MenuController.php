@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Data\Admin\Menu\MenuCreateData;
+use App\Data\Admin\Menu\MenuFilterData;
 use App\Data\Admin\Menu\MenuUpdateData;
+use App\Enums\PaginationEnum;
 use App\Http\Controllers\BaseController;
 use App\Models\Menu;
 use App\Resource\MenuResource;
@@ -14,6 +16,9 @@ use App\Services\MenuService;
  */
 class MenuController extends BaseController
 {
+    protected ?string $filterDataClass = MenuFilterData::class;
+    protected string $perPageConfigKey = PaginationEnum::Menu->value;
+
     public function __construct(MenuService $service)
     {
         parent::__construct(

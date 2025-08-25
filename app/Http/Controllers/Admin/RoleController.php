@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Data\Admin\Role\AssignRoleData;
 use App\Data\Admin\Role\RoleCreateData;
+use App\Data\Admin\Role\RoleFilterData;
 use App\Data\Admin\Role\RoleUpdateData;
 use App\Data\Admin\Role\RoleAssignPermissionsData;
+use App\Enums\PaginationEnum;
 use App\Http\Controllers\BaseController;
 use App\Models\User;
 use App\Resource\RoleResource;
 use App\Services\RoleService;
-use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\JsonResponse;
 
@@ -19,6 +20,9 @@ use Illuminate\Http\JsonResponse;
  */
 class RoleController extends BaseController
 {
+    protected ?string $filterDataClass = RoleFilterData::class;
+    protected string $perPageConfigKey = PaginationEnum::Role->value;
+
     public function __construct(RoleService $service)
     {
         parent::__construct(

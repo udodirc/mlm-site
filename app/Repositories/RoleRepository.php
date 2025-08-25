@@ -8,7 +8,7 @@ use App\Enums\RolesEnum;
 use App\Models\User;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class RoleRepository extends AbstractRepository implements RoleRepositoryInterface
 {
