@@ -24,9 +24,9 @@ abstract class BaseService
         $this->repository = $repository;
     }
 
-    public function all(array $filters = []): LengthAwarePaginator|Collection
+    public function all($paginate = true, array $filters = [], $paginationKey = ''): LengthAwarePaginator|Collection
     {
-        return $this->repository->all($filters);
+        return $this->repository->all($paginate, $filters, $paginationKey);
     }
 
     /**

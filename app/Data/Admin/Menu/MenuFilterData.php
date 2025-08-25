@@ -15,9 +15,9 @@ class MenuFilterData extends Data
 {
     public string|Optional|null $name;
 
-    public string|Optional $created_from;
+    public string|Optional|null $created_from;
 
-    public string|Optional $created_to;
+    public string|Optional|null $created_to;
 
     public function __construct(
         string|Optional|null $name = null,

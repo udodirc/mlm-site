@@ -11,8 +11,6 @@ use App\Http\Controllers\BaseController;
 use App\Models\User;
 use App\Resource\RoleResource;
 use App\Services\RoleService;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Spatie\Permission\Models\Role;
 use Illuminate\Http\JsonResponse;
 
@@ -21,6 +19,9 @@ use Illuminate\Http\JsonResponse;
  */
 class RoleController extends BaseController
 {
+    protected ?string $filterDataClass = RoleFilterData::class;
+    protected string $perPageConfigKey = 'per_page_roles';
+
     public function __construct(RoleService $service)
     {
         parent::__construct(
@@ -29,16 +30,6 @@ class RoleController extends BaseController
             Role::class,
             RoleCreateData::class,
             RoleUpdateData::class
-        );
-    }
-
-    public function index(Request $request): AnonymousResourceCollection|JsonResponse
-    {
-        $filters = RoleFilterData::from($request);
-        $filtersArray = $filters->toArray();
-
-        return ($this->resourceClass)::collection(
-            $this->service->all($filtersArray)
         );
     }
 

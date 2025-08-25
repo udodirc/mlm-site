@@ -6,7 +6,6 @@ use App\Repositories\Contracts\BaseRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use App\Models\User;
 
 abstract class AbstractRepository implements BaseRepositoryInterface
 {
@@ -17,9 +16,16 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         $this->model = $model;
     }
 
-    public function all(): LengthAwarePaginator|Collection
+    public function all($paginate = true, array $filters = [], $paginationKey = ''): LengthAwarePaginator|Collection
     {
-        return $this->model->all();
+        if ($paginate) {
+            return $this->model
+                ->newQuery()
+                ->filter($filters)
+                ->paginate(config('app.settings.'.$paginationKey) ?? config('app.default_pagination'));
+        } else {
+            return $this->model->all();
+        }
     }
 
     public function find(int $id): ?Model

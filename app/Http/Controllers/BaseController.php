@@ -63,10 +63,18 @@ abstract class BaseController extends Controller
 
     public function index(Request $request): AnonymousResourceCollection|JsonResponse
     {
-        $filters = $request->all();
+        $filtersArray = [];
+        if (property_exists($this, 'filterDataClass') && $this->filterDataClass) {
+            /** @var \Spatie\LaravelData\Data $filters */
+            $filters = $this->filterDataClass::from($request);
+            $filtersArray = $filters->toArray();
+        }
+
+        $perPageKey = property_exists($this, 'perPageConfigKey') ? $this->perPageConfigKey : '';
+        $paginate = property_exists($this, 'paginate') ? $this->paginate : true;
 
         return ($this->resourceClass)::collection(
-            $this->service->all()
+            $this->service->all($paginate, $filtersArray, $perPageKey)
         );
     }
 

@@ -7,7 +7,6 @@ use App\Data\Admin\Role\RoleAssignPermissionsData;
 use App\Enums\RolesEnum;
 use App\Models\User;
 use App\Repositories\Contracts\RoleRepositoryInterface;
-use Illuminate\Database\Eloquent\Collection;
 use Spatie\Permission\Models\Permission;
 use App\Models\Role;
 
@@ -16,18 +15,6 @@ class RoleRepository extends AbstractRepository implements RoleRepositoryInterfa
     public function __construct(Role $role)
     {
         parent::__construct($role);
-    }
-
-    /**
-     * @param array $filters
-     * @return Collection
-     */
-    public function all(array $filters = []): Collection
-    {
-        return $this->model
-            ->newQuery()
-            ->filter($filters)
-            ->get();
     }
 
     public function existRole(string $role): Role|null
