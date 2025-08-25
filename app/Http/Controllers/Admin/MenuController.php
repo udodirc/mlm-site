@@ -10,9 +10,6 @@ use App\Http\Controllers\BaseController;
 use App\Models\Menu;
 use App\Resource\MenuResource;
 use App\Services\MenuService;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 /**
  * @extends BaseController<MenuService, Menu, MenuResource, MenuCreateData, MenuUpdateData>
