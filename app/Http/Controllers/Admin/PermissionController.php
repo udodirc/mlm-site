@@ -12,6 +12,7 @@ use Spatie\Permission\Models\Permission;
  */
 class PermissionController extends BaseController
 {
+    protected bool $paginate = false;
     public function __construct(PermissionService $service)
     {
         parent::__construct(

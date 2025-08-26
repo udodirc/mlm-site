@@ -125,6 +125,8 @@ return [
 
     'title' => 'Library System',
 
+    'default_pagination' => 10,
+
     'settings' => [],
 
 ];

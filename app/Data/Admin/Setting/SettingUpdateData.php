@@ -2,10 +2,8 @@
 
 namespace App\Data\Admin\Setting;
 
-use Spatie\LaravelData\Attributes\Validation\Exists;
-use Spatie\LaravelData\Attributes\Validation\IntegerType;
+use Illuminate\Database\Query\Builder;
 use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\Nullable;
 use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Attributes\Validation\Unique;
@@ -31,6 +29,7 @@ class SettingUpdateData extends Data
                 new Unique(
                     table: 'settings',
                     column: 'key',
+                    where: fn (Builder $q): Builder => $q->where('key', '!=', $args[0]->payload['key'])
                 ),
                 new Required(),
                 new StringType(),
