@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\QueryBuilders\ContentQueryBuilder;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -26,4 +27,14 @@ class Content extends Model
         'content',
         'content'
     ];
+
+    public function menu()
+    {
+        return $this->belongsTo(Menu::class, 'menu_id');
+    }
+
+    public function newEloquentBuilder($query): ContentQueryBuilder
+    {
+        return new ContentQueryBuilder($query);
+    }
 }
