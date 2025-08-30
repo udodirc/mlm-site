@@ -22,7 +22,7 @@ class RoleResource extends JsonResource
             'name' => $this->name,
             'permissions' => $this->permissions->pluck('name')->toArray(),
             'createdAt' => $this->created_at,
-            'updatedAt' => $this->created_at,
+            'updatedAt' => $this->updated_at,
         ];
     }
 }

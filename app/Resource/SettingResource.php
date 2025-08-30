@@ -22,7 +22,7 @@ class SettingResource extends JsonResource
             'key' => $this->key,
             'value' => $this->value,
             'createdAt' => $this->created_at,
-            'updatedAt' => $this->created_at,
+            'updatedAt' => $this->updated_at,
         ];
     }
 }

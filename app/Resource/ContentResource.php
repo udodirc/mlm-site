@@ -20,9 +20,10 @@ class ContentResource extends JsonResource
         return [
             'id' => $this->id,
             'menu_id' => $this->menu_id,
+            'menu_name' => $this->menu?->name,
             'content' => $this->content,
             'createdAt' => $this->created_at,
-            'updatedAt' => $this->created_at,
+            'updatedAt' => $this->updated_at,
         ];
     }
 }
