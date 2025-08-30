@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use App\Enums\RolesEnum;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
@@ -14,10 +13,10 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $permissions = RolesEnum::cases();
+        $permissions = array_filter(RolesEnum::cases(), fn($role) => $role !== RolesEnum::Guard);
 
         foreach ($permissions as $permission) {
-            Role::firstOrCreate(['name' => $permission]);
+            Role::firstOrCreate(['name' => $permission->value]);
         }
     }
 }
