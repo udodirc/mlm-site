@@ -6,6 +6,7 @@ use App\Data\Admin\Menu\MenuCreateData;
 use App\Data\Admin\Menu\MenuUpdateData;
 use App\Models\Menu;
 use App\Repositories\Contracts\MenuRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\LaravelData\Data;
 
 /**
@@ -34,5 +35,10 @@ class MenuService extends BaseService
             'parent_id' => $data->parent_id,
             'name' => $data->name
         ];
+    }
+
+    public function subMenus(int $id): Collection
+    {
+        return $this->repository->subMenus($id);
     }
 }
