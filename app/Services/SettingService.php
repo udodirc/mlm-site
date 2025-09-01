@@ -22,6 +22,7 @@ class SettingService extends BaseService
     {
         /** @var SettingCreateData $data */
         return [
+            'name' => $data->name,
             'key' => $data->key,
             'value' => $data->value
         ];
@@ -31,6 +32,7 @@ class SettingService extends BaseService
     {
         /** @var SettingUpdateData $data */
         return [
+            'name' => $data->name,
             'key' => $data->key,
             'value' => $data->value
         ];
