@@ -41,4 +41,11 @@ class MenuController extends BaseController
             $this->service->subMenus($id)
         );
     }
+
+    public function parentMenus(): AnonymousResourceCollection|JsonResponse
+    {
+        return (SubMenuResource::class)::collection(
+            $this->service->parentMenus()
+        );
+    }
 }

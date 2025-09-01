@@ -41,4 +41,9 @@ class MenuService extends BaseService
     {
         return $this->repository->subMenus($id);
     }
+
+    public function parentMenus(): Collection
+    {
+        return $this->repository->parentMenus();
+    }
 }
