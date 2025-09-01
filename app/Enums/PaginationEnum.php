@@ -9,5 +9,7 @@ enum PaginationEnum: string
     case Role = 'per_page_roles';
 
     case Menu = 'per_page_menus';
+
+    case Content = 'per_page_content';
 }
 

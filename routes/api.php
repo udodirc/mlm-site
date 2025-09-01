@@ -24,8 +24,10 @@ Route::group(['prefix' => 'admin'], function () {
         });
 
         Route::group(['middleware' => ['permission:create-menu|update-menu|view-menu|delete-menu']], function () {
+            Route::get('/menu/parent', [AdminMenuController::class, 'parentMenus'])->name('menu.parent-menus');
             Route::apiResource('menu', AdminMenuController::class);
             Route::apiResource('content', AdminContentController::class);
+            Route::get('/menu/submenu/{id}', [AdminMenuController::class, 'subMenus'])->name('menu.submenus');
         });
 
         Route::group(['middleware' => ['permission:create-settings|update-settings|view-settings|delete-settings']], function () {

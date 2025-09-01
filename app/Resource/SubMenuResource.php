@@ -2,14 +2,14 @@
 
 namespace App\Resource;
 
-use App\Models\Content;
+use App\Models\Menu;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 /**
- * @mixin Content
+ * @mixin Menu
  */
-class ContentResource extends JsonResource
+class SubMenuResource extends JsonResource
 {
     /**
      * @param Request $request
@@ -19,11 +19,7 @@ class ContentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'menu_id' => $this->menu_id,
-            'menu_name' => $this->menu?->name,
-            'content' => $this->content,
-            'createdAt' => $this->created_at,
-            'updatedAt' => $this->updated_at,
+            'name' => $this->name,
         ];
     }
 }

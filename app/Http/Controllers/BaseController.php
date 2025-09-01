@@ -73,6 +73,10 @@ abstract class BaseController extends Controller
         $perPageKey = property_exists($this, 'perPageConfigKey') ? $this->perPageConfigKey : '';
         $paginate = property_exists($this, 'paginate') ? $this->paginate : true;
 
+        if ($request->has('paginate')) {
+            $paginate = filter_var($request->get('paginate'), FILTER_VALIDATE_BOOLEAN);
+        }
+
         return ($this->resourceClass)::collection(
             $this->service->all($paginate, $filtersArray, $perPageKey)
         );
