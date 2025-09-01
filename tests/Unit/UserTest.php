@@ -22,6 +22,11 @@ class UserTest extends BaseTest
         return UserRepository::class;
     }
 
+    protected function setUp(): void
+    {
+        parent::setUp();
+    }
+
     public function testCreateUser(): void
     {
         $dto = new UserCreateData(

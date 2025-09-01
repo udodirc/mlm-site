@@ -4,9 +4,7 @@ namespace Tests\Unit;
 
 use App\Data\Admin\Menu\MenuCreateData;
 use App\Data\Admin\Menu\MenuUpdateData;
-use App\Enums\PermissionsEnum;
 use App\Models\Menu;
-use App\Models\User;
 use App\Repositories\MenuRepository;
 use App\Services\MenuService;
 use Illuminate\Database\Eloquent\Collection;
@@ -124,7 +122,7 @@ class MenuTest extends BaseTest
         $result = $this->service->find(1);
 
         $this->assertEquals(1, $result->id);
-        $this->assertEquals('Main Menu', $result->name);
         $this->assertNull($result->parent_id);
+        $this->assertEquals('Main Menu', $result->name);
     }
 }

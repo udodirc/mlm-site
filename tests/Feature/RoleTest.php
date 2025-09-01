@@ -197,6 +197,7 @@ class RoleTest extends TestCase
         $this->actingAs($user, RolesEnum::Guard->value);
 
         $data = [
+            'id' => $user->id,
             'role' => RolesEnum::Admin->value
         ];
 

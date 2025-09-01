@@ -16,7 +16,10 @@ class RoleSeeder extends Seeder
         $permissions = array_filter(RolesEnum::cases(), fn($role) => $role !== RolesEnum::Guard);
 
         foreach ($permissions as $permission) {
-            Role::firstOrCreate(['name' => $permission->value]);
+            Role::firstOrCreate([
+                'name' => $permission->value,
+                'guard_name' => RolesEnum::Guard->value,
+            ]);
         }
     }
 }

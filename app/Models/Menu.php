@@ -27,6 +27,7 @@ class Menu extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'id',
         'parent_id',
         'name'
     ];
