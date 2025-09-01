@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\QueryBuilders\ContentQueryBuilder;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -15,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Content extends Model
 {
+    use HasFactory;
+
     protected $table = 'content';
 
     /**

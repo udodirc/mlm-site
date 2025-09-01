@@ -78,7 +78,7 @@ class MenuTest extends BaseTest
 
         $response = $this->deleteJson(route('menu.destroy', $menu));
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function testMenusList(): void
