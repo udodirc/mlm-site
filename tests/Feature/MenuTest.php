@@ -72,7 +72,7 @@ class MenuTest extends BaseTest
 
     public function testDeleteMenu(): void
     {
-        $user = $this->auth(PermissionsEnum::MenuDelete->value);
+        $this->auth(PermissionsEnum::MenuDelete->value);
 
         $menu = Menu::factory()->create();
 

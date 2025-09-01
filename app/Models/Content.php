@@ -26,6 +26,7 @@ class Content extends Model
      * @var list<string>
      */
     protected $fillable = [
+        'id',
         'menu_id',
         'content',
         'content'
