@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property-read int $id
+ * @property string $name
  * @property int $key
  * @property string $value
  * @property-read Carbon|null $created_at
@@ -19,5 +20,5 @@ class Setting extends Model
 
     protected $table = 'settings';
 
-    protected $fillable = ['key', 'value'];
+    protected $fillable = ['name', 'key', 'value'];
 }
