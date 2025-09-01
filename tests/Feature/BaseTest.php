@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\RolesEnum;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Spatie\Permission\Models\Permission;
@@ -23,6 +24,11 @@ abstract class BaseTest extends TestCase
         string $permission
     ): User
     {
+        Role::firstOrCreate([
+            'name' => 'manager',
+            'guard_name' => 'api',
+        ]);
+
         Permission::create([
             'name' => $permission,
             'guard_name' => RolesEnum::Guard->value,
