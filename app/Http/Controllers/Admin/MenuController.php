@@ -22,6 +22,8 @@ class MenuController extends BaseController
     protected ?string $filterDataClass = MenuFilterData::class;
     protected string $perPageConfigKey = PaginationEnum::Menu->value;
 
+    protected bool $paginate = true;
+
     public function __construct(MenuService $service)
     {
         parent::__construct(
