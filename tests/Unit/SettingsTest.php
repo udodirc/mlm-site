@@ -24,11 +24,13 @@ class SettingsTest extends BaseTest
     public function testCreateSettings(): void
     {
         $dto = new  SettingCreateData(
+            'Количество пользователей на странице',
             key: 'per_page_users',
             value: '10'
         );
 
         $settings = new Setting([
+            'Количество пользователей на странице',
             'key' => 'per_page_users',
             'value' => '10'
         ]);
@@ -46,15 +48,18 @@ class SettingsTest extends BaseTest
     public function testUpdateSettings(): void
     {
         $dto = new SettingUpdateData(
+            'Количество ролей на странице',
             key: 'per_page_roles',
             value: '5'
         );
 
         $settings = new Setting([
+            'Количество пользователей на странице',
             'key' => 'per_page_users',
             'value' => '10'
         ]);
 
+        $settings->name = 'Количество ролей на странице';
         $settings->key = 'per_page_roles';
         $settings->value = '5';
 
@@ -62,6 +67,7 @@ class SettingsTest extends BaseTest
             model: $settings,
             updateDto: $dto,
             expectedInput: [
+                'name' => 'Количество ролей на странице',
                 'key' => 'per_page_roles',
                 'value' => '5'
             ],
@@ -73,6 +79,7 @@ class SettingsTest extends BaseTest
     {
         $settings = new Setting([
             'id' => 1,
+            'name' => 'Количество пользователей на странице',
             'key' => 'per_page_users',
             'value' => '10'
         ]);
@@ -87,11 +94,13 @@ class SettingsTest extends BaseTest
         $settings = new Collection([
             new Setting([
                 'id' => 1,
+                'name' => 'Количество пользователей на странице',
                 'key' => 'per_page_users',
                 'value' => '10'
             ]),
             new Setting([
                 'id' => 2,
+                'name' => 'Количество ролей на странице',
                 'key' => 'per_page_roles',
                 'value' => '5'
             ]),
@@ -108,8 +117,9 @@ class SettingsTest extends BaseTest
     {
         $setting = new Setting([
             'id' => 1,
+            'name' => 'Количество пользователей на странице',
             'key' => 'per_page_users',
-            //'value' => '10',
+            'value' => '10',
         ]);
         $setting->exists = true;
 
@@ -122,8 +132,9 @@ class SettingsTest extends BaseTest
         /** @var Setting $result */
         $result = $this->service->find(1);
 
-//        $this->assertEquals(1, $result->id);
-//        $this->assertEquals('per_page_users', $result->key);
-//        $this->assertEquals('10', $result->value);
+        $this->assertEquals(1, $result->id);
+        $this->assertEquals('Количество пользователей на странице', $result->name);
+        $this->assertEquals('per_page_users', $result->key);
+        $this->assertEquals('10', $result->value);
     }
 }
