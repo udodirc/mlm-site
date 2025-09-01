@@ -11,11 +11,7 @@ use App\Models\User;
 use App\Repositories\RoleRepository;
 use App\Services\RoleService;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use PHPUnit\Framework\MockObject\MockObject;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
-use Tests\TestCase;
+use App\Models\Role;
 use Illuminate\Support\Facades\Artisan;
 
 class RoleTest extends BaseTest
@@ -106,6 +102,7 @@ class RoleTest extends BaseTest
         $this->assertShowItemEntity(
             PermissionsEnum::RoleView->value,
             'roles.show',
+            [],
             true
         );
     }
@@ -123,8 +120,8 @@ class RoleTest extends BaseTest
         ]);
 
         $user = User::factory()->create();
-
-        $data = new AssignRoleData(role: RolesEnum::Admin->value);
+        $id = $user->id;
+        $data = new AssignRoleData($id, role: RolesEnum::Admin->value);
 
         $result = $roleService->assignRole($user, $data);
 

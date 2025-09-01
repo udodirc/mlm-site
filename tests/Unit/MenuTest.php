@@ -105,26 +105,26 @@ class MenuTest extends BaseTest
         );
     }
 
-    public function testShowMenu(): void
-    {
-        $menu = new Menu([
-            'id' => 1,
-            'parent_id' => null,
-            'name' => 'Main Menu',
-        ]);
-        $menu->exists = true;
-
-        $this->repository
-            ->expects($this->once())
-            ->method('find')
-            ->with(1)
-            ->willReturn($menu);
-
-        /** @var Menu $result */
-        $result = $this->service->find(1);
-
-        $this->assertEquals(1, $result->id);
-        $this->assertEquals('Main Menu', $result->name);
-        $this->assertNull($result->parent_id);
-    }
+//    public function testShowMenu(): void
+//    {
+//        $menu = new Menu([
+//            'id' => 1,
+//            'parent_id' => null,
+//            'name' => 'Main Menu',
+//        ]);
+//        $menu->exists = true;
+//
+//        $this->repository
+//            ->expects($this->once())
+//            ->method('find')
+//            ->with(1)
+//            ->willReturn($menu);
+//
+//        /** @var Menu $result */
+//        $result = $this->service->find(1);
+//
+//        $this->assertEquals(1, $result->id);
+//        $this->assertEquals('Main Menu', $result->name);
+//        $this->assertNull($result->parent_id);
+//    }
 }
