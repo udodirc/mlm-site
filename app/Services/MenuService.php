@@ -48,4 +48,9 @@ class MenuService extends BaseService
     {
         return $this->repository->parentMenus();
     }
+
+    public function treeMenus(): array
+    {
+        return $this->repository->treeMenus();
+    }
 }

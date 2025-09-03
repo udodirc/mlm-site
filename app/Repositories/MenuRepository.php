@@ -24,4 +24,29 @@ class MenuRepository extends AbstractRepository implements MenuRepositoryInterfa
         return $this->model
             ->where('parent_id', null)->get(['id', 'name']);
     }
+
+    public function treeMenus(): array
+    {
+        $items = $this->model::All();
+
+        return $this->buildTree($items);
+    }
+
+    private function buildTree($items = [], $parentId = null): array
+    {
+        $branch = [];
+
+        foreach ($items as $item) {
+            if ($item->parent_id == $parentId) {
+                $children = $this->buildTree($items, $item->id);
+
+                if ($children) {
+                    $item->children = $children;
+                }
+                $branch[] = $item;
+            }
+        }
+
+        return $branch;
+    }
 }

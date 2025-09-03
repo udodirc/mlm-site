@@ -48,4 +48,9 @@ class MenuController extends BaseController
             $this->service->parentMenus()
         );
     }
+
+    public function treeMenus()
+    {
+        return $this->service->treeMenus();
+    }
 }
