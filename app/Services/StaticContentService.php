@@ -2,10 +2,12 @@
 
 namespace App\Services;
 
+use App\Data\Admin\StaticContent\StaticContentByNamesData;
 use App\Data\Admin\StaticContent\StaticContentCreateData;
 use App\Data\Admin\StaticContent\StaticContentUpdateData;
 use App\Models\StaticContent;
 use App\Repositories\Contracts\StaticContentRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\LaravelData\Data;
 
 /**
@@ -39,5 +41,10 @@ class StaticContentService extends BaseService
     public function contentByName(string $name): ?StaticContent
     {
         return $this->repository->contentByName($name);
+    }
+
+    public function getContentByNames(StaticContentByNamesData $names): ?Collection
+    {
+        return $this->repository->getContentByNames($names);
     }
 }

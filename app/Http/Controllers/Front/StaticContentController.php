@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Front;
 
+use App\Data\Admin\StaticContent\StaticContentByNamesData;
 use App\Http\Controllers\Controller;
 
 use App\Resource\StaticContentResource;
 use App\Services\StaticContentService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class StaticContentController extends Controller
 {
@@ -26,5 +28,18 @@ class StaticContentController extends Controller
         }
 
         return new StaticContentResource($content);
+    }
+
+    public function contentByNames(StaticContentByNamesData $names): JsonResponse|AnonymousResourceCollection
+    {
+        $contents = $this->service->getContentByNames($names);
+
+        if ($contents->isEmpty()) {
+            return response()->json(['message' => 'Content not found'], 404);
+        }
+
+        return (StaticContentResource::class)::collection(
+            $contents
+        );
     }
 }

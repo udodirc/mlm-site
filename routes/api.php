@@ -54,3 +54,4 @@ Route::group(['prefix' => 'admin'], function () {
 Route::get('/menu/tree', [FrontMenuController::class, 'treeMenus']);
 Route::get('/{slug}', [FrontContentController::class, 'contentByMenu']);
 Route::get('/static_content/{name}', [FrontStaticContentController::class, 'contentByName']);
+Route::post('/static_content', [FrontStaticContentController::class, 'contentByNames']);
