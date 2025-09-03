@@ -35,4 +35,9 @@ class ContentService extends BaseService
             'content' => $data->content,
         ];
     }
+
+    public function contentByMenu(string $slug): ?Content
+    {
+        return $this->repository->contentByMenu($slug);
+    }
 }
