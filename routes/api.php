@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Front\MenuController as FrontMenuController;
 use App\Http\Middleware\LoadAdminSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -46,3 +47,4 @@ Route::group(['prefix' => 'admin'], function () {
         });
     });
 });
+Route::get('/menu/tree', [FrontMenuController::class, 'treeMenus']);

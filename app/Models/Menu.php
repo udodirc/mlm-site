@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int $id
  * @property int $parent_id
  * @property string $name
+ * @property string $url
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */
@@ -29,7 +30,8 @@ class Menu extends Model
     protected $fillable = [
         'id',
         'parent_id',
-        'name'
+        'name',
+        'url'
     ];
 
     public function parent()

@@ -24,7 +24,8 @@ class MenuService extends BaseService
         /** @var MenuCreateData $data */
         return [
             'parent_id' => $data->parent_id,
-            'name' => $data->name
+            'name' => $data->name,
+            'url' => $data->url,
         ];
     }
 
@@ -33,7 +34,8 @@ class MenuService extends BaseService
         /** @var MenuUpdateData $data */
         return [
             'parent_id' => $data->parent_id,
-            'name' => $data->name
+            'name' => $data->name,
+            'url' => $data->url,
         ];
     }
 
@@ -45,5 +47,10 @@ class MenuService extends BaseService
     public function parentMenus(): Collection
     {
         return $this->repository->parentMenus();
+    }
+
+    public function treeMenus(): array
+    {
+        return $this->repository->treeMenus();
     }
 }

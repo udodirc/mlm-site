@@ -11,5 +11,9 @@ class MenuQueryBuilder extends BaseQueryBuilder
         if (!empty($filters['parent_id'])) {
             $this->where('parent_id', $filters['parent_id']);
         }
+
+        if (!empty($filters['url'])) {
+            $this->where('url', $filters['url']);
+        }
     }
 }

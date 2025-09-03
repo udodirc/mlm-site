@@ -9,7 +9,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /**
  * @mixin Menu
  */
-class MenuResource extends JsonResource
+class MenuTreeResource extends JsonResource
 {
     /**
      * @param Request $request
@@ -20,11 +20,11 @@ class MenuResource extends JsonResource
         return [
             'id' => $this->id,
             'parent_id' => $this->parent_id,
-            'parent_name' => $this->parent?->name,
             'name' => $this->name,
             'url' => $this->url,
-            'createdAt' => $this->created_at,
-            'updatedAt' => $this->updated_at,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'children' => $this->children ? MenuResource::collection($this->children) : [],
         ];
     }
 }

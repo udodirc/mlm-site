@@ -16,13 +16,16 @@ class MenuUpdateData extends Data
 {
     public ?int $parent_id;
     public string $name;
+    public ?string $url;
 
     public function __construct(
         ?int $parent_id,
         string $name,
+        ?string $url,
     ){
         $this->parent_id = $parent_id;
         $this->name = $name;
+        $this->url = $url;
     }
 
     public static function rules(...$args): array
@@ -37,6 +40,16 @@ class MenuUpdateData extends Data
                 new Required(),
                 new StringType(),
                 new Max(100)
+            ],
+            'url' => [
+                new Unique(
+                    table: 'menu',
+                    column: 'url',
+                    where: fn (Builder $q): Builder => $q->where('url', '!=', $args[0]->payload['url'])
+                ),
+                new Nullable(),
+                new StringType(),
+                new Max(50)
             ],
             'parent_id' => [
                 new Nullable(),

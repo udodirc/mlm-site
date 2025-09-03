@@ -9,6 +9,7 @@ use App\Enums\PaginationEnum;
 use App\Http\Controllers\BaseController;
 use App\Models\Menu;
 use App\Resource\MenuResource;
+use App\Resource\MenuTreeResource;
 use App\Resource\SubMenuResource;
 use App\Services\MenuService;
 use Illuminate\Http\JsonResponse;

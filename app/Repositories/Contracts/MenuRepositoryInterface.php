@@ -9,4 +9,6 @@ interface MenuRepositoryInterface extends BaseRepositoryInterface
     public function subMenus(int $id): Collection;
 
     public function parentMenus(): Collection;
+
+    public function treeMenus(): array;
 }
