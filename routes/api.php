@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Front\MenuController as FrontMenuController;
 use App\Http\Middleware\LoadAdminSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -26,7 +27,6 @@ Route::group(['prefix' => 'admin'], function () {
         Route::group(['middleware' => ['permission:create-menu|update-menu|view-menu|delete-menu']], function () {
             Route::get('/menu/parent', [AdminMenuController::class, 'parentMenus'])->name('menu.parent-menus');
             Route::get('/menu/submenu/{id}', [AdminMenuController::class, 'subMenus'])->name('menu.submenus');
-            Route::get('/menu/tree', [AdminMenuController::class, 'treeMenus'])->name('menu.tree');
             Route::apiResource('menu', AdminMenuController::class);
         });
 
@@ -47,3 +47,4 @@ Route::group(['prefix' => 'admin'], function () {
         });
     });
 });
+Route::get('/menu/tree', [FrontMenuController::class, 'treeMenus']);
