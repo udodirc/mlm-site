@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\MenuController as AdminMenuController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
+use App\Http\Controllers\Admin\StaticContentController as AdminStaticContentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
@@ -33,6 +34,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::group(['middleware' => ['permission:create-content|update-content|view-content|delete-content']], function () {
             Route::apiResource('content', AdminContentController::class);
+            Route::apiResource('static_content', AdminStaticContentController::class);
         });
 
         Route::group(['middleware' => ['permission:create-settings|update-settings|view-settings|delete-settings']], function () {

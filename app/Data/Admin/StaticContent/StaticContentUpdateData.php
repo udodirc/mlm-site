@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Data\Admin\Content;
+namespace App\Data\Admin\StaticContent;
 
+use Illuminate\Database\Query\Builder;
 use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Attributes\Validation\IntegerType;
 use Spatie\LaravelData\Attributes\Validation\Required;
@@ -9,33 +10,30 @@ use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Data;
 
-class ContentCreateData extends Data
+class StaticContentUpdateData extends Data
 {
-    public ?int $menu_id;
+    public string $name;
     public string $content;
 
     public function __construct(
-        ?int $menu_id,
+        string $name,
         string $content,
     ){
-        $this->menu_id = $menu_id;
+        $this->name = $name;
         $this->content = $content;
     }
 
     public static function rules(...$args): array
     {
         return [
-            'menu_id' => [
+            'name' => [
                 new Unique(
-                    table: 'content',
-                    column: 'menu_id',
-                ),
-                new Exists(
-                    table: 'menu',
-                    column: 'id'
+                    table: 'static_content',
+                    column: 'name',
+                    where: fn (Builder $q): Builder => $q->where('name', '!=', $args[0]->payload['name'])
                 ),
                 new Required(),
-                new IntegerType()
+                new StringType(),
             ],
             'content' => [
                 new Required(),

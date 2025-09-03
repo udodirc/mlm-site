@@ -11,5 +11,7 @@ enum PaginationEnum: string
     case Menu = 'per_page_menus';
 
     case Content = 'per_page_content';
+
+    case StaticContent = 'per_page_static_content';
 }
 
