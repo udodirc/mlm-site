@@ -11,4 +11,13 @@ class ContentRepository extends AbstractRepository implements ContentRepositoryI
     {
         parent::__construct($content);
     }
+
+    public function contentByMenu(string $slug): ?Content
+    {
+        return $this->model
+            ->whereHas('menu', function ($query) use ($slug) {
+                $query->where('url', $slug);
+            })
+            ->first() ?? null;
+    }
 }
