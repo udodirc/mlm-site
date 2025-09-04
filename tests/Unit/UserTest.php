@@ -59,7 +59,8 @@ class UserTest extends BaseTest
             email: 'updated@test.test',
             name: 'Updated Name',
             password: '123456789',
-            role: 'editor'
+            role: 'editor',
+            status: false
         );
 
         $user = new User([
@@ -67,11 +68,13 @@ class UserTest extends BaseTest
             'name' => 'user',
             'email' => 'user@test.test',
             'password' => bcrypt('old_password'),
+            'status' => true,
         ]);
 
         $user->email = 'updated@test.test';
         $user->name = 'Updated Name';
         $user->password = bcrypt('123456789');
+        $user->status = false;
 
         $this->assertUpdateEntity(
             model: $user,
@@ -80,6 +83,7 @@ class UserTest extends BaseTest
                 'email' => 'updated@test.test',
                 'name' => 'Updated Name',
                 'password' => '123456789',
+                'status' => false,
             ],
             expectedModel: $user
         );
