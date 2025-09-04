@@ -15,8 +15,8 @@ class MenuFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->words(2, true), // 'Main Menu', 'Top Bar' и т.д.
-            'parent_id' => null,              // по умолчанию корневое
+            'name' => fake()->words(2, true),
+            'parent_id' => null,
         ];
     }
 
