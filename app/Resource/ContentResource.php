@@ -22,6 +22,7 @@ class ContentResource extends JsonResource
             'menu_id' => $this->menu_id,
             'menu_name' => $this->menu?->name,
             'content' => $this->content,
+            'status' => $this->status,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];

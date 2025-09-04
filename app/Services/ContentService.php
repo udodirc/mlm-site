@@ -33,6 +33,7 @@ class ContentService extends BaseService
         return [
             'menu_id' => $data->menu_id,
             'content' => $data->content,
+            'status' => $data->status,
         ];
     }
 
