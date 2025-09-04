@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\MenuController as AdminMenuController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
+use App\Http\Controllers\Admin\StaticContentController as AdminStaticContentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\Admin\PermissionController as AdminPermissionController
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Front\MenuController as FrontMenuController;
 use App\Http\Controllers\Front\ContentController as FrontContentController;
+use App\Http\Controllers\Front\StaticContentController as FrontStaticContentController;
 use App\Http\Middleware\LoadAdminSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +35,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::group(['middleware' => ['permission:create-content|update-content|view-content|delete-content']], function () {
             Route::apiResource('content', AdminContentController::class);
+            Route::apiResource('static_content', AdminStaticContentController::class);
         });
 
         Route::group(['middleware' => ['permission:create-settings|update-settings|view-settings|delete-settings']], function () {
@@ -50,3 +53,5 @@ Route::group(['prefix' => 'admin'], function () {
 });
 Route::get('/menu/tree', [FrontMenuController::class, 'treeMenus']);
 Route::get('/{slug}', [FrontContentController::class, 'contentByMenu']);
+Route::get('/static_content/{name}', [FrontStaticContentController::class, 'contentByName']);
+Route::post('/static_content', [FrontStaticContentController::class, 'contentByNames']);

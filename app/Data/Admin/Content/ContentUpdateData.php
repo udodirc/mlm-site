@@ -41,6 +41,7 @@ class ContentUpdateData extends Data
             ],
             'content' => [
                 new StringType(),
+                new Required(),
             ]
         ];
     }
