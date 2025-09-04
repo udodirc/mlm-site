@@ -34,12 +34,13 @@ class ContentTest extends BaseTest
 
         $content = Content::factory()->create();
 
-        $data = ['content' => 'Updated content', 'menu_id' => $content->menu_id];
+        $data = ['content' => 'Updated content', 'menu_id' => $content->menu_id, 'status' => false];
 
         $response = $this->putJson(route('content.update', $content->id), $data);
 
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJsonFragment(['content' => 'Updated content']);
+        $response->assertJsonFragment(['status' => false]);
     }
 
 
