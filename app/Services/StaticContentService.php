@@ -35,6 +35,7 @@ class StaticContentService extends BaseService
         return [
             'name' => $data->name,
             'content' => $data->content,
+            'status' => $data->status,
         ];
     }
 
