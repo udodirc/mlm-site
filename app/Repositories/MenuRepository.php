@@ -16,18 +16,24 @@ class MenuRepository extends AbstractRepository implements MenuRepositoryInterfa
     public function subMenus(int $id): Collection
     {
         return $this->model
-            ->where('parent_id', $id)->get(['id', 'name']);
+            ->where('parent_id', $id)
+            ->where('status', true)
+            ->get(['id', 'name']);
     }
 
     public function parentMenus(): Collection
     {
         return $this->model
-            ->where('parent_id', null)->get(['id', 'name']);
+            ->where('parent_id', null)
+            ->where('status', true)
+            ->get(['id', 'name']);
     }
 
     public function treeMenus(): array
     {
-        $items = $this->model::All();
+        $items = $this->model
+            ->where('status', true)
+            ->get();
 
         return $this->buildTree($items);
     }

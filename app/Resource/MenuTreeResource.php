@@ -22,6 +22,7 @@ class MenuTreeResource extends JsonResource
             'parent_id' => $this->parent_id,
             'name' => $this->name,
             'url' => $this->url,
+            'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'children' => $this->children ? MenuResource::collection($this->children) : [],
