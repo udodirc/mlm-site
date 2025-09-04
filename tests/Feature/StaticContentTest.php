@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Enums\PermissionsEnum;
-use Database\Factories\StaticContentFactory;
-use Illuminate\Http\Response;
 use App\Models\StaticContent;
 
 class StaticContentTest extends BaseTest
@@ -13,16 +11,16 @@ class StaticContentTest extends BaseTest
     {
         $this->auth(PermissionsEnum::StaticContentCreate->value);
 
-        $data = [
-            'name' => 'Test',
-            'content' => 'Some content',
-        ];
-
-        $response = $this->postJson(route('static_content.store'), $data);
-
-        $response->assertStatus(Response::HTTP_CREATED);
-        $this->assertDatabaseHas('static_content', ['name' => 'Test', 'content' => 'Some content']);
-        $response->assertJsonFragment(['name' => 'Test', 'content' => 'Some content']);
+        $this->performAction(
+            action: 'create',
+            route: 'static_content.store',
+            data: [
+                'name' => 'Test',
+                'content' => 'Some content',
+            ],
+            table: 'static_content',
+            expectedJson: ['name' => 'Test', 'content' => 'Some content']
+        );
     }
 
     public function testUpdateStaticContent(): void
@@ -31,14 +29,22 @@ class StaticContentTest extends BaseTest
 
         $content = StaticContent::factory()->create();
 
-        $data = ['name' => 'Updated name','content' => 'Updated content', 'status' => false];
-
-        $response = $this->putJson(route('static_content.update', $content->id), $data);
-
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonFragment(['name' => 'Updated name']);
-        $response->assertJsonFragment(['content' => 'Updated content']);
-        $response->assertJsonFragment(['status' => false]);
+        $this->performAction(
+            action: 'update',
+            route: 'static_content.update',
+            id: $content->id,
+            data: [
+                'name' => 'Updated name',
+                'content' => 'Updated content',
+                'status' => false,
+            ],
+            table: 'static_content',
+            expectedJson: [
+                'name' => 'Updated name',
+                'content' => 'Updated content',
+                'status' => false
+            ]
+        );
     }
 
     public function testDeleteContent(): void
@@ -47,10 +53,12 @@ class StaticContentTest extends BaseTest
 
         $content = StaticContent::factory()->create();
 
-        $response = $this->deleteJson(route('static_content.destroy', $content->id));
-
-        $response->assertStatus(Response::HTTP_OK);
-        $this->assertDatabaseMissing('static_content', ['id' => $content->id]);
+        $this->performAction(
+            action: 'delete',
+            route: 'static_content.destroy',
+            id: $content->id,
+            table: 'static_content'
+        );
     }
 
     public function testContentsList(): void
@@ -59,10 +67,11 @@ class StaticContentTest extends BaseTest
 
         StaticContent::factory()->count(3)->create();
 
-        $response = $this->getJson(route('static_content.index'));
-
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(3, 'data');
+        $this->performAction(
+            action: 'list',
+            route: 'static_content.index',
+            expectedCount: 3
+        );
     }
 
     public function testSingleContent(): void
@@ -71,9 +80,11 @@ class StaticContentTest extends BaseTest
 
         $content = StaticContent::factory()->create();
 
-        $response = $this->getJson(route('static_content.show', $content->id));
-
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonFragment(['content' => $content->content]);
+        $this->performAction(
+            action: 'show',
+            route: 'static_content.show',
+            id: $content->id,
+            expectedJson: ['content' => $content->content]
+        );
     }
 }

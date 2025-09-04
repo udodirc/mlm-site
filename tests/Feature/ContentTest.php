@@ -1,12 +1,10 @@
 <?php
 
-namespace Feature;
+namespace Tests\Feature;
 
 use App\Enums\PermissionsEnum;
 use App\Models\Content;
 use App\Models\Menu;
-use Illuminate\Http\Response;
-use Tests\Feature\BaseTest;
 
 class ContentTest extends BaseTest
 {
@@ -16,16 +14,16 @@ class ContentTest extends BaseTest
 
         $menu = Menu::factory()->create();
 
-        $data = [
-            'menu_id' => $menu->id,
-            'content' => 'Some content',
-        ];
-
-        $response = $this->postJson(route('content.store'), $data);
-
-        $response->assertStatus(Response::HTTP_CREATED);
-        $this->assertDatabaseHas('content', ['content' => 'Some content', 'menu_id' => $menu->id]);
-        $response->assertJsonFragment(['content' => 'Some content']);
+        $this->performAction(
+            action: 'create',
+            route: 'content.store',
+            data: [
+                'menu_id' => $menu->id,
+                'content' => 'Some content',
+            ],
+            table: 'content',
+            expectedJson: ['content' => 'Some content']
+        );
     }
 
     public function testUpdateContent(): void
@@ -34,15 +32,19 @@ class ContentTest extends BaseTest
 
         $content = Content::factory()->create();
 
-        $data = ['content' => 'Updated content', 'menu_id' => $content->menu_id, 'status' => false];
-
-        $response = $this->putJson(route('content.update', $content->id), $data);
-
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonFragment(['content' => 'Updated content']);
-        $response->assertJsonFragment(['status' => false]);
+        $this->performAction(
+            action: 'update',
+            route: 'content.update',
+            id: $content->id,
+            data: [
+                'content' => 'Updated content',
+                'menu_id' => $content->menu_id,
+                'status' => false,
+            ],
+            table: 'content',
+            expectedJson: ['content' => 'Updated content', 'status' => false]
+        );
     }
-
 
     public function testDeleteContent(): void
     {
@@ -50,10 +52,12 @@ class ContentTest extends BaseTest
 
         $content = Content::factory()->create();
 
-        $response = $this->deleteJson(route('content.destroy', $content->id));
-
-        $response->assertStatus(Response::HTTP_OK);
-        $this->assertDatabaseMissing('content', ['id' => $content->id]);
+        $this->performAction(
+            action: 'delete',
+            route: 'content.destroy',
+            id: $content->id,
+            table: 'content'
+        );
     }
 
     public function testContentsList(): void
@@ -62,10 +66,11 @@ class ContentTest extends BaseTest
 
         Content::factory()->count(3)->create();
 
-        $response = $this->getJson(route('content.index'));
-
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(3, 'data');
+        $this->performAction(
+            action: 'list',
+            route: 'content.index',
+            expectedCount: 3
+        );
     }
 
     public function testSingleContent(): void
@@ -74,9 +79,11 @@ class ContentTest extends BaseTest
 
         $content = Content::factory()->create();
 
-        $response = $this->getJson(route('content.show', $content->id));
-
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonFragment(['content' => $content->content]);
+        $this->performAction(
+            action: 'show',
+            route: 'content.show',
+            id: $content->id,
+            expectedJson: ['content' => $content->content]
+        );
     }
 }

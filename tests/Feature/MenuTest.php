@@ -1,11 +1,9 @@
 <?php
 
-namespace Feature;
+namespace Tests\Feature;
 
 use App\Enums\PermissionsEnum;
 use App\Models\Menu;
-use Illuminate\Http\Response;
-use Tests\Feature\BaseTest;
 
 class MenuTest extends BaseTest
 {
@@ -13,18 +11,16 @@ class MenuTest extends BaseTest
     {
         $this->auth(PermissionsEnum::MenuCreate->value);
 
-        $data = [
-            'parent_id' => null,
-            'name' => 'Menu',
-        ];
-
-        $response = $this->postJson(route('menu.store'), $data);
-
-        $response->assertStatus(Response::HTTP_CREATED);
-
-        $this->assertDatabaseHas('menu', ['name' => 'Menu']);
-
-        $response->assertJsonFragment(['name' => 'Menu']);
+        $this->performAction(
+            action: 'create',
+            route: 'menu.store',
+            data: [
+                'parent_id' => null,
+                'name' => 'Menu',
+            ],
+            table: 'menu',
+            expectedJson: ['name' => 'Menu']
+        );
     }
 
     public function testCreateChildMenu(): void
@@ -33,23 +29,19 @@ class MenuTest extends BaseTest
 
         $parent = Menu::factory()->create();
 
-        $data = [
-            'name' => 'Sub Menu',
-            'parent_id' => $parent->id,
-        ];
-
-        $response = $this->postJson(route('menu.store'), $data);
-
-        $response->assertStatus(Response::HTTP_CREATED);
-        $response->assertJsonFragment([
-            'name' => 'Sub Menu',
-            'parent_id' => $parent->id,
-        ]);
-
-        $this->assertDatabaseHas('menu', [
-            'name' => 'Sub Menu',
-            'parent_id' => $parent->id,
-        ]);
+        $this->performAction(
+            action: 'create',
+            route: 'menu.store',
+            data: [
+                'name' => 'Sub Menu',
+                'parent_id' => $parent->id,
+            ],
+            table: 'menu',
+            expectedJson: [
+                'name' => 'Sub Menu',
+                'parent_id' => $parent->id
+            ]
+        );
     }
 
     public function testUpdateMenu(): void
@@ -58,22 +50,21 @@ class MenuTest extends BaseTest
 
         $menu = Menu::factory()->create();
 
-        $data = [
-            'parent_id' => null,
-            'name' => 'Updated menu',
-            'status' => 0
-        ];
-
-        $response = $this->putJson(route('menu.update', $menu->id), $data);
-
-        $response->assertStatus(Response::HTTP_OK);
-
-        $response->assertJsonFragment([
-            'name' => 'Updated menu',
-            'status' => false,
-        ]);
-
-        $this->assertDatabaseHas('menu', ['status' => 0]);
+        $this->performAction(
+            action: 'update',
+            route: 'menu.update',
+            id: $menu->id,
+            data: [
+                'parent_id' => null,
+                'name' => 'Updated menu',
+                'status' => false
+            ],
+            table: 'menu',
+            expectedJson: [
+                'name' => 'Updated menu',
+                'status' => false
+            ]
+        );
     }
 
     public function testDeleteMenu(): void
@@ -82,9 +73,12 @@ class MenuTest extends BaseTest
 
         $menu = Menu::factory()->create();
 
-        $response = $this->deleteJson(route('menu.destroy', $menu));
-
-        $response->assertStatus(Response::HTTP_OK);
+        $this->performAction(
+            action: 'delete',
+            route: 'menu.destroy',
+            id: $menu->id,
+            table: 'menu'
+        );
     }
 
     public function testMenusList(): void
@@ -93,10 +87,11 @@ class MenuTest extends BaseTest
 
         Menu::factory()->count(3)->create();
 
-        $response = $this->getJson(route('menu.index'));
-
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonCount(3, 'data');
+        $this->performAction(
+            action: 'list',
+            route: 'menu.index',
+            expectedCount: 3
+        );
     }
 
     public function testSingleMenu(): void
@@ -105,9 +100,11 @@ class MenuTest extends BaseTest
 
         $menu = Menu::factory()->create();
 
-        $response = $this->getJson(route('menu.show', $menu->id));
-
-        $response->assertStatus(Response::HTTP_OK);
-        $response->assertJsonFragment(['name' => $menu->name]);
+        $this->performAction(
+            action: 'show',
+            route: 'menu.show',
+            id: $menu->id,
+            expectedJson: ['name' => $menu->name]
+        );
     }
 }
