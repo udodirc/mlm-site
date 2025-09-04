@@ -126,4 +126,20 @@ abstract class BaseController extends Controller
             'success' => $deleted,
         ]);
     }
+
+    public function toggleStatus(mixed $model, Request $request): JsonResponse
+    {
+        if (!$model instanceof Model) {
+            $model = $this->resolveModel($model);
+        }
+
+        $column = $request->get('column', 'status');
+
+        $updated = $this->service->toggleStatus($model, $column);
+
+        return response()->json([
+            'success' => (bool) $updated,
+            'data'    => $updated ? new $this->resourceClass($updated) : null,
+        ]);
+    }
 }

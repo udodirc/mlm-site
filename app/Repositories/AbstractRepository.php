@@ -49,4 +49,16 @@ abstract class AbstractRepository implements BaseRepositoryInterface
     {
         return (bool) $model->delete();
     }
+
+    public function toggleStatus(Model $model, string $column = 'status'): ?Model
+    {
+        if (! $model->isFillable($column) && ! array_key_exists($column, $model->getAttributes())) {
+            throw new \InvalidArgumentException("Column '{$column}' does not exist on model " . get_class($model));
+        }
+
+        $model->{$column} = !$model->{$column};
+        $model->save();
+
+        return $model;
+    }
 }

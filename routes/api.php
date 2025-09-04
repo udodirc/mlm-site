@@ -34,6 +34,7 @@ Route::group(['prefix' => 'admin'], function () {
         });
 
         Route::group(['middleware' => ['permission:create-content|update-content|view-content|delete-content']], function () {
+            Route::post('/content/status/{content}', [AdminContentController::class, 'toggleStatus'])->name('content.toggle-status');
             Route::apiResource('content', AdminContentController::class);
             Route::apiResource('static_content', AdminStaticContentController::class);
         });
