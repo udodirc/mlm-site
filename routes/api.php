@@ -24,6 +24,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('me', [AdminAuthController::class, 'me'])->name('auth.me');
 
         Route::group(['middleware' => ['permission:create-users|update-users|view-users|delete-users']], function () {
+            Route::post('/users/status/{user}', [AdminUserController::class, 'toggleStatus'])->name('user.toggle-status');
             Route::apiResource('users', AdminUserController::class);
         });
 
@@ -36,7 +37,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::group(['middleware' => ['permission:create-content|update-content|view-content|delete-content']], function () {
             Route::post('/content/status/{content}', [AdminContentController::class, 'toggleStatus'])->name('content.toggle-status');
-            Route::post('/static_content/status/{static_content}', [AdminMenuController::class, 'toggleStatus'])->name('static-content.toggle-status');
+            Route::post('/static_content/status/{static_content}', [AdminStaticContentController::class, 'toggleStatus'])->name('static-content.toggle-status');
             Route::apiResource('content', AdminContentController::class);
             Route::apiResource('static_content', AdminStaticContentController::class);
         });
