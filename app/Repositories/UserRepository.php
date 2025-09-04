@@ -17,7 +17,7 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
 
     public function update(Model $model, array $data): ?Model
     {
-        $model->fill(Arr::only($data, ['name', 'email']));
+        $model->fill(Arr::only($data, ['name', 'email', 'status']));
 
         if (!empty($data['password'])) {
             $model->password = Hash::make($data['password']);

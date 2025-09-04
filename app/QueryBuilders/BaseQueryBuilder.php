@@ -13,6 +13,10 @@ abstract class BaseQueryBuilder extends Builder
             $this->where('name', 'like', '%' . $filters['name'] . '%');
         }
 
+        if (isset($filters['status'])) {
+            $this->where('status', filter_var($filters['status'], FILTER_VALIDATE_BOOLEAN));
+        }
+
         if (!empty($filters['created_from']) && !empty($filters['created_to'])) {
             $createdFrom = Carbon::createFromFormat('Y-m-d', $filters['created_from'])->startOfDay();
             $createdTo = Carbon::createFromFormat('Y-m-d', $filters['created_to'])->endOfDay();

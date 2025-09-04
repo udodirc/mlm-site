@@ -35,6 +35,7 @@ class UserService extends BaseService
             'email' => $data->email,
             'name' => $data->name,
             'role' => $data->role,
+            'status' => $data->status,
         ];
 
         if($data->password){

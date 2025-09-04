@@ -18,6 +18,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $email
  * @property string $password
  * @property int $email_verified_at
+ * @property bool $status
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */
@@ -39,6 +40,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'status'
     ];
 
     /**

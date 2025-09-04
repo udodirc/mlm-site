@@ -2,6 +2,7 @@
 
 namespace App\Data\Admin\User;
 
+use Spatie\LaravelData\Attributes\Validation\BooleanType;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
 use Spatie\LaravelData\Attributes\Validation\StringType;
@@ -13,21 +14,22 @@ class UserFilterData extends Data
     public string|Optional|null $name;
     public string|Optional|null $email;
     public string|Optional|null $role;
-
+    public bool|Optional|null $status;
     public string|Optional|null $created_from;
-
    public string|Optional|null $created_to;
 
     public function __construct(
         string|Optional|null $name = null,
         string|Optional|null $email = null,
         string|Optional|null $role = null,
+        bool|Optional|null $status,
         string|Optional|null $created_from = null,
         string|Optional|null $created_to = null,
     ) {
         $this->name = $name ?? new Optional();
         $this->email = $email ?? new Optional();
         $this->role = $role ?? new Optional();
+        $this->status = $status ?? new Optional();
         $this->created_from = $created_from ?? new Optional();
         $this->created_to = $created_to ?? new Optional();
     }
@@ -49,6 +51,10 @@ class UserFilterData extends Data
                 new StringType(),
                 new Max(100),
                 new Nullable(),
+            ],
+            'status' => [
+                new Nullable(),
+                new BooleanType(),
             ],
             'created_from' => [
                 new StringType(),

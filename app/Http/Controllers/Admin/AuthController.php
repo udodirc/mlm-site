@@ -38,6 +38,14 @@ class AuthController extends Controller
             return response()->json(['error' => __('messages.unauthorized')], 401);
         }
 
+        $user = auth()->user();
+
+        if (! $user->status) {
+            auth()->logout();
+
+            return response()->json(['error' => __('messages.user_inactive')], 403);
+        }
+
         return $this->respondWithToken($token);
     }
 
