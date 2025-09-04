@@ -25,19 +25,22 @@ class MenuTest extends BaseTest
     {
         $dto = new MenuCreateData(
             parent_id: null,
-            name: 'Menu'
+            name: 'Menu',
+            url: 'menu'
         );
 
         $menu = new Menu([
             'parent_id' => null,
-            'name' => 'Menu'
+            'name' => 'Menu',
+            'url' => 'menu',
         ]);
 
         $this->assertCreateEntity(
             createDto: $dto,
             expectedInput: [
                 'parent_id' => null,
-                'name' => 'Menu'
+                'name' => 'Menu',
+                'url' => 'menu',
             ],
             expectedModel: $menu
         );
@@ -47,23 +50,30 @@ class MenuTest extends BaseTest
     {
         $dto = new MenuUpdateData(
             parent_id: null,
-            name: 'Updated Menu'
+            name: 'Updated Menu',
+            url: 'Updated menu',
+            status: false
         );
 
         $menu = new Menu([
             'parent_id' => null,
-            'name' => 'Menu'
+            'name' => 'Menu',
+            'url' => 'menu',
         ]);
 
         $menu->parent_id = null;
         $menu->name = 'Updated Menu';
+        $menu->url = 'Updated menu';
+        $menu->status = false;
 
         $this->assertUpdateEntity(
             model: $menu,
             updateDto: $dto,
             expectedInput: [
                 'parent_id' => null,
-                'name' => 'Updated Menu'
+                'name' => 'Updated Menu',
+                'url' => 'Updated menu',
+                'status' => false,
             ],
             expectedModel: $menu
         );

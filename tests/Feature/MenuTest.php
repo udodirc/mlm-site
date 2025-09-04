@@ -61,13 +61,19 @@ class MenuTest extends BaseTest
         $data = [
             'parent_id' => null,
             'name' => 'Updated menu',
+            'status' => 0
         ];
 
         $response = $this->putJson(route('menu.update', $menu->id), $data);
 
         $response->assertStatus(Response::HTTP_OK);
 
-        $response->assertJsonFragment(['name' => 'Updated menu']);
+        $response->assertJsonFragment([
+            'name' => 'Updated menu',
+            'status' => false,
+        ]);
+
+        $this->assertDatabaseHas('menu', ['status' => 0]);
     }
 
     public function testDeleteMenu(): void
