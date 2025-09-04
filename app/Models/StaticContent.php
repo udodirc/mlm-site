@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int $id
  * @property string $name
  * @property string $content
+ * @property bool $status
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */
@@ -29,6 +30,7 @@ class StaticContent extends Model
         'id',
         'name',
         'content',
+        'status'
     ];
 
     public function newEloquentBuilder($query): StaticContentQueryBuilder

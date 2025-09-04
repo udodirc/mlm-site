@@ -17,4 +17,6 @@ interface BaseRepositoryInterface
     public function update(Model $model, array $data): ?Model;
 
     public function delete(Model $model): bool;
+
+    public function toggleStatus(Model $model, string $column = 'status'): ?Model;
 }

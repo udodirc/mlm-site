@@ -16,13 +16,16 @@ class StaticContentRepository extends AbstractRepository implements StaticConten
 
     public function contentByName(string $name): ?StaticContent
     {
-        return $this->model->where('name', $name)->first() ?? null;
+        return $this->model
+            ->where('status', true)
+            ->where('name', $name)->first() ?? null;
     }
 
     public function getContentByNames(StaticContentByNamesData $names): ?Collection
     {
         return $this->model
             ->whereIn('name', $names->names)
-            ->get(['name', 'content']);
+            ->where('status', true)
+            ->get();
     }
 }

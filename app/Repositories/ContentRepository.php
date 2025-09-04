@@ -18,6 +18,7 @@ class ContentRepository extends AbstractRepository implements ContentRepositoryI
             ->whereHas('menu', function ($query) use ($slug) {
                 $query->where('url', $slug);
             })
+            ->where('status', true)
             ->first() ?? null;
     }
 }

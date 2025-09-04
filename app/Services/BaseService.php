@@ -66,6 +66,16 @@ abstract class BaseService
     }
 
     /**
+     * @param TModel $model
+     * @param string $column
+     * @return TModel|null
+     */
+    public function toggleStatus(Model $model, string $column = 'status'): ?Model
+    {
+        return $this->repository->toggleStatus($model, $column);
+    }
+
+    /**
      * Преобразование DTO в массив для создания.
      *
      * @param TData $data

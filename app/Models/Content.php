@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int $id
  * @property int $menu_id
  * @property string $content
+ * @property bool $status
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */
@@ -28,7 +29,8 @@ class Content extends Model
     protected $fillable = [
         'id',
         'menu_id',
-        'content'
+        'content',
+        'status'
     ];
 
     public function menu()

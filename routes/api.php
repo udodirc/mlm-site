@@ -24,16 +24,20 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('me', [AdminAuthController::class, 'me'])->name('auth.me');
 
         Route::group(['middleware' => ['permission:create-users|update-users|view-users|delete-users']], function () {
+            Route::post('/users/status/{user}', [AdminUserController::class, 'toggleStatus'])->name('user.toggle-status');
             Route::apiResource('users', AdminUserController::class);
         });
 
         Route::group(['middleware' => ['permission:create-menu|update-menu|view-menu|delete-menu']], function () {
+            Route::post('/menu/status/{menu}', [AdminMenuController::class, 'toggleStatus'])->name('menu.toggle-status');
             Route::get('/menu/parent', [AdminMenuController::class, 'parentMenus'])->name('menu.parent-menus');
             Route::get('/menu/submenu/{id}', [AdminMenuController::class, 'subMenus'])->name('menu.submenus');
             Route::apiResource('menu', AdminMenuController::class);
         });
 
         Route::group(['middleware' => ['permission:create-content|update-content|view-content|delete-content']], function () {
+            Route::post('/content/status/{content}', [AdminContentController::class, 'toggleStatus'])->name('content.toggle-status');
+            Route::post('/static_content/status/{static_content}', [AdminStaticContentController::class, 'toggleStatus'])->name('static-content.toggle-status');
             Route::apiResource('content', AdminContentController::class);
             Route::apiResource('static_content', AdminStaticContentController::class);
         });
@@ -51,7 +55,7 @@ Route::group(['prefix' => 'admin'], function () {
         });
     });
 });
-Route::get('/menu/tree', [FrontMenuController::class, 'treeMenus']);
-Route::get('/{slug}', [FrontContentController::class, 'contentByMenu']);
-Route::get('/static_content/{name}', [FrontStaticContentController::class, 'contentByName']);
-Route::post('/static_content', [FrontStaticContentController::class, 'contentByNames']);
+Route::get('/menu/tree', [FrontMenuController::class, 'treeMenus'])->name('menu.tree');
+Route::get('/{slug}', [FrontContentController::class, 'contentByMenu'])->name('content.content-by-menu');
+Route::get('/static_content/{name}', [FrontStaticContentController::class, 'contentByName'])->name('static-content.content-by-name');
+Route::post('/static_content', [FrontStaticContentController::class, 'contentByNames'])->name('static-content.content-by-names');

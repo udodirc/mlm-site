@@ -36,6 +36,7 @@ class MenuService extends BaseService
             'parent_id' => $data->parent_id,
             'name' => $data->name,
             'url' => $data->url,
+            'status' => $data->status,
         ];
     }
 

@@ -3,6 +3,7 @@
 namespace App\Data\Admin\User;
 
 use Illuminate\Database\Query\Builder;
+use Spatie\LaravelData\Attributes\Validation\BooleanType;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
@@ -17,17 +18,20 @@ class UserUpdateData extends Data
     public string $name;
     public ?string $password;
     public ?string $role;
+    public ?bool $status;
 
     public function __construct(
         string $email,
         string $name,
         ?string $password,
-        ?string $role
+        ?string $role,
+        ?bool $status
     ) {
         $this->password = $password;
         $this->name = $name;
         $this->email = $email;
         $this->role = $role;
+        $this->status = $status;
     }
 
     public static function rules(...$args): array
@@ -67,6 +71,10 @@ class UserUpdateData extends Data
                 new Nullable(),
                 new StringType(),
                 new Max(100)
+            ],
+            'status' => [
+                new Nullable(),
+                new BooleanType(),
             ],
         ];
     }

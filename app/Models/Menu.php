@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $parent_id
  * @property string $name
  * @property string $url
+ * @property bool $status
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */
@@ -31,7 +32,8 @@ class Menu extends Model
         'id',
         'parent_id',
         'name',
-        'url'
+        'url',
+        'status'
     ];
 
     public function parent()
