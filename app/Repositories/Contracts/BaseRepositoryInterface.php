@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 interface BaseRepositoryInterface
 {
-    public function all($paginate = true, array $filters = [], $paginationKey = ''): LengthAwarePaginator|Collection;
+    public function all(bool $paginate = true, array $filters = [], string $paginationKey = ''): LengthAwarePaginator|Collection;
 
     public function find(int $id): ?Model;
 

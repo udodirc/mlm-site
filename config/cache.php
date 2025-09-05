@@ -105,4 +105,19 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_cache_'),
 
+    'models' => [
+        'default_ttl_days' => env('CACHE_DEFAULT_TTL_DAYS', 7),
+
+        'Content' => [
+            'ttl_days' => env('CACHE_CONTENT_TTL_DAYS', 7),
+        ],
+
+        'Menu' => [
+            'ttl_days' => env('CACHE_MENU_TTL_DAYS', 7),
+        ],
+
+        'StaticContent' => [
+            'ttl_days' => env('CACHE_STATIC_CONTENT_TTL_DAYS', 7),
+        ],
+    ],
 ];
