@@ -25,6 +25,11 @@ enum PermissionsEnum: string
     case ContentView = 'view-content';
     case ContentDelete = 'delete-content';
 
+    case StaticContentCreate = 'create-static-content';
+    case StaticContentUpdate = 'update-static-content';
+    case StaticContentView = 'view-static-content';
+    case StaticContentDelete = 'delete-static-content';
+
     case SettingsCreate = 'create-settings';
     case SettingsUpdate = 'update-settings';
     case SettingsView = 'view-settings';

@@ -7,13 +7,12 @@ use Spatie\Permission\Models\Role;
 
 class RoleFactory extends Factory
 {
-    // Указываем нужную модель
     protected $model = Role::class;
 
     public function definition(): array
     {
         return [
-            'name' => $this->faker->unique()->jobTitle, // уникальные имена ролей
+            'name' => $this->faker->unique()->jobTitle,
             'guard_name' => 'api',
         ];
     }

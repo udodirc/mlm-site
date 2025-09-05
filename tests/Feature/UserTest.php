@@ -33,13 +33,16 @@ class UserTest extends BaseTest
             'name' => 'Updated User',
             'email' => 'updated@test.test',
             'password' => '123456789',
-            'role' => 'manager'
+            'role' => 'manager',
+            'status' => false
         ];
 
         $response = $this->putJson(route('users.update', $user->id), $data);
 
         $response->assertStatus(Response::HTTP_OK);
         $response->assertJsonFragment(['name' => 'Updated User']);
+        $response->assertJsonFragment(['email' => 'updated@test.test']);
+        $response->assertJsonFragment(['status' => false]);
     }
 
     public function testDeleteUser(): void

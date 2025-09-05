@@ -2,43 +2,41 @@
 
 namespace Tests\Unit;
 
-use App\Data\Admin\Content\ContentCreateData;
-use App\Data\Admin\Content\ContentUpdateData;
-use App\Models\Content;
-use App\Models\Menu;
-use App\Repositories\ContentRepository;
-use App\Services\ContentService;
+use App\Data\Admin\StaticContent\StaticContentCreateData;
+use App\Data\Admin\StaticContent\StaticContentUpdateData;
+use App\Models\StaticContent;
+use App\Repositories\StaticContentRepository;
+use App\Services\StaticContentService;
+use Illuminate\Database\Eloquent\Collection;
 
-class ContentTest extends BaseTest
+class StaticContentTest extends BaseTest
 {
     protected function getServiceClass(): string
     {
-        return ContentService::class;
+        return StaticContentService::class;
     }
 
     protected function getRepositoryClass(): string
     {
-        return ContentRepository::class;
+        return StaticContentRepository::class;
     }
 
     public function testCreateContent(): void
     {
-        $menu = Menu::factory()->create();
-
-        $dto = new ContentCreateData(
-            $menu->id,
-            'Some content'
+        $dto = new StaticContentCreateData(
+            name: 'Test',
+            content: 'Some content',
         );
 
-        $content = new Content([
-            'menu_id' => 1,
+        $content = new StaticContent([
+            'name' => 'Test',
             'content' => 'Some content'
         ]);
 
         $this->assertCreateEntity(
             createDto: $dto,
             expectedInput: [
-                'menu_id' => 1,
+                'name' => 'Test',
                 'content' => 'Some content'
             ],
             expectedModel: $content
@@ -47,27 +45,25 @@ class ContentTest extends BaseTest
 
     public function testUpdateContent(): void
     {
-        $menu = Menu::factory()->create();
-
-        $dto = new ContentUpdateData(
-            $menu->id,
+        $dto = new StaticContentUpdateData(
+            'Updated test',
             'Updated content'
         );
 
-        $content = new Content([
-            'menu_id' => $menu->id,
+        $content = new StaticContent([
+            'name' => 'Test',
             'content' => 'Some content'
         ]);
 
-        $content->menu_id = $menu->id;
+        $content->name = 'Updated test';
         $content->content = 'Updated content';
 
         $this->assertUpdateEntity(
             model: $content,
             updateDto: $dto,
             expectedInput: [
-                'menu_id' => $menu->id,
-                'content' => 'Updated content'  // ожидаемые данные после обновления
+                'name' => 'Updated test',
+                'content' => 'Updated content'
             ],
             expectedModel: $content
         );
@@ -75,11 +71,9 @@ class ContentTest extends BaseTest
 
     public function testDeleteContent(): void
     {
-        $menu = Menu::factory()->create();
-
-        $content = new Content([
+        $content = new StaticContent([
             'id' => 1,
-            'menu_id' => $menu->id,
+            'name' => 'Test',
             'content' => 'Some content'
         ]);
 
@@ -90,29 +84,27 @@ class ContentTest extends BaseTest
 
     public function testListContent(): void
     {
-        $menus = Menu::factory()->count(2)->create();
-
         $contents = [
-            tap(new Content([
+            tap(new StaticContent([
                 'id' => 1,
-                'menu_id' => $menus[0]->id,
+                'name' => 'First test',
                 'content' => 'First content',
             ]), fn($c) => $c->exists = true),
-            tap(new Content([
+            tap(new StaticContent([
                 'id' => 2,
-                'menu_id' => $menus[1]->id,
+                'name' => 'Second test',
                 'content' => 'Second content',
             ]), fn($c) => $c->exists = true),
         ];
 
-        $collection = new \Illuminate\Database\Eloquent\Collection($contents);
+        $collection = new Collection($contents);
 
         $this->repository
             ->expects($this->once())
             ->method('all')
             ->willReturn($collection);
 
-        $result = $this->service->all(false); // без пагинации
+        $result = $this->service->all(false);
 
         $this->assertCount(2, $result);
         $this->assertEquals('First content', $result[0]->content);
@@ -121,10 +113,9 @@ class ContentTest extends BaseTest
 
     public function testShowContent(): void
     {
-        $menu = new Menu(['id' => 1]);
-        $content = new Content([
+        $content = new StaticContent([
             'id' => 1,
-            'menu_id' => $menu->id,
+            'name' => 'Test',
             'content' => 'Some content',
         ]);
         $content->exists = true;
@@ -134,12 +125,12 @@ class ContentTest extends BaseTest
             ->method('find')
             ->willReturn($content);
 
-        /** @var Content $result */
+        /** @var StaticContent $result */
         $result = $this->service->find(1);
 
         $this->assertNotNull($result);
         $this->assertEquals(1, $result->id);
-        $this->assertEquals($menu->id, $result->menu_id);
+        $this->assertEquals('Test', $result->name);
         $this->assertEquals('Some content', $result->content);
     }
 }
