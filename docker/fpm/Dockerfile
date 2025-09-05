@@ -1,6 +1,7 @@
 FROM php:8.3-fpm
 
-RUN apt-get update && apt-get install  -y \
+# Устанавливаем системные зависимости
+RUN apt-get update && apt-get install -y \
     git \
     curl \
     libpng-dev \
@@ -8,17 +9,36 @@ RUN apt-get update && apt-get install  -y \
     libxml2-dev \
     zip \
     unzip \
-    libjpeg-dev\
-    libfreetype6-dev
+    libjpeg-dev \
+    libfreetype6-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-RUN pecl install xdebug && docker-php-ext-enable xdebug
+# Устанавливаем и включаем Xdebug
+RUN pecl install xdebug \
+    && docker-php-ext-enable xdebug
 
-RUN docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd sockets
+# Настраиваем и устанавливаем расширения PHP
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install \
+        pdo_mysql \
+        mbstring \
+        exif \
+        pcntl \
+        bcmath \
+        gd \
+        sockets
 
+# Устанавливаем Redis (фиксированная версия для стабильности)
+RUN pecl install redis-6.0.2 \
+    && docker-php-ext-enable redis
+
+# Копируем Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Копируем конфиг Xdebug
 COPY ./docker/fpm/xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+WORKDIR /api
 
 EXPOSE 9000
 
