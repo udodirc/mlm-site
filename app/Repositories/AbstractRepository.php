@@ -29,11 +29,49 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         }
 
         $modelName = class_basename($this->model);
-
         $days = (int) config("cache.models.$modelName.ttl_days")
             ?? config('cache.models.default_ttl_days', 7);
 
         return now()->addDays($days);
+    }
+
+    protected function getTag(): string
+    {
+        return 'model:' . class_basename($this->model);
+    }
+
+    protected function getCacheKey(
+        mixed $identifier,
+        array $filters = [],
+        ?int $page = null,
+        ?int $perPage = null
+    ): string {
+        $key = 'model:' . class_basename($this->model) . ':' . $identifier;
+
+        if (!empty($filters)) {
+            $key .= ':f' . md5(json_encode($filters));
+        }
+
+        if ($page !== null) {
+            $key .= ':p' . $page;
+        }
+
+        if ($perPage !== null) {
+            $key .= ':pp' . $perPage;
+        }
+
+        return $key;
+    }
+
+    protected function clearListCache(): void
+    {
+        if ($this->isCacheable()) {
+            try {
+                Cache::tags($this->getTag())->flush();
+            } catch (\Exception $e) {
+                logger()->warning("Failed to flush cache tags for " . $this->getTag() . ": " . $e->getMessage());
+            }
+        }
     }
 
     public function all(
@@ -53,7 +91,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
 
         $cacheKey = $this->getCacheKey('all', $filters, $page, $perPage);
 
-        return Cache::remember(
+        return Cache::tags($this->getTag())->remember(
             $cacheKey,
             $this->getTtl(),
             fn() => $this->queryAll($paginate, $filters, $paginationKey, $perPage)
@@ -89,7 +127,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
 
         $cacheKey = $this->getCacheKey($id);
 
-        return Cache::remember($cacheKey, $this->getTtl(), fn() => $this->model->find($id));
+        return Cache::tags($this->getTag())->remember($cacheKey, $this->getTtl(), fn() => $this->model->find($id));
     }
 
     public function create(array $data): Model
@@ -97,7 +135,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         $model = $this->model->create($data);
 
         if ($this->isCacheable()) {
-            Cache::put($this->getCacheKey($model->getKey()), $model, $this->getTtl());
+            Cache::tags($this->getTag())->put($this->getCacheKey($model->getKey()), $model, $this->getTtl());
             $this->clearListCache();
         }
 
@@ -111,7 +149,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         $model->update($data);
 
         if ($this->isCacheable()) {
-            Cache::put($this->getCacheKey($model->getKey()), $model, $this->getTtl());
+            Cache::tags($this->getTag())->put($this->getCacheKey($model->getKey()), $model, $this->getTtl());
             $this->clearListCache();
         }
 
@@ -125,7 +163,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         $deleted = (bool) $model->delete();
 
         if ($deleted && $this->isCacheable()) {
-            Cache::forget($this->getCacheKey($model->getKey()));
+            Cache::tags($this->getTag())->forget($this->getCacheKey($model->getKey()));
             $this->clearListCache();
         }
 
@@ -146,7 +184,7 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         $model->save();
 
         if ($this->isCacheable()) {
-            Cache::put($this->getCacheKey($model->getKey()), $model, $this->getTtl());
+            Cache::tags($this->getTag())->put($this->getCacheKey($model->getKey()), $model, $this->getTtl());
             $this->clearListCache();
         }
 
@@ -155,44 +193,6 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         return $model;
     }
 
-    protected function getCacheKey(
-        mixed $identifier,
-        array $filters = [],
-        ?int $page = null,
-        ?int $perPage = null
-    ): string {
-        $key = 'model:' . class_basename($this->model) . ':' . $identifier;
-
-        if (!empty($filters)) {
-            $key .= ':f' . md5(json_encode($filters));
-        }
-
-        if ($page !== null) {
-            $key .= ':p' . $page;
-        }
-
-        if ($perPage !== null) {
-            $key .= ':pp' . $perPage;
-        }
-
-        return $key;
-    }
-
-    protected function clearListCache(): void
-    {
-        if ($this->isCacheable()) {
-            Cache::tags($this->getTag())->flush();
-        }
-    }
-
-    protected function getTag(): string
-    {
-        return 'model:' . class_basename($this->model);
-    }
-
-    /**
-     * Сбрасывает кеш конкретной настройки, если модель — Setting.
-     */
     protected function invalidateSettingCache(Model $model): void
     {
         if ($model instanceof \App\Models\Setting && array_key_exists('key', $model->getAttributes())) {
