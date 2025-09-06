@@ -24,12 +24,10 @@ abstract class AbstractRepository implements BaseRepositoryInterface
 
     protected function getTtl(): \DateTimeInterface
     {
-        // Если у модели явно задан $ttl
         if (property_exists($this->model, 'ttl') && !is_null($this->model::$ttl)) {
             return now()->addDays($this->model::$ttl);
         }
 
-        // Берем из конфига, если есть
         $modelName = class_basename($this->model);
 
         $days = (int) config("cache.models.$modelName.ttl_days")
@@ -38,24 +36,46 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         return now()->addDays($days);
     }
 
-    public function all(bool $paginate = true, array $filters = [], string $paginationKey = ''): LengthAwarePaginator|Collection
-    {
+    public function all(
+        bool $paginate = true,
+        array $filters = [],
+        string $paginationKey = ''
+    ): LengthAwarePaginator|Collection {
         if (!$this->isCacheable()) {
             return $this->queryAll($paginate, $filters, $paginationKey);
         }
 
-        $cacheKey = $this->getCacheKey('all', $filters);
+        $page = request()->integer('page', 1);
+        $perPage = request()->integer(
+            'per_page',
+            setting($paginationKey, config('app.default_pagination'))
+        );
 
-        return Cache::remember($cacheKey, $this->getTtl(), fn() => $this->queryAll($paginate, $filters, $paginationKey));
+        $cacheKey = $this->getCacheKey('all', $filters, $page, $perPage);
+
+        return Cache::remember(
+            $cacheKey,
+            $this->getTtl(),
+            fn() => $this->queryAll($paginate, $filters, $paginationKey, $perPage)
+        );
     }
 
-    protected function queryAll(bool $paginate, array $filters, string $paginationKey): LengthAwarePaginator|Collection
-    {
+    protected function queryAll(
+        bool $paginate,
+        array $filters,
+        string $paginationKey,
+        ?int $perPage = null
+    ): LengthAwarePaginator|Collection {
         if ($paginate) {
+            $perPage ??= request()->integer(
+                'per_page',
+                setting($paginationKey, config('app.default_pagination'))
+            );
+
             return $this->model
                 ->newQuery()
                 ->filter($filters)
-                ->paginate(config('app.settings.' . $paginationKey) ?? config('app.default_pagination'));
+                ->paginate($perPage);
         }
 
         return $this->model->all();
@@ -81,6 +101,8 @@ abstract class AbstractRepository implements BaseRepositoryInterface
             $this->clearListCache();
         }
 
+        $this->invalidateSettingCache($model);
+
         return $model;
     }
 
@@ -93,6 +115,8 @@ abstract class AbstractRepository implements BaseRepositoryInterface
             $this->clearListCache();
         }
 
+        $this->invalidateSettingCache($model);
+
         return $model;
     }
 
@@ -103,6 +127,10 @@ abstract class AbstractRepository implements BaseRepositoryInterface
         if ($deleted && $this->isCacheable()) {
             Cache::forget($this->getCacheKey($model->getKey()));
             $this->clearListCache();
+        }
+
+        if ($deleted) {
+            $this->invalidateSettingCache($model);
         }
 
         return $deleted;
@@ -122,15 +150,29 @@ abstract class AbstractRepository implements BaseRepositoryInterface
             $this->clearListCache();
         }
 
+        $this->invalidateSettingCache($model);
+
         return $model;
     }
 
-    protected function getCacheKey(mixed $identifier, array $filters = []): string
-    {
+    protected function getCacheKey(
+        mixed $identifier,
+        array $filters = [],
+        ?int $page = null,
+        ?int $perPage = null
+    ): string {
         $key = 'model:' . class_basename($this->model) . ':' . $identifier;
 
         if (!empty($filters)) {
-            $key .= ':' . md5(json_encode($filters));
+            $key .= ':f' . md5(json_encode($filters));
+        }
+
+        if ($page !== null) {
+            $key .= ':p' . $page;
+        }
+
+        if ($perPage !== null) {
+            $key .= ':pp' . $perPage;
         }
 
         return $key;
@@ -146,5 +188,15 @@ abstract class AbstractRepository implements BaseRepositoryInterface
     protected function getTag(): string
     {
         return 'model:' . class_basename($this->model);
+    }
+
+    /**
+     * Сбрасывает кеш конкретной настройки, если модель — Setting.
+     */
+    protected function invalidateSettingCache(Model $model): void
+    {
+        if ($model instanceof \App\Models\Setting && array_key_exists('key', $model->getAttributes())) {
+            Cache::forget("setting:{$model->key}");
+        }
     }
 }
