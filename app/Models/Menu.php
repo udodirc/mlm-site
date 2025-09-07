@@ -23,6 +23,9 @@ class Menu extends Model
 
     protected $table = 'menu';
 
+    public static bool $cache = true;
+    public static ?int $ttl = null;
+
     /**
      * The attributes that are mass assignable.
      *
