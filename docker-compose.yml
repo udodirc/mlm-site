@@ -8,7 +8,7 @@ services:
             - "${DOCKER_NGINX_PORT}:80"
             - "${DOCKER_NGINX_PORT_SSL}:443"
         networks:
-            - binar
+            - site
         volumes:
             - ./docker/nginx:/etc/nginx/conf.d/
             - ./docker/nginx/logs:/var/log/nginx/
@@ -26,7 +26,7 @@ services:
         expose:
             - "9000"
         networks:
-            - binar
+            - site
         restart: always
         volumes:
             - ./.:/api
@@ -39,7 +39,7 @@ services:
         container_name: mlm-site-db
         image: mysql:latest
         volumes:
-            - binar-db-vol:/var/lib/mysql
+            - site-db-vol:/var/lib/mysql
         environment:
             MYSQL_USER: ${DB_USERNAME}
             MYSQL_PASSWORD: ${DB_PASSWORD}
@@ -52,7 +52,7 @@ services:
         ports:
             - "${DOCKER_PROJECT_IP}:${DOCKER_DB_PORT}:3306"
         networks:
-            - binar
+            - site
         restart: always
 
     redis:
@@ -61,15 +61,27 @@ services:
         ports:
             - "${DOCKER_PROJECT_IP}:6379:6379" # опционально, если нужно подключаться извне
         networks:
-            - binar
+            - site
         restart: always
         volumes:
             - redis-data:/data
 
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: ${DOCKER_CONTAINER}-rabbitmq
+        ports:
+            - "5672:5672"    # RabbitMQ
+            - "15672:15672"  # Web UI http://localhost:15672
+        environment:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASS: guest
+        networks:
+            - site
+
 networks:
-    binar:
+    site:
         driver: bridge
 
 volumes:
-    binar-db-vol:
+    site-db-vol:
     redis-data:
