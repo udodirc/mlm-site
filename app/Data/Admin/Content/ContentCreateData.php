@@ -102,7 +102,7 @@ class ContentCreateData extends Data
                 new StringType(),
             ],
             'og_type' => [
-                new Nullable(),
+                new Required(),
                 new StringType(),
             ],
             'canonical_url' => [
@@ -110,7 +110,7 @@ class ContentCreateData extends Data
                 new StringType(),
             ],
             'robots' => [
-                new Nullable(),
+                new Required(),
                 new StringType(),
             ]
         ];
