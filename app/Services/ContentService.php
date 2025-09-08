@@ -24,6 +24,16 @@ class ContentService extends BaseService
         return [
             'menu_id' => $data->menu_id,
             'content' => $data->content,
+            'title' => $data->title,
+            'meta_description' => $data->meta_description,
+            'meta_keywords' => $data->meta_keywords,
+            'og_title' => $data->og_title,
+            'og_description' => $data->og_description,
+            'og_image' => $data->og_image,
+            'og_type' => $data->og_type,
+            'og_url' => $data->og_url,
+            'canonical_url' => $data->canonical_url,
+            'robots' => $data->robots
         ];
     }
 
@@ -34,6 +44,16 @@ class ContentService extends BaseService
             'menu_id' => $data->menu_id,
             'content' => $data->content,
             'status' => $data->status,
+            'title' => $data->title,
+            'meta_description' => $data->meta_description,
+            'meta_keywords' => $data->meta_keywords,
+            'og_title' => $data->og_title,
+            'og_description' => $data->og_description,
+            'og_image' => $data->og_image,
+            'og_type' => $data->og_type,
+            'og_url' => $data->og_url,
+            'canonical_url' => $data->canonical_url,
+            'robots' => $data->robots
         ];
     }
 
