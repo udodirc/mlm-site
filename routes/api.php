@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\SettingController as AdminSettingController;
 use App\Http\Controllers\Front\MenuController as FrontMenuController;
 use App\Http\Controllers\Front\ContentController as FrontContentController;
 use App\Http\Controllers\Front\StaticContentController as FrontStaticContentController;
+use App\Http\Controllers\Front\ContactController as FrontContactController;
 use App\Http\Middleware\LoadAdminSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -59,6 +60,7 @@ Route::group(['prefix' => 'admin'], function () {
     });
 });
 Route::get('/menu/tree', [FrontMenuController::class, 'treeMenus'])->name('menu.tree');
-Route::get('/{slug}', [FrontContentController::class, 'contentByMenu'])->name('content.content-by-menu');
 Route::get('/static_content/{name}', [FrontStaticContentController::class, 'contentByName'])->name('static-content.content-by-name');
 Route::post('/static_content', [FrontStaticContentController::class, 'contentByNames'])->name('static-content.content-by-names');
+Route::post('/contacts', [FrontContactController::class, 'send'])->name('contacts.send');
+Route::get('/{slug}', [FrontContentController::class, 'contentByMenu'])->name('content.content-by-menu');

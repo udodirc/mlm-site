@@ -16,7 +16,7 @@ class CreateAdminUser extends Command
      *
      * @var string
      */
-    protected $signature = 'user:create-admin {email} {name}';
+    protected $signature = 'user:create-admin {emails} {name}';
 
     /**
      * The console command description.
@@ -33,13 +33,13 @@ class CreateAdminUser extends Command
         $password = Str::random(12);
 
         $data = new AdminCreateData(
-            $this->argument('email'),
+            $this->argument('emails'),
             $this->argument('name'),
             $password,
         );
 
         $user = User::create([
-            'email' => $data->email,
+            'emails' => $data->email,
             'name' => $data->name,
             'password' => $password,
         ]);
@@ -66,7 +66,7 @@ class CreateAdminUser extends Command
     {
         return [
             'name' => __('form.create_admin_name'),
-            'email' => __('form.create_admin_email')
+            'emails' => __('form.create_admin_email')
         ];
     }
 }
