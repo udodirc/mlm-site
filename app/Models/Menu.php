@@ -44,6 +44,11 @@ class Menu extends Model
         return $this->belongsTo(Menu::class, 'parent_id');
     }
 
+    public function content()
+    {
+        return $this->hasOne(Content::class, 'menu_id');
+    }
+
     public function newEloquentBuilder($query): MenuQueryBuilder
     {
         return new MenuQueryBuilder($query);

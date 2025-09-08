@@ -12,6 +12,16 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $menu_id
  * @property string $content
  * @property bool $status
+ * @property string $title
+ * @property string $meta_description
+ * @property string $meta_keywords
+ * @property string $og_title
+ * @property string $og_description
+ * @property string $og_image
+ * @property string $og_url
+ * @property string $og_type
+ * @property string $canonical_url
+ * @property string $robots
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */
@@ -33,7 +43,17 @@ class Content extends Model
         'id',
         'menu_id',
         'content',
-        'status'
+        'status',
+        'title',
+        'meta_description',
+        'meta_keywords',
+        'og_title',
+        'og_description',
+        'og_image',
+        'og_url',
+        'og_type',
+        'canonical_url',
+        'robots'
     ];
 
     public function menu()
