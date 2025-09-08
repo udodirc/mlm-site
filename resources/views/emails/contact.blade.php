@@ -1,4 +1,4 @@
-<p><strong>Имя:</strong> {{ $dto->name }}</p>
-<p><strong>Email:</strong> {{ $dto->email }}</p>
+<p><strong>Email:</strong> {{ $data->email }}</p>
+<p><strong>Телефон:</strong> {{ $data->phone }}</p>
 <p><strong>Сообщение:</strong></p>
-<p>{{ $dto->message }}</p>
+<p>{{ $data->message }}</p>

@@ -11,12 +11,21 @@ class ContactMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public function __construct(public ContactSendData $data) {}
+    public ContactSendData $data;
+
+    public function __construct(ContactSendData $data)
+    {
+        $this->data = $data;
+    }
 
     public function build()
     {
-        return $this->subject('Новое сообщение с формы контактов')
+        return $this->from($this->data->email, 'Contacts')
+            ->to(config('mail.admin_address'))
+            ->subject('Новое сообщение с формы контактов')
             ->view('emails.contact')
-            ->with(['dto' => $this->data]);
+            ->with([
+                'data' => $this->data
+            ]);
     }
 }

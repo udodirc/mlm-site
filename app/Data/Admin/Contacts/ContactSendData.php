@@ -29,7 +29,7 @@ class ContactSendData extends Data
     public static function rules(...$args): array
     {
         return [
-            'emails' => [
+            'email' => [
                 new Required(),
                 new StringType(),
                 new Max(100)

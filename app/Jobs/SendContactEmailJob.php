@@ -27,7 +27,6 @@ class SendContactEmailJob implements ShouldQueue
 
     public function handle(): void
     {
-        Mail::to(config('mail.admin_address')) // например, письмо админу
-        ->send(new ContactMail($this->data));
+        Mail::send(new ContactMail($this->data));
     }
 }
