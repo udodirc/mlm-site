@@ -28,7 +28,7 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         gd \
         sockets
 
-# Устанавливаем Redis (фиксированная версия для стабильности)
+# Устанавливаем расширение phpredis и включаем его
 RUN pecl install redis-6.0.2 \
     && docker-php-ext-enable redis
 
