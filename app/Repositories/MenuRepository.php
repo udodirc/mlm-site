@@ -24,9 +24,11 @@ class MenuRepository extends AbstractRepository implements MenuRepositoryInterfa
     public function parentMenus(): Collection
     {
         return $this->model
-            ->where('parent_id', null)
-            ->where('status', true)
-            ->get(['id', 'name']);
+            ->whereNull('menu.parent_id')
+            ->where('menu.status', true)
+            ->leftJoin('content', 'menu.id', '=', 'content.menu_id')
+            ->whereNull('content.menu_id')
+            ->get(['menu.id', 'menu.name']);
     }
 
     public function treeMenus(): array
