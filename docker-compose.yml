@@ -32,8 +32,8 @@ services:
             - ./.:/api
         environment:
             PHP_IDE_CONFIG: "serverName=${DOCKER_PROJECT_DOMAIN}"
-        depends_on:
-            - redis
+#        depends_on:
+#            - redis
 
     db:
         container_name: mlm-site-db
@@ -55,16 +55,16 @@ services:
             - site
         restart: always
 
-    redis:
-        container_name: mlm-site-redis
-        image: redis:7-alpine
-        ports:
-            - "${DOCKER_PROJECT_IP}:6379:6379" # опционально, если нужно подключаться извне
-        networks:
-            - site
-        restart: always
-        volumes:
-            - redis-data:/data
+#    redis:
+#        container_name: mlm-site-redis
+#        image: redis:7-alpine
+#        ports:
+#            - "${DOCKER_PROJECT_IP}:6379:6379" # опционально, если нужно подключаться извне
+#        networks:
+#            - site
+#        restart: always
+#        volumes:
+#            - redis-data:/data
 
     rabbitmq:
         image: rabbitmq:3-management
