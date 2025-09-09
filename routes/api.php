@@ -35,6 +35,8 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('/menu/status/{menu}', [AdminMenuController::class, 'toggleStatus'])->name('menu.toggle-status');
             Route::get('/menu/parent', [AdminMenuController::class, 'parentMenus'])->name('menu.parent-menus');
             Route::get('/menu/submenu/{id}', [AdminMenuController::class, 'subMenus'])->name('menu.submenus');
+            Route::post('menu/order/{menu}/up', [AdminMenuController::class, 'orderUp']);
+            Route::post('menu/order/{menu}/down', [AdminMenuController::class, 'orderDown']);
             Route::apiResource('menu', AdminMenuController::class);
         });
 

@@ -24,6 +24,7 @@ class MenuResource extends JsonResource
             'name' => $this->name,
             'url' => $this->url,
             'status' => $this->status,
+            'order' => $this->order,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];
