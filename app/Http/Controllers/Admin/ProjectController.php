@@ -14,7 +14,7 @@ use App\Services\ProjectService;
 class ProjectController extends BaseController
 {
     protected ?string $filterDataClass = ProjectFilterData::class;
-    protected string $perPageConfigKey = PaginationEnum::Content->value;
+    protected string $perPageConfigKey = PaginationEnum::Project->value;
 
     public function __construct(ProjectService $service)
     {

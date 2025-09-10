@@ -13,5 +13,7 @@ enum PaginationEnum: string
     case Content = 'per_page_content';
 
     case StaticContent = 'per_page_static_content';
+
+    case Project = 'per_page_project';
 }
 
