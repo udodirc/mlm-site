@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\MenuController as AdminMenuController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
+use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\StaticContentController as AdminStaticContentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
@@ -43,6 +44,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::group(['middleware' => ['permission:create-content|update-content|view-content|delete-content']], function () {
             Route::post('/content/status/{content}', [AdminContentController::class, 'toggleStatus'])->name('content.toggle-status');
             Route::apiResource('content', AdminContentController::class);
+            Route::post('/project/status/{content}', [AdminProjectController::class, 'toggleStatus'])->name('content.toggle-status');
+            Route::apiResource('project', AdminProjectController::class);
         });
 
         Route::group(['middleware' => ['permission:create-static-content|update-static-content|view-static-content|delete-static-content']], function () {
