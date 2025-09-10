@@ -54,4 +54,14 @@ class MenuService extends BaseService
     {
         return $this->repository->treeMenus();
     }
+
+    public function orderUp(Menu $menu): bool
+    {
+        return $this->repository->orderUp($menu);
+    }
+
+    public function orderDown(Menu $menu): bool
+    {
+        return $this->repository->orderDown($menu);
+    }
 }

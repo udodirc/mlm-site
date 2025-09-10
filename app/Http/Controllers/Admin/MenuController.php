@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Data\Admin\Menu\MenuChangeOrderData;
 use App\Data\Admin\Menu\MenuCreateData;
 use App\Data\Admin\Menu\MenuFilterData;
 use App\Data\Admin\Menu\MenuUpdateData;
@@ -48,5 +49,15 @@ class MenuController extends BaseController
         return (SubMenuResource::class)::collection(
             $this->service->parentMenus()
         );
+    }
+
+    public function orderUp(Menu $menu): bool
+    {
+        return $this->service->orderUp($menu);
+    }
+
+    public function orderDown(Menu $menu): bool
+    {
+        return $this->service->orderDown($menu);
     }
 }

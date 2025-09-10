@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use App\QueryBuilders\MenuQueryBuilder;
+use App\Traits\Ordered;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
  * @property-read int $id
@@ -13,13 +17,14 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $name
  * @property string $url
  * @property bool $status
+ * @property-read int $order
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */
 class Menu extends Model
 {
     /** @use HasFactory<\Database\Factories\MenuFactory> */
-    use HasFactory;
+    use HasFactory, Ordered;
 
     protected $table = 'menu';
 
@@ -36,17 +41,23 @@ class Menu extends Model
         'parent_id',
         'name',
         'url',
-        'status'
+        'status',
+        'order'
     ];
 
-    public function parent()
+    public function parent(): BelongsTo
     {
         return $this->belongsTo(Menu::class, 'parent_id');
     }
 
-    public function content()
+    public function content(): HasOne
     {
         return $this->hasOne(Content::class, 'menu_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(Menu::class, 'parent_id');
     }
 
     public function newEloquentBuilder($query): MenuQueryBuilder

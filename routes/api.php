@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
 use App\Http\Controllers\Admin\SettingController as AdminSettingController;
+use App\Http\Controllers\Admin\CacheController as AdminCacheController;
 use App\Http\Controllers\Front\MenuController as FrontMenuController;
 use App\Http\Controllers\Front\ContentController as FrontContentController;
 use App\Http\Controllers\Front\StaticContentController as FrontStaticContentController;
@@ -23,6 +24,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('logout', [AdminAuthController::class, 'logout'])->name('auth.logout');
         Route::post('refresh', [AdminAuthController::class, 'refresh'])->name('auth.refresh-token');
         Route::post('me', [AdminAuthController::class, 'me'])->name('auth.me');
+        Route::post('/cache/clear', [AdminCacheController::class, 'clear'])->name('cache.clear');
 
         Route::group(['middleware' => ['permission:create-users|update-users|view-users|delete-users']], function () {
             Route::post('/users/status/{user}', [AdminUserController::class, 'toggleStatus'])->name('user.toggle-status');
@@ -33,6 +35,8 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('/menu/status/{menu}', [AdminMenuController::class, 'toggleStatus'])->name('menu.toggle-status');
             Route::get('/menu/parent', [AdminMenuController::class, 'parentMenus'])->name('menu.parent-menus');
             Route::get('/menu/submenu/{id}', [AdminMenuController::class, 'subMenus'])->name('menu.submenus');
+            Route::post('menu/order/{menu}/up', [AdminMenuController::class, 'orderUp']);
+            Route::post('menu/order/{menu}/down', [AdminMenuController::class, 'orderDown']);
             Route::apiResource('menu', AdminMenuController::class);
         });
 
