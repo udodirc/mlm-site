@@ -120,7 +120,22 @@ class ProjectUpdateData extends Data
             'robots' => [
                 new Required(),
                 new StringType(),
-            ]
+            ],
+            'images' => [
+                new Nullable(),
+                function ($attribute, $value, $fail) {
+                    if (is_array($value)) {
+                        foreach ($value as $file) {
+                            if (!in_array($file->getClientMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
+                                $fail("The {$attribute} must be a file of type: jpeg, png, webp.");
+                            }
+                            if ($file->getSize() > 2 * 1024 * 1024) { // 2MB
+                                $fail("The {$attribute} file is too large (max 2MB).");
+                            }
+                        }
+                    }
+                },
+            ],
         ];
     }
 }

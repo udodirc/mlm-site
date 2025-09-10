@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Project;
 use App\Models\Setting;
 use App\Models\User;
+use App\Observers\ProjectObserver;
 use App\Observers\SettingsObserver;
 use App\Observers\UserObserver;
 use App\Repositories\ContentRepository;
@@ -48,5 +50,6 @@ class AppServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
         Setting::observe(SettingsObserver::class);
+        Project::observe(ProjectObserver::class);
     }
 }

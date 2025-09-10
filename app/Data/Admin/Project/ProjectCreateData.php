@@ -5,6 +5,7 @@ namespace App\Data\Admin\Project;
 use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Attributes\Validation\IntegerType;
 use Spatie\LaravelData\Attributes\Validation\Max;
+use Spatie\LaravelData\Attributes\Validation\MimeTypes;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
 use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Attributes\Validation\StringType;
@@ -26,6 +27,7 @@ class ProjectCreateData extends Data
     public string $og_type;
     public string|Optional|null $canonical_url;
     public string $robots;
+    public array $images;
 
     public function __construct(
         string $name,
@@ -40,6 +42,7 @@ class ProjectCreateData extends Data
         string $og_type = 'website',
         ?string $canonical_url,
         string $robots = 'index, follow',
+        array $images = []
     ){
         $this->name = $name;
         $this->content = $content;
@@ -53,6 +56,7 @@ class ProjectCreateData extends Data
         $this->og_type = $og_type;
         $this->canonical_url = $canonical_url;
         $this->robots = $robots;
+        $this->images = $images;
     }
 
     public static function rules(...$args): array
@@ -106,7 +110,22 @@ class ProjectCreateData extends Data
             'robots' => [
                 new Required(),
                 new StringType(),
-            ]
+            ],
+            'images' => [
+                new Nullable(),
+                function ($attribute, $value, $fail) {
+                    if (is_array($value)) {
+                        foreach ($value as $file) {
+                            if (!in_array($file->getClientMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
+                                $fail("The {$attribute} must be a file of type: jpeg, png, webp.");
+                            }
+                            if ($file->getSize() > 2 * 1024 * 1024) { // 2MB
+                                $fail("The {$attribute} file is too large (max 2MB).");
+                            }
+                        }
+                    }
+                },
+            ],
         ];
     }
 }
