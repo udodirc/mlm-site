@@ -70,9 +70,11 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('/permissions', [AdminPermissionController::class, 'createPermissions'])->name('permissions.create-permissions');
         });
 
-        Route::prefix('files')->group(function () {
-            Route::get('{entity}/{entityId}', [FileController::class, 'index']);
-            Route::delete('{entity}/{entityId}', [FileController::class, 'destroy']);
+        Route::group(['middleware' => ['permission:create-project|update-project|delete-project']], function () {
+            Route::prefix('files')->group(function () {
+                Route::get('{entity}/{entityId}', [FileController::class, 'index']);
+                Route::delete('{entity}/{entityId}', [FileController::class, 'destroy']);
+            });
         });
     });
 });

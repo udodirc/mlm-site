@@ -4,15 +4,15 @@ namespace App\Observers;
 
 use App\Enums\UploadEnum;
 use App\Models\Project;
-use App\Services\UploadService;
+use App\Services\FileService;
 
 class ProjectObserver
 {
-    protected UploadService $imageService;
+    protected FileService $fileService;
 
-    public function __construct(UploadService $service)
+    public function __construct(FileService $service)
     {
-        $this->imageService = $service;
+        $this->fileService = $service;
     }
 
     /**
@@ -36,7 +36,7 @@ class ProjectObserver
      */
     public function deleted(Project $project): void
     {
-        $this->imageService->delete(UploadEnum::ProjectsDir->value, $project->id);
+        $this->fileService->deleteFolder(UploadEnum::ProjectsDir->value, $project->id);
     }
 
     /**
@@ -52,14 +52,13 @@ class ProjectObserver
      */
     public function forceDeleted(Project $project): void
     {
-        $this->imageService->delete(UploadEnum::ProjectsDir->value, $project->id);
+        $this->fileService->deleteFolder(UploadEnum::ProjectsDir->value, $project->id);
     }
 
     protected function handleImages(Project $project): void
     {
         if (request()->hasFile('images')) {
-            $this->imageService->delete(UploadEnum::ProjectsDir->value, $project->id);
-            $this->imageService->upload(request()->file('images'), UploadEnum::ProjectsDir->value, $project->id);
+            $this->fileService->upload(request()->file('images'), UploadEnum::ProjectsDir->value, $project->id);
         }
     }
 }

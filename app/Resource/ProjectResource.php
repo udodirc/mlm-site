@@ -4,9 +4,10 @@ namespace App\Resource;
 
 use App\Enums\UploadEnum;
 use App\Models\Project;
-use App\Services\UploadService;
+use App\Services\FileService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+
 /**
  * @mixin Project
  */
@@ -14,7 +15,13 @@ class ProjectResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-       return [
+        $fileService = app(FileService::class);
+
+        $entity = UploadEnum::ProjectsDir->value;
+
+        $folderUrl = asset("storage/" . UploadEnum::UploadsDir->value . "/{$entity}/{$this->id}");
+
+        return [
             'id' => $this->id,
             'name' => $this->name,
             'content' => $this->content,
@@ -29,9 +36,9 @@ class ProjectResource extends JsonResource
             'og_url' => $this->og_url,
             'canonical_url' => $this->canonical_url,
             'robots' => $this->robots,
-            'image_url' => asset("storage/" . UploadEnum::UploadsDir->value . "/" . UploadEnum::ProjectsDir->value . "/$this->id"),
-            'images' => UploadService::files(UploadEnum::ProjectsDir->value, $this->id),
-            'image_dir' => UploadEnum::ProjectsDir->value,
+            'image_url' => $folderUrl,
+            'images' => $fileService->files($entity, $this->id),
+            'image_dir' => $entity,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];
