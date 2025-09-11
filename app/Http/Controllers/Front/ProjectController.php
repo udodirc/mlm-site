@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
+use App\Models\Project;
 use App\Resource\ProjectResource;
 use App\Services\ProjectService;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -21,5 +22,10 @@ class ProjectController extends Controller
         return ProjectResource::collection(
             $this->service->all()
         );
+    }
+
+    public function show(Project $project): ProjectResource
+    {
+        return new ProjectResource($project);
     }
 }
