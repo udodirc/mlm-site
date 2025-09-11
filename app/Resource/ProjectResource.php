@@ -31,6 +31,7 @@ class ProjectResource extends JsonResource
             'robots' => $this->robots,
             'image_url' => asset("storage/" . UploadEnum::UploadsDir->value . "/" . UploadEnum::ProjectsDir->value . "/$this->id"),
             'images' => UploadService::files(UploadEnum::ProjectsDir->value, $this->id),
+            'image_dir' => UploadEnum::ProjectsDir->value,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];
