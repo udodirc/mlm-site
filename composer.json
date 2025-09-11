@@ -18,7 +18,8 @@
         "spatie/laravel-data": "^4.15",
         "spatie/laravel-permission": "^6.19",
         "tymon/jwt-auth": "^2.2",
-        "vladimir-yuldashev/laravel-queue-rabbitmq": "^14.3"
+        "vladimir-yuldashev/laravel-queue-rabbitmq": "^14.3",
+        "ext-http": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

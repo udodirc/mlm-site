@@ -11,6 +11,9 @@ use App\Models\Content;
 use App\Resource\ContentResource;
 use App\Services\ContentService;
 
+/**
+ * @extends BaseController<ContentService, Content, ContentResource, ContentCreateData, ContentUpdateData>
+ */
 class ContentController extends BaseController
 {
     protected ?string $filterDataClass = ContentFilterData::class;

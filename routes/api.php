@@ -47,7 +47,8 @@ Route::group(['prefix' => 'admin'], function () {
         });
 
         Route::group(['middleware' => ['permission:create-project|update-project|view-project|delete-project']], function () {
-            Route::post('/project/status/{content}', [AdminProjectController::class, 'toggleStatus'])->name('project.toggle-status');
+            Route::post('/project/status/{project}', [AdminProjectController::class, 'toggleStatus'])->name('project.toggle-status');
+            Route::post('/project/{project}', [AdminProjectController::class, 'update'])->name('project.update');
             Route::apiResource('project', AdminProjectController::class);
         });
 

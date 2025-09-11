@@ -10,7 +10,12 @@ use App\Http\Controllers\BaseController;
 use App\Models\Project;
 use App\Resource\ProjectResource;
 use App\Services\ProjectService;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Request;
 
+/**
+ * @extends BaseController<ProjectService, Project, ProjectResource, ProjectCreateData, ProjectUpdateData>
+ */
 class ProjectController extends BaseController
 {
     protected ?string $filterDataClass = ProjectFilterData::class;
