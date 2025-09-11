@@ -2,22 +2,19 @@
 
 namespace App\Resource;
 
+use App\Enums\UploadEnum;
 use App\Models\Project;
+use App\Services\UploadService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-
 /**
  * @mixin Project
  */
 class ProjectResource extends JsonResource
 {
-    /**
-     * @param Request $request
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        return [
+       return [
             'id' => $this->id,
             'name' => $this->name,
             'content' => $this->content,
@@ -32,6 +29,8 @@ class ProjectResource extends JsonResource
             'og_url' => $this->og_url,
             'canonical_url' => $this->canonical_url,
             'robots' => $this->robots,
+            'image_url' => asset("storage/" . UploadEnum::UploadsDir->value . "/" . UploadEnum::ProjectsDir->value . "/$this->id"),
+            'images' => UploadService::files(UploadEnum::ProjectsDir->value, $this->id),
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];

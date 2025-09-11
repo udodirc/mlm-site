@@ -13,7 +13,7 @@ class UploadService
         $files = is_array($files) ? $files : [$files];
 
         foreach ($files as $file) {
-            $file->store(UploadEnum::UploadsDir->value."/{$entity}/{$entityId}");
+            $file->store(UploadEnum::UploadsDir->value."/{$entity}/{$entityId}", 'public');
         }
     }
 
@@ -24,5 +24,18 @@ class UploadService
         if (Storage::exists($folder)) {
             Storage::deleteDirectory($folder);
         }
+    }
+
+    public static function files($entity, $entityId): array
+    {
+        $folder = storage_path("app/public/".UploadEnum::UploadsDir->value."/{$entity}/{$entityId}");
+
+        if (!is_dir($folder)) {
+            return [];
+        }
+
+        $files = scandir($folder);
+
+        return array_values(array_filter($files, fn($file) => !in_array($file, ['.', '..'])));
     }
 }
