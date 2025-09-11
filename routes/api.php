@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\FileController;
 use App\Http\Controllers\Admin\MenuController as AdminMenuController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
@@ -67,6 +68,11 @@ Route::group(['prefix' => 'admin'], function () {
             Route::post('/roles/permissions', [AdminRoleController::class, 'assignPermissions'])->name('roles.assign-permissions');
             Route::get('/permissions', [AdminPermissionController::class, 'index'])->name('permissions.all');
             Route::post('/permissions', [AdminPermissionController::class, 'createPermissions'])->name('permissions.create-permissions');
+        });
+
+        Route::prefix('files')->group(function () {
+            Route::get('{entity}/{entityId}', [FileController::class, 'index']);
+            Route::delete('{entity}/{entityId}', [FileController::class, 'destroy']);
         });
     });
 });

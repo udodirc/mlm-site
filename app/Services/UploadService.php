@@ -26,7 +26,7 @@ class UploadService
         }
     }
 
-    public static function files($entity, $entityId): array
+    public static function files(string $entity, int|string $entityId): array
     {
         $folder = storage_path("app/public/".UploadEnum::UploadsDir->value."/{$entity}/{$entityId}");
 
