@@ -34,6 +34,14 @@ Route::group(['prefix' => 'admin'], function () {
                 Route::post('/users/status/{user}', [AdminUserController::class, 'toggleStatus'])->name('user.toggle-status');
                 Route::apiResource('users', AdminUserController::class);
             });
+
+            Route::group(['middleware' => ['permission:view-permissions|create-roles|update-roles|view-roles|delete-roles']], function () {
+                Route::post('/roles/assign', [AdminRoleController::class, 'assignRole'])->name('roles.assign-role');
+                Route::apiResource('roles', AdminRoleController::class);
+                Route::post('/roles/permissions', [AdminRoleController::class, 'assignPermissions'])->name('roles.assign-permissions');
+                Route::get('/permissions', [AdminPermissionController::class, 'index'])->name('permissions.all');
+                Route::post('/permissions', [AdminPermissionController::class, 'createPermissions'])->name('permissions.create-permissions');
+            });
         });
 
         Route::group(['middleware' => ['permission:create-menu|update-menu|view-menu|delete-menu']], function () {
@@ -63,14 +71,6 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::group(['middleware' => ['permission:create-settings|update-settings|view-settings|delete-settings']], function () {
             Route::apiResource('settings', AdminSettingController::class);
-        });
-
-        Route::group(['middleware' => ['permission:view-permissions|create-roles|update-roles|view-roles|delete-roles']], function () {
-            Route::post('/roles/assign', [AdminRoleController::class, 'assignRole'])->name('roles.assign-role');
-            Route::apiResource('roles', AdminRoleController::class);
-            Route::post('/roles/permissions', [AdminRoleController::class, 'assignPermissions'])->name('roles.assign-permissions');
-            Route::get('/permissions', [AdminPermissionController::class, 'index'])->name('permissions.all');
-            Route::post('/permissions', [AdminPermissionController::class, 'createPermissions'])->name('permissions.create-permissions');
         });
 
         Route::group(['middleware' => ['permission:create-project|update-project|delete-project']], function () {
