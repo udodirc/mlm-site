@@ -24,6 +24,7 @@ class ProjectService extends BaseService
         return [
             'name' => $data->name,
             'content' => $data->content,
+            'url' => $data->url,
             'title' => $data->title,
             'meta_description' => $data->meta_description,
             'meta_keywords' => $data->meta_keywords,
@@ -44,6 +45,7 @@ class ProjectService extends BaseService
             'name' => $data->name,
             'content' => $data->content,
             'status' => $data->status,
+            'url' => $data->url,
             'title' => $data->title,
             'meta_description' => $data->meta_description,
             'meta_keywords' => $data->meta_keywords,

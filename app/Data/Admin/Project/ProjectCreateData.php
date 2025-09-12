@@ -13,6 +13,7 @@ class ProjectCreateData extends Data
 {
     public string $name;
     public string $content;
+    public string $url;
     public string|Optional|null $title;
     public string|Optional|null $meta_description;
     public string|Optional|null $meta_keywords;
@@ -28,6 +29,7 @@ class ProjectCreateData extends Data
     public function __construct(
         string $name,
         string $content,
+        string $url,
         ?string $title,
         ?string $meta_description,
         ?string $meta_keywords,
@@ -42,6 +44,7 @@ class ProjectCreateData extends Data
     ){
         $this->name = $name;
         $this->content = $content;
+        $this->url = $url;
         $this->title = $title;
         $this->meta_description = $meta_description;
         $this->meta_keywords = $meta_keywords;
@@ -66,6 +69,11 @@ class ProjectCreateData extends Data
             'content' => [
                 new Required(),
                 new StringType(),
+            ],
+            'url' => [
+                new Required(),
+                new StringType(),
+                new Max(100)
             ],
             'title' => [
                 new Nullable(),

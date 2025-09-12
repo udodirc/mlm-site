@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int $id
  * @property string $name
  * @property string $content
+ * @property string $url
  * @property bool $status
  * @property string $title
  * @property string $meta_description
@@ -44,6 +45,7 @@ class Project extends Model
         'name',
         'content',
         'status',
+        'url',
         'title',
         'meta_description',
         'meta_keywords',

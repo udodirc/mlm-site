@@ -15,6 +15,8 @@ class ProjectFilterData extends Data
 {
     public string|Optional|null $name;
 
+    public string $url;
+
     public bool|Optional|null $status;
 
     public string|Optional|null $created_from;
@@ -24,11 +26,13 @@ class ProjectFilterData extends Data
     public function __construct(
         string|Optional|null $name = null,
         bool|Optional|null $status = null,
+        string $url,
         string|Optional|null $created_from = null,
         string|Optional|null $created_to = null,
     ) {
         $this->name = $name ?? new Optional();
         $this->status = $status ?? new Nullable();
+        $this->url = $url;
         $this->created_from = $created_from ?? new Optional();
         $this->created_to = $created_to ?? new Optional();
     }
@@ -44,6 +48,11 @@ class ProjectFilterData extends Data
             'status' => [
                 new Nullable(),
                 new BooleanType(),
+            ],
+            'url' => [
+                new Required(),
+                new StringType(),
+                new Max(100)
             ],
             'created_from' => [
                 new StringType(),

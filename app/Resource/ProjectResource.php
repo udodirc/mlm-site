@@ -16,15 +16,14 @@ class ProjectResource extends JsonResource
     public function toArray(Request $request): array
     {
         $fileService = app(FileService::class);
-
         $entity = UploadEnum::ProjectsDir->value;
-
         $folderUrl = asset("storage/" . UploadEnum::UploadsDir->value . "/{$entity}/{$this->id}");
 
         return [
             'id' => $this->id,
             'name' => $this->name,
             'content' => $this->content,
+            'url' => $this->url,
             'status' => $this->status,
             'title' => $this->title,
             'meta_description' => $this->meta_description,

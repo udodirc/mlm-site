@@ -16,6 +16,7 @@ class ProjectUpdateData extends Data
 {
     public string $name;
     public string $content;
+    public string $url;
     public bool|Optional|null $status;
     public string|Optional|null $title;
     public string|Optional|null $meta_description;
@@ -32,6 +33,7 @@ class ProjectUpdateData extends Data
         string $name,
         string $content,
         bool|Optional|null $status = null,
+        string $url,
         ?string $title,
         ?string $meta_description,
         ?string $meta_keywords,
@@ -46,6 +48,7 @@ class ProjectUpdateData extends Data
         $this->name = $name;
         $this->content = $content;
         $this->status = $status;
+        $this->url = $url;
         $this->title = $title;
         $this->meta_description = $meta_description;
         $this->meta_keywords = $meta_keywords;
@@ -78,6 +81,11 @@ class ProjectUpdateData extends Data
             'status' => [
                 new Nullable(),
                 new BooleanType(),
+            ],
+            'url' => [
+                new Required(),
+                new StringType(),
+                new Max(100)
             ],
             'title' => [
                 new Nullable(),
