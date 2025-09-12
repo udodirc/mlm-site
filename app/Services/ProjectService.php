@@ -58,4 +58,9 @@ class ProjectService extends BaseService
             'robots' => $data->robots
         ];
     }
+
+    public function projectByUrl(string $slug): ?Project
+    {
+        return $this->repository->projectByUrl($slug);
+    }
 }

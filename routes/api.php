@@ -80,7 +80,7 @@ Route::group(['prefix' => 'admin'], function () {
     });
 });
 Route::get('/projects', [FrontProjectController::class, 'index'])->name('projects.index');
-Route::get('/projects/{project}', [FrontProjectController::class, 'show'])->name('projects.show');
+Route::get('/projects/{slug}', [FrontProjectController::class, 'projectByUrl'])->name('projects.project-by-url');
 Route::get('/menu/tree', [FrontMenuController::class, 'treeMenus'])->name('menu.tree');
 Route::get('/static_content/{name}', [FrontStaticContentController::class, 'contentByName'])->name('static-content.content-by-name');
 Route::post('/static_content', [FrontStaticContentController::class, 'contentByNames'])->name('static-content.content-by-names');

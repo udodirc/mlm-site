@@ -15,7 +15,7 @@ class ProjectFilterData extends Data
 {
     public string|Optional|null $name;
 
-    public string $url;
+    public string|Optional|null $url;
 
     public bool|Optional|null $status;
 
@@ -26,7 +26,7 @@ class ProjectFilterData extends Data
     public function __construct(
         string|Optional|null $name = null,
         bool|Optional|null $status = null,
-        string $url,
+        string|Optional|null $url,
         string|Optional|null $created_from = null,
         string|Optional|null $created_to = null,
     ) {
@@ -50,7 +50,7 @@ class ProjectFilterData extends Data
                 new BooleanType(),
             ],
             'url' => [
-                new Required(),
+                new Nullable(),
                 new StringType(),
                 new Max(100)
             ],

@@ -24,8 +24,10 @@ class ProjectController extends Controller
         );
     }
 
-    public function show(Project $project): ProjectResource
+    public function projectByUrl(string $slug): ProjectResource
     {
-        return new ProjectResource($project);
+        return new ProjectResource(
+            $this->service->projectByUrl($slug)
+        );
     }
 }

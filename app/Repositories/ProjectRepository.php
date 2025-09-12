@@ -11,4 +11,12 @@ class ProjectRepository extends AbstractRepository implements ProjectRepositoryI
     {
         parent::__construct($project);
     }
+
+    public function projectByUrl(string $slug): ?Project
+    {
+        return $this->model
+            ->where('url', $slug)
+            ->where('status', true)
+            ->first() ?? null;
+    }
 }
