@@ -2,20 +2,24 @@
 
 namespace App\Providers;
 
+use App\Models\Project;
 use App\Models\Setting;
 use App\Models\User;
+use App\Observers\ProjectObserver;
 use App\Observers\SettingsObserver;
 use App\Observers\UserObserver;
 use App\Repositories\ContentRepository;
 use App\Repositories\Contracts\ContentRepositoryInterface;
 use App\Repositories\Contracts\MenuRepositoryInterface;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
+use App\Repositories\Contracts\ProjectRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use App\Repositories\Contracts\SettingRepositoryInterface;
 use App\Repositories\Contracts\StaticContentRepositoryInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Repositories\MenuRepository;
 use App\Repositories\PermissionRepository;
+use App\Repositories\ProjectRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\SettingRepository;
 use App\Repositories\StaticContentRepository;
@@ -36,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ContentRepositoryInterface::class, ContentRepository::class);
         $this->app->bind(SettingRepositoryInterface::class, SettingRepository::class);
         $this->app->bind(StaticContentRepositoryInterface::class, StaticContentRepository::class);
+        $this->app->bind(ProjectRepositoryInterface::class, ProjectRepository::class);
     }
 
     /**
@@ -45,5 +50,6 @@ class AppServiceProvider extends ServiceProvider
     {
         User::observe(UserObserver::class);
         Setting::observe(SettingsObserver::class);
+        Project::observe(ProjectObserver::class);
     }
 }

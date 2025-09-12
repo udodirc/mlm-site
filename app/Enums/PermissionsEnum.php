@@ -34,4 +34,9 @@ enum PermissionsEnum: string
     case SettingsUpdate = 'update-settings';
     case SettingsView = 'view-settings';
     case SettingsDelete = 'delete-settings';
+
+    case ProjectCreate = 'create-project';
+    case ProjectUpdate = 'update-project';
+    case ProjectView = 'view-project';
+    case ProjectDelete = 'delete-project';
 }

@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\FileController;
 use App\Http\Controllers\Admin\MenuController as AdminMenuController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
+use App\Http\Controllers\Admin\ProjectController as AdminProjectController;
 use App\Http\Controllers\Admin\StaticContentController as AdminStaticContentController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\AuthController as AdminAuthController;
@@ -13,6 +15,7 @@ use App\Http\Controllers\Front\MenuController as FrontMenuController;
 use App\Http\Controllers\Front\ContentController as FrontContentController;
 use App\Http\Controllers\Front\StaticContentController as FrontStaticContentController;
 use App\Http\Controllers\Front\ContactController as FrontContactController;
+use App\Http\Controllers\Front\ProjectController as FrontProjectController;
 use App\Http\Middleware\LoadAdminSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -45,6 +48,12 @@ Route::group(['prefix' => 'admin'], function () {
             Route::apiResource('content', AdminContentController::class);
         });
 
+        Route::group(['middleware' => ['permission:create-project|update-project|view-project|delete-project']], function () {
+            Route::post('/project/status/{project}', [AdminProjectController::class, 'toggleStatus'])->name('project.toggle-status');
+            Route::post('/project/{project}', [AdminProjectController::class, 'update'])->name('project.update');
+            Route::apiResource('project', AdminProjectController::class);
+        });
+
         Route::group(['middleware' => ['permission:create-static-content|update-static-content|view-static-content|delete-static-content']], function () {
             Route::post('/static_content/status/{static_content}', [AdminStaticContentController::class, 'toggleStatus'])->name('static-content.toggle-status');
             Route::apiResource('static_content', AdminStaticContentController::class);
@@ -61,8 +70,17 @@ Route::group(['prefix' => 'admin'], function () {
             Route::get('/permissions', [AdminPermissionController::class, 'index'])->name('permissions.all');
             Route::post('/permissions', [AdminPermissionController::class, 'createPermissions'])->name('permissions.create-permissions');
         });
+
+        Route::group(['middleware' => ['permission:create-project|update-project|delete-project']], function () {
+            Route::prefix('files')->group(function () {
+                Route::get('{entity}/{entityId}', [FileController::class, 'index']);
+                Route::delete('{entity}/{entityId}', [FileController::class, 'destroy']);
+            });
+        });
     });
 });
+Route::get('/projects', [FrontProjectController::class, 'index'])->name('projects.index');
+Route::get('/projects/{slug}', [FrontProjectController::class, 'projectByUrl'])->name('projects.project-by-url');
 Route::get('/menu/tree', [FrontMenuController::class, 'treeMenus'])->name('menu.tree');
 Route::get('/static_content/{name}', [FrontStaticContentController::class, 'contentByName'])->name('static-content.content-by-name');
 Route::post('/static_content', [FrontStaticContentController::class, 'contentByNames'])->name('static-content.content-by-names');
