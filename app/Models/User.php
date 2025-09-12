@@ -19,6 +19,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $password
  * @property int $email_verified_at
  * @property bool $status
+ * @property bool $is_superadmin
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */

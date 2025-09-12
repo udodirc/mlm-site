@@ -28,6 +28,7 @@ class UserResource extends JsonResource
                 'name' => $role->name,
             ] : null,
             'status' => $this->status,
+            'is_superadmin' => $this->isSuperAdmin(),
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];
