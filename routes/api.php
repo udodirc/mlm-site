@@ -29,9 +29,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('me', [AdminAuthController::class, 'me'])->name('auth.me');
         Route::post('/cache/clear', [AdminCacheController::class, 'clear'])->name('cache.clear');
 
-        Route::group(['middleware' => ['permission:create-users|update-users|view-users|delete-users']], function () {
-            Route::post('/users/status/{user}', [AdminUserController::class, 'toggleStatus'])->name('user.toggle-status');
-            Route::apiResource('users', AdminUserController::class);
+        Route::middleware(['superadmin'])->group(function () {
+            Route::group(['middleware' => ['permission:create-users|update-users|view-users|delete-users']], function () {
+                Route::post('/users/status/{user}', [AdminUserController::class, 'toggleStatus'])->name('user.toggle-status');
+                Route::apiResource('users', AdminUserController::class);
+            });
         });
 
         Route::group(['middleware' => ['permission:create-menu|update-menu|view-menu|delete-menu']], function () {

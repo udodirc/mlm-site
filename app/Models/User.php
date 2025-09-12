@@ -90,6 +90,11 @@ class User extends Authenticatable implements JWTSubject
         return 'api';
     }
 
+    public function isSuperAdmin(): bool
+    {
+        return $this->is_superadmin;
+    }
+
     public function newEloquentBuilder($query): UserQueryBuilder
     {
         return new UserQueryBuilder($query);
