@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Data\Admin\User\ProfileData;
 use App\Data\Admin\User\UserFilterData;
 use App\Data\Admin\User\UserCreateData;
 use App\Data\Admin\User\UserUpdateData;
@@ -27,6 +28,20 @@ class UserController extends BaseController
             User::class,
             UserCreateData::class,
             UserUpdateData::class
+        );
+    }
+
+    public function profile(ProfileData $data): UserResource
+    {
+        return new UserResource(
+            $this->service->profile($data)
+        );
+    }
+
+    public function profileUser(): UserResource
+    {
+        return new UserResource(
+            auth()->user()
         );
     }
 }

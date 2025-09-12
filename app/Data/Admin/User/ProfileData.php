@@ -12,26 +12,20 @@ use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Data;
 
-class UserUpdateData extends Data
+class ProfileData extends Data
 {
     public string $email;
     public string $name;
     public ?string $password;
-    public ?string $role;
-    public ?bool $status;
 
     public function __construct(
         string $email,
         string $name,
-        ?string $password,
-        ?string $role,
-        ?bool $status
+        ?string $password
     ) {
         $this->password = $password;
         $this->name = $name;
         $this->email = $email;
-        $this->role = $role;
-        $this->status = $status;
     }
 
     public static function rules(...$args): array
@@ -62,16 +56,7 @@ class UserUpdateData extends Data
                 new StringType(),
                 new Max(100),
                 new Min(8),
-            ],
-            'role' => [
-                new Nullable(),
-                new StringType(),
-                new Max(100)
-            ],
-            'status' => [
-                new Nullable(),
-                new BooleanType(),
-            ],
+            ]
         ];
     }
 }

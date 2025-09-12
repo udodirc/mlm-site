@@ -28,6 +28,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('refresh', [AdminAuthController::class, 'refresh'])->name('auth.refresh-token');
         Route::post('me', [AdminAuthController::class, 'me'])->name('auth.me');
         Route::post('/cache/clear', [AdminCacheController::class, 'clear'])->name('cache.clear');
+        Route::get('/users/profile', [AdminUserController::class, 'profileUser'])->name('user.profile-user');
+        Route::put('/users/profile', [AdminUserController::class, 'profile'])->name('user.profile');
 
         Route::middleware(['superadmin'])->group(function () {
             Route::group(['middleware' => ['permission:create-users|update-users|view-users|delete-users']], function () {

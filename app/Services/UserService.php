@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Data\Admin\User\ProfileData;
 use App\Data\Admin\User\UserCreateData;
 use App\Data\Admin\User\UserUpdateData;
 use Spatie\LaravelData\Data;
@@ -29,14 +30,21 @@ class UserService extends BaseService
         ];
     }
 
-    protected function toUpdateArray(Data $data): array
+    protected function toUpdateArray(Data $data, bool $profile = false): array
     {
-        $user = [
-            'email' => $data->email,
-            'name' => $data->name,
-            'role' => $data->role,
-            'status' => $data->status,
-        ];
+        if ($profile) {
+            $user = [
+                'email' => $data->email,
+                'name' => $data->name
+            ];
+        } else {
+            $user = [
+                'email' => $data->email,
+                'name' => $data->name,
+                'role' => $data->role,
+                'status' => $data->status
+            ];
+        }
 
         if($data->password){
             $user['password'] = bcrypt($data->password);
@@ -44,5 +52,12 @@ class UserService extends BaseService
 
         /** @var UserUpdateData $data */
         return $user;
+    }
+
+    public function profile(ProfileData $data): User
+    {
+        $data = $this->toUpdateArray($data, true);
+
+        return $this->repository->profile($data);
     }
 }

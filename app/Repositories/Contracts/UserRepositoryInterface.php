@@ -2,10 +2,9 @@
 
 namespace App\Repositories\Contracts;
 
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\User;
 
 interface UserRepositoryInterface extends BaseRepositoryInterface
 {
-
+    public function profile(array $data): User;
 }
