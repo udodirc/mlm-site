@@ -28,6 +28,7 @@ class ProjectUpdateData extends Data
     public string $og_type;
     public string|Optional|null $canonical_url;
     public string $robots;
+    public ?string $main_page;
 
     public function __construct(
         string $name,
@@ -44,6 +45,7 @@ class ProjectUpdateData extends Data
         string $og_type = 'website',
         ?string $canonical_url,
         string $robots = 'index, follow',
+        ?string $main_page
     ){
         $this->name = $name;
         $this->content = $content;
@@ -59,6 +61,7 @@ class ProjectUpdateData extends Data
         $this->og_type = $og_type;
         $this->canonical_url = $canonical_url;
         $this->robots = $robots;
+        $this->main_page = $main_page;
     }
 
     public static function rules(...$args): array
@@ -125,6 +128,10 @@ class ProjectUpdateData extends Data
             ],
             'robots' => [
                 new Required(),
+                new StringType(),
+            ],
+            'main_page' => [
+                new Nullable(),
                 new StringType(),
             ],
             'images' => [

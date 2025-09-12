@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $og_type
  * @property string $canonical_url
  * @property string $robots
+ * @property string $main_page
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */
@@ -55,7 +56,8 @@ class Project extends Model
         'og_url',
         'og_type',
         'canonical_url',
-        'robots'
+        'robots',
+        'main_page'
     ];
 
     public function newEloquentBuilder($query): ProjectQueryBuilder

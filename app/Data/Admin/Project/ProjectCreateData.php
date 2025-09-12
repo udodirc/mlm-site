@@ -25,6 +25,7 @@ class ProjectCreateData extends Data
     public string|Optional|null $canonical_url;
     public string $robots;
     public array $images;
+    public ?string $main_page;
 
     public function __construct(
         string $name,
@@ -40,7 +41,8 @@ class ProjectCreateData extends Data
         string $og_type = 'website',
         ?string $canonical_url,
         string $robots = 'index, follow',
-        array $images = []
+        array $images = [],
+        ?string $main_page
     ){
         $this->name = $name;
         $this->content = $content;
@@ -56,6 +58,7 @@ class ProjectCreateData extends Data
         $this->canonical_url = $canonical_url;
         $this->robots = $robots;
         $this->images = $images;
+        $this->main_page = $main_page;
     }
 
     public static function rules(...$args): array
@@ -129,6 +132,10 @@ class ProjectCreateData extends Data
                         }
                     }
                 },
+            ],
+            'main_page' => [
+                new Nullable(),
+                new StringType(),
             ],
         ];
     }

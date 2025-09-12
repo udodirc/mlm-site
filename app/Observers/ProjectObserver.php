@@ -58,7 +58,21 @@ class ProjectObserver
     protected function handleImages(Project $project): void
     {
         if (request()->hasFile('images')) {
-            $this->fileService->upload(request()->file('images'), UploadEnum::ProjectsDir->value, $project->id);
+            $this->fileService->upload(
+                request()->file('images'),
+                UploadEnum::ProjectsDir->value,
+                $project->id
+            );
+        }
+
+        if (request()->has('main_page')) {
+            $mainIndex = (int) request()->input('main_page');
+            $files = $this->fileService->files(UploadEnum::ProjectsDir->value, $project->id);
+
+            if (isset($files[$mainIndex])) {
+                $project->main_page = $files[$mainIndex];
+                $project->saveQuietly();
+            }
         }
     }
 }
