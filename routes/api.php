@@ -28,10 +28,22 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('refresh', [AdminAuthController::class, 'refresh'])->name('auth.refresh-token');
         Route::post('me', [AdminAuthController::class, 'me'])->name('auth.me');
         Route::post('/cache/clear', [AdminCacheController::class, 'clear'])->name('cache.clear');
+        Route::get('/users/profile', [AdminUserController::class, 'profileUser'])->name('user.profile-user');
+        Route::put('/users/profile', [AdminUserController::class, 'profile'])->name('user.profile');
 
-        Route::group(['middleware' => ['permission:create-users|update-users|view-users|delete-users']], function () {
-            Route::post('/users/status/{user}', [AdminUserController::class, 'toggleStatus'])->name('user.toggle-status');
-            Route::apiResource('users', AdminUserController::class);
+        Route::middleware(['superadmin'])->group(function () {
+            Route::group(['middleware' => ['permission:create-users|update-users|view-users|delete-users']], function () {
+                Route::post('/users/status/{user}', [AdminUserController::class, 'toggleStatus'])->name('user.toggle-status');
+                Route::apiResource('users', AdminUserController::class);
+            });
+
+            Route::group(['middleware' => ['permission:view-permissions|create-roles|update-roles|view-roles|delete-roles']], function () {
+                Route::post('/roles/assign', [AdminRoleController::class, 'assignRole'])->name('roles.assign-role');
+                Route::apiResource('roles', AdminRoleController::class);
+                Route::post('/roles/permissions', [AdminRoleController::class, 'assignPermissions'])->name('roles.assign-permissions');
+                Route::get('/permissions', [AdminPermissionController::class, 'index'])->name('permissions.all');
+                Route::post('/permissions', [AdminPermissionController::class, 'createPermissions'])->name('permissions.create-permissions');
+            });
         });
 
         Route::group(['middleware' => ['permission:create-menu|update-menu|view-menu|delete-menu']], function () {
@@ -61,14 +73,6 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::group(['middleware' => ['permission:create-settings|update-settings|view-settings|delete-settings']], function () {
             Route::apiResource('settings', AdminSettingController::class);
-        });
-
-        Route::group(['middleware' => ['permission:view-permissions|create-roles|update-roles|view-roles|delete-roles']], function () {
-            Route::post('/roles/assign', [AdminRoleController::class, 'assignRole'])->name('roles.assign-role');
-            Route::apiResource('roles', AdminRoleController::class);
-            Route::post('/roles/permissions', [AdminRoleController::class, 'assignPermissions'])->name('roles.assign-permissions');
-            Route::get('/permissions', [AdminPermissionController::class, 'index'])->name('permissions.all');
-            Route::post('/permissions', [AdminPermissionController::class, 'createPermissions'])->name('permissions.create-permissions');
         });
 
         Route::group(['middleware' => ['permission:create-project|update-project|delete-project']], function () {

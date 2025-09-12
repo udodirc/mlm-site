@@ -31,4 +31,12 @@ class UserRepository extends AbstractRepository implements UserRepositoryInterfa
 
         return $model;
     }
+
+    public function profile(array $data): User
+    {
+        $user = auth()->user();
+        $user->update($data);
+
+        return $user;
+    }
 }

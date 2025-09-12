@@ -19,6 +19,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
  * @property string $password
  * @property int $email_verified_at
  * @property bool $status
+ * @property bool $is_superadmin
  * @property-read Carbon|null $created_at
  * @property-read Carbon|null $updated_at
  */
@@ -88,6 +89,11 @@ class User extends Authenticatable implements JWTSubject
     public function guardName(): string
     {
         return 'api';
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->is_superadmin;
     }
 
     public function newEloquentBuilder($query): UserQueryBuilder

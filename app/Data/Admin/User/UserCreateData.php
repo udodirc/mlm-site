@@ -54,10 +54,6 @@ class UserCreateData extends Data
                 new Max(100)
             ],
             'password' => [
-                new Unique(
-                    table: 'users',
-                    column: 'email',
-                ),
                 new Required(),
                 new StringType(),
                 new Max(100),
