@@ -17,7 +17,7 @@ class FileService
         $files = is_array($files) ? $files : [$files];
 
         foreach ($files as $file) {
-            $file->store($this->getFolderPath($entity, $entityId), 'public');
+            $file->store($this->getFolderPath($entity, $entityId), config('filesystems.default'));
         }
     }
 
@@ -28,8 +28,8 @@ class FileService
     {
         $folder = $this->getFolderPath($entity, $entityId);
 
-        if (Storage::disk('public')->exists($folder)) {
-            Storage::disk('public')->deleteDirectory($folder);
+        if (Storage::disk(config('filesystems.default'))->exists($folder)) {
+            Storage::disk(config('filesystems.default'))->deleteDirectory($folder);
         }
     }
 
@@ -40,11 +40,11 @@ class FileService
     {
         $folder = $this->getFolderPath($entity, $entityId);
 
-        if (!Storage::disk('public')->exists($folder)) {
+        if (!Storage::disk(config('filesystems.default'))->exists($folder)) {
             return [];
         }
 
-        $files = Storage::disk('public')->files($folder);
+        $files = Storage::disk(config('filesystems.default'))->files($folder);
 
         return array_map(fn($file) => basename($file), $files);
     }
@@ -56,8 +56,8 @@ class FileService
     {
         $filePath = $this->getFolderPath($entity, $entityId) . '/' . $filename;
 
-        if (Storage::disk('public')->exists($filePath)) {
-            Storage::disk('public')->delete($filePath);
+        if (Storage::disk(config('filesystems.default'))->exists($filePath)) {
+            Storage::disk(config('filesystems.default'))->delete($filePath);
         } else {
             abort(Response::HTTP_NOT_FOUND, 'Файл не найден');
         }
@@ -85,5 +85,58 @@ class FileService
         };
 
         return "{$base}/{$entityDir}/{$entityId}";
+    }
+
+    public static function uploadInTemp($request): array
+    {
+        $tempPaths = [];
+
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $file) {
+                $tempPaths[] = $file->store(UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/".UploadEnum::TempDir->value);
+            }
+        }
+
+        return $tempPaths;
+    }
+
+    public static function uploadFromTemp(array $filePaths, int $projectId): array
+    {
+        $uploadedFiles = [];
+
+        foreach ($filePaths as $path) {
+            $fullPath = Storage::disk(config('filesystems.default'))->path($path);
+
+            if (!file_exists($fullPath)) {
+                continue;
+            }
+
+            $targetDir = Storage::disk(config('filesystems.default'))->path(UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/{$projectId}");
+
+            if (!is_dir($targetDir)) {
+                mkdir($targetDir, 0777, true);
+            }
+
+            copy($fullPath, $targetDir . '/' . basename($fullPath));
+            $uploadedFiles[] = basename($fullPath);
+
+            Storage::disk(config('filesystems.default'))->delete($path);
+        }
+
+        return $uploadedFiles;
+    }
+
+    public static function clearTempDir(): void
+    {
+        $tempDir = Storage::disk(config('filesystems.default'))->path(UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/".UploadEnum::TempDir->value);
+
+        if (is_dir($tempDir)) {
+            $files = glob($tempDir . '/*');
+            foreach ($files as $file) {
+                if (is_file($file)) {
+                    unlink($file);
+                }
+            }
+        }
     }
 }
