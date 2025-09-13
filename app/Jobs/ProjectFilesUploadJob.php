@@ -10,6 +10,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Project;
+use Illuminate\Support\Facades\Log;
 
 #[AllowDynamicProperties] class ProjectFilesUploadJob implements ShouldQueue
 {
@@ -31,7 +32,7 @@ use App\Models\Project;
         $uploadedFiles = FileService::uploadFromTemp($this->filePaths, $this->project->id);
         FileService::clearTempDir();
 
-        if ($this->mainIndex !== null && isset($uploadedFiles[$this->mainIndex])) {
+        if ($this->mainIndex !== null) {
             if ($this->project) {
                 $this->project->main_page = $uploadedFiles[$this->mainIndex];
                 $this->project->saveQuietly();

@@ -45,12 +45,14 @@ class ProjectObserver
 
         $tempPaths = FileService::uploadInTemp($request);
 
-        $mainIndex = $request->input('main_page') !== null
-            ? (int) $request->input('main_page')
-            : null;
-
-        if (!empty($tempPaths) || $mainIndex !== null) {
+        if (!empty($tempPaths)) {
+            $mainIndex = intval(mb_substr($request->input('main_page'), 4, 1));
             ProjectFilesUploadJob::dispatch($tempPaths, $project, $mainIndex);
+        } else {
+            if ($request->input('main_page')){
+                $project->main_page = $request->input('main_page');
+                $project->saveQuietly();
+            }
         }
     }
 }
