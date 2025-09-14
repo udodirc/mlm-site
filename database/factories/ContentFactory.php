@@ -19,7 +19,17 @@ class ContentFactory extends Factory
     {
         return [
             'menu_id' => Menu::factory(),
-            'content' => $this->faker->paragraphs(3, true)
+            'content' => $this->faker->paragraphs(3, true),
+            'title' => fake()->words(2, true),
+            'meta_description' => fake()->words(2, true),
+            'meta_keywords' => fake()->words(2, true),
+            'og_title' => fake()->words(2, true),
+            'og_description' => fake()->words(2, true),
+            'og_image' => fake()->words(2, true),
+            'og_type' => fake()->words(2, true),
+            'og_url' => fake()->words(2, true),
+            'canonical_url' => fake()->words(2, true),
+            'robots' => fake()->words(2, true),
         ];
     }
 }
