@@ -197,7 +197,7 @@ abstract class BaseTest extends TestCase
             'guard_name' => RolesEnum::Guard->value,
         ]);
 
-        $user = User::factory()->create([
+        $user = User::factory()->superAdmin()->create([
             'name' => 'Alice',
             'email' => 'alice@test.test'
         ]);
