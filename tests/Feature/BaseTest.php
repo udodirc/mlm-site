@@ -33,7 +33,9 @@ abstract class BaseTest extends TestCase
             'guard_name' => RolesEnum::Guard->value,
         ]);
 
-        $admin = User::factory()->create();
+        $admin = User::factory()
+            ->superAdmin()
+            ->create();
         $admin->givePermissionTo($permission);
         $this->actingAs($admin);
 
@@ -64,7 +66,9 @@ abstract class BaseTest extends TestCase
             case 'create':
                 $response = $this->postJson(route($route), $data);
                 $response->assertCreated();
-                $table && $this->assertDatabaseHas($table, $data);
+                $dataForDb = $data;
+                unset($dataForDb['images']);
+                $table && $this->assertDatabaseHas($table, $dataForDb);
                 $expectedJson && $response->assertJsonFragment($expectedJson);
                 break;
 

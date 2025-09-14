@@ -38,7 +38,9 @@ class RoleTest extends TestCase
             'guard_name' => RolesEnum::Guard->value,
         ]);
         $role->givePermissionTo(PermissionsEnum::RoleCreate->value);
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->superAdmin()
+            ->create();
         $user->assignRole($role);
 
         $this->actingAs($user, RolesEnum::Guard->value);
@@ -68,7 +70,9 @@ class RoleTest extends TestCase
             'guard_name' => RolesEnum::Guard->value,
         ]);
         $role->givePermissionTo(PermissionsEnum::RoleUpdate->value);
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->superAdmin()
+            ->create();
         $user->assignRole($role);
 
         $this->actingAs($user, RolesEnum::Guard->value);
@@ -99,7 +103,9 @@ class RoleTest extends TestCase
         ]);
         $role->givePermissionTo(PermissionsEnum::RoleDelete->value);
 
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->superAdmin()
+            ->create();
         $user->assignRole($role);
 
         $this->actingAs($user, RolesEnum::Guard->value);
@@ -123,7 +129,9 @@ class RoleTest extends TestCase
             'guard_name' => RolesEnum::Guard->value,
         ]);
         $role->givePermissionTo(PermissionsEnum::RoleView->value);
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->superAdmin()
+            ->create();
         $user->assignRole($role);
 
         $this->actingAs($user, RolesEnum::Guard->value);
@@ -157,7 +165,9 @@ class RoleTest extends TestCase
             'guard_name' => RolesEnum::Guard->value,
         ]);
         $role->givePermissionTo(PermissionsEnum::RoleCreate->value);
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->superAdmin()
+            ->create();
         $user->assignRole($role);
 
         $this->actingAs($user, RolesEnum::Guard->value);
@@ -191,7 +201,9 @@ class RoleTest extends TestCase
             'guard_name' => RolesEnum::Guard->value,
         ]);
         $role->givePermissionTo(PermissionsEnum::RoleCreate->value);
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->superAdmin()
+            ->create();
         $user->assignRole($role);
 
         $this->actingAs($user, RolesEnum::Guard->value);

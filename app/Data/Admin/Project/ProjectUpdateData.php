@@ -17,17 +17,18 @@ class ProjectUpdateData extends Data
     public string $name;
     public string $content;
     public string $url;
-    public bool|Optional|null $status;
-    public string|Optional|null $title;
-    public string|Optional|null $meta_description;
-    public string|Optional|null $meta_keywords;
-    public string|Optional|null $og_title;
-    public string|Optional|null $og_description;
-    public string|Optional|null $og_image;
-    public string|Optional|null $og_url;
+    public bool $status;
+    public ?string $title;
+    public ?string $meta_description;
+    public ?string $meta_keywords;
+    public ?string $og_title;
+    public ?string $og_description;
+    public ?string $og_image;
+    public ?string $og_url;
     public string $og_type;
-    public string|Optional|null $canonical_url;
+    public ?string $canonical_url;
     public string $robots;
+    public array $images;
     public ?string $main_page;
 
     public function __construct(
@@ -35,16 +36,17 @@ class ProjectUpdateData extends Data
         string $content,
         bool|Optional|null $status = null,
         string $url,
-        ?string $title,
-        ?string $meta_description,
-        ?string $meta_keywords,
-        ?string $og_title,
-        ?string $og_description,
-        ?string $og_image,
-        ?string $og_url,
+        ?string $title = null,
+        ?string $meta_description = null,
+        ?string $meta_keywords = null,
+        ?string $og_title = null,
+        ?string $og_description = null,
+        ?string $og_image = null,
+        ?string $og_url = null,
         string $og_type = 'website',
-        ?string $canonical_url,
+        ?string $canonical_url = null,
         string $robots = 'index, follow',
+        array $images = [],
         ?string $main_page
     ){
         $this->name = $name;
@@ -61,6 +63,7 @@ class ProjectUpdateData extends Data
         $this->og_type = $og_type;
         $this->canonical_url = $canonical_url;
         $this->robots = $robots;
+        $this->images = $images;
         $this->main_page = $main_page;
     }
 

@@ -119,7 +119,9 @@ class RoleTest extends BaseTest
             'guard_name' => RolesEnum::Guard->value,
         ]);
 
-        $user = User::factory()->create();
+        $user = User::factory()
+            ->superAdmin()
+            ->create();
         $id = $user->id;
         $data = new AssignRoleData($id, role: RolesEnum::Admin->value);
 

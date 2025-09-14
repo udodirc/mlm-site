@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Content>
  */
-class ContentFactory extends Factory
+class ProjectFactory extends Factory
 {
     /**
      * Define the model's default state.
@@ -18,8 +18,9 @@ class ContentFactory extends Factory
     public function definition(): array
     {
         return [
-            'menu_id' => Menu::factory(),
+            'name' => $this->faker->name(),
             'content' => $this->faker->paragraphs(3, true),
+            'url' => $this->faker->url(),
             'title' => fake()->words(2, true),
             'meta_description' => fake()->words(2, true),
             'meta_keywords' => fake()->words(2, true),

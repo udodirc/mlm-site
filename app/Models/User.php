@@ -41,7 +41,8 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
-        'status'
+        'status',
+        'is_superadmin'
     ];
 
     /**
@@ -93,7 +94,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function isSuperAdmin(): bool
     {
-        return $this->is_superadmin;
+        return $this->is_superadmin ?? false;
     }
 
     public function newEloquentBuilder($query): UserQueryBuilder

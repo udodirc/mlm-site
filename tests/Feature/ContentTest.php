@@ -20,9 +20,31 @@ class ContentTest extends BaseTest
             data: [
                 'menu_id' => $menu->id,
                 'content' => 'Some content',
+                'title' => 'title',
+                'meta_description' => 'meta_description',
+                'meta_keywords' => 'meta_keywords',
+                'og_title' =>'og_title',
+                'og_description' => 'og_description',
+                'og_image' => 'og_image',
+                'og_type' => 'og_type',
+                'og_url' => 'og_url',
+                'canonical_url' => 'canonical_url',
+                'robots' => 'robots'
             ],
             table: 'content',
-            expectedJson: ['content' => 'Some content']
+            expectedJson: [
+                'content' => 'Some content',
+                'title' => 'title',
+                'meta_description' => 'meta_description',
+                'meta_keywords' => 'meta_keywords',
+                'og_title' =>'og_title',
+                'og_description' => 'og_description',
+                'og_image' => 'og_image',
+                'og_type' => 'og_type',
+                'og_url' => 'og_url',
+                'canonical_url' => 'canonical_url',
+                'robots' => 'robots'
+            ]
         );
     }
 
@@ -40,9 +62,32 @@ class ContentTest extends BaseTest
                 'content' => 'Updated content',
                 'menu_id' => $content->menu_id,
                 'status' => false,
+                'title' => 'Updated title',
+                'meta_description' => 'Updated meta_description',
+                'meta_keywords' => 'Updated meta_keywords',
+                'og_title' =>'Updated og_title',
+                'og_description' => 'Updated og_description',
+                'og_image' => 'Updated og_image',
+                'og_type' => 'Updated og_type',
+                'og_url' => 'Updated og_url',
+                'canonical_url' => 'Updated canonical_url',
+                'robots' => 'Updated robots'
             ],
             table: 'content',
-            expectedJson: ['content' => 'Updated content', 'status' => false]
+            expectedJson: [
+                'content' => 'Updated content',
+                'status' => false,
+                'title' => 'Updated title',
+                'meta_description' => 'Updated meta_description',
+                'meta_keywords' => 'Updated meta_keywords',
+                'og_title' =>'Updated og_title',
+                'og_description' => 'Updated og_description',
+                'og_image' => 'Updated og_image',
+                'og_type' => 'Updated og_type',
+                'og_url' => 'Updated og_url',
+                'canonical_url' => 'Updated canonical_url',
+                'robots' => 'Updated robots'
+            ]
         );
     }
 
