@@ -33,7 +33,9 @@ abstract class BaseTest extends TestCase
             'guard_name' => RolesEnum::Guard->value,
         ]);
 
-        $admin = User::factory()->create();
+        $admin = User::factory()
+            ->superAdmin()
+            ->create();
         $admin->givePermissionTo($permission);
         $this->actingAs($admin);
 

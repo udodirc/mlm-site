@@ -16,7 +16,8 @@ class UserTest extends BaseTest
             'name' => 'Test User',
             'email' => 'user@test.test',
             'password' => '12345678',
-            'role' => 'manager'
+            'role' => 'manager',
+            'is_superadmin' => true
         ];
 
         $response = $this->postJson(route('users.store'), $data);
