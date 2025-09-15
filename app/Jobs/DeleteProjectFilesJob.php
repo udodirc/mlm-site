@@ -15,14 +15,18 @@ class DeleteProjectFilesJob implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public int $projectId;
+    public array $dir;
 
-    public function __construct(int $projectId)
+    public function __construct(int $projectId, array $dir)
     {
         $this->projectId = $projectId;
+        $this->dir = $dir;
     }
 
     public function handle(FileService $fileService)
     {
-        $fileService->deleteFolder(UploadEnum::ProjectsDir->value, $this->projectId);
+        foreach ($this->dir as $dir) {
+            $fileService->deleteFolder(UploadEnum::ProjectsDir->value, $this->projectId, $dir);
+        }
     }
 }

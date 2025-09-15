@@ -31,9 +31,20 @@ class ProjectFilesUploadJob implements ShouldQueue
 
     public function handle(): void
     {
+        // Подготовка карты директорий
+        $dirsMap = [
+            'images' => UploadEnum::ProjectsDir->value . '/' . UploadEnum::All->value,
+            'og_image' => UploadEnum::ProjectsDir->value . '/' . UploadEnum::OgImagesDir->value,
+        ];
+
         // Загружаем все файлы из temp в проект
-        $uploaded = FileService::uploadFromTemp($this->filePaths, $this->project->id);
-        $tempDir = Storage::disk(config('filesystems.default'))->path(UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/".UploadEnum::TempDir->value);
+        $uploaded = FileService::uploadFromTemp($this->filePaths, $this->project->id, $dirsMap);
+
+        $tempDir = Storage::disk(config('filesystems.default'))->path(
+            UploadEnum::UploadsDir->value
+            . '/' . UploadEnum::ProjectsDir->value
+            . '/' . UploadEnum::TempDir->value
+        );
 
         FileService::clearDir($tempDir);
 

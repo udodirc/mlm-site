@@ -23,12 +23,12 @@ class ProjectObserver
 
     public function deleted(Project $project): void
     {
-        DeleteProjectFilesJob::dispatch($project->id);
+        DeleteProjectFilesJob::dispatch($project->id, [UploadEnum::All->value, UploadEnum::OgImagesDir->value]);
     }
 
     public function forceDeleted(Project $project): void
     {
-        DeleteProjectFilesJob::dispatch($project->id);
+        DeleteProjectFilesJob::dispatch($project->id, [UploadEnum::All->value, UploadEnum::OgImagesDir->value]);
     }
 
     protected function dispatchFilesJob(Project $project): void
