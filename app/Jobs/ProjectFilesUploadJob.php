@@ -10,9 +10,9 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Project;
-use Illuminate\Support\Facades\Log;
 
-#[AllowDynamicProperties] class ProjectFilesUploadJob implements ShouldQueue
+#[AllowDynamicProperties]
+class ProjectFilesUploadJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -29,14 +29,25 @@ use Illuminate\Support\Facades\Log;
 
     public function handle(): void
     {
-        $uploadedFiles = FileService::uploadFromTemp($this->filePaths, $this->project->id);
+        // Загружаем все файлы из temp в проект
+        $uploaded = FileService::uploadFromTemp($this->filePaths, $this->project->id);
+
         FileService::clearTempDir();
 
-        if ($this->mainIndex !== null) {
-            if ($this->project) {
-                $this->project->main_page = $uploadedFiles[$this->mainIndex];
-                $this->project->saveQuietly();
+        // --- images ---
+        if (!empty($uploaded['images'])) {
+            //$this->project->images = $uploaded['images'];
+
+            if ($this->mainIndex !== null && isset($uploaded['images'][$this->mainIndex])) {
+                $this->project->main_page = $uploaded['images'][$this->mainIndex];
             }
         }
+
+        // --- og_image ---
+        if (!empty($uploaded['og_image'])) {
+            $this->project->og_image = $uploaded['og_image'];
+        }
+
+        $this->project->saveQuietly();
     }
 }

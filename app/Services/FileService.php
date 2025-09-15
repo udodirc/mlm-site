@@ -89,12 +89,25 @@ class FileService
 
     public static function uploadInTemp($request): array
     {
-        $tempPaths = [];
+        $tempPaths = [
+            'images' => [],
+            'og_image' => null,
+        ];
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $tempPaths[] = $file->store(UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/".UploadEnum::TempDir->value);
+                $tempPaths['images'][] = $file->store(
+                    UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . '/' . UploadEnum::TempDir->value,
+                    config('filesystems.default')
+                );
             }
+        }
+
+        if ($request->hasFile('og_image')) {
+            $tempPaths['og_image'] = $request->file('og_image')->store(
+                UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . '/' . UploadEnum::TempDir->value,
+                config('filesystems.default')
+            );
         }
 
         return $tempPaths;
@@ -102,28 +115,54 @@ class FileService
 
     public static function uploadFromTemp(array $filePaths, int $projectId): array
     {
-        $uploadedFiles = [];
+        $uploadedFiles = [
+            'images' => [],
+            'og_image' => null,
+        ];
 
-        foreach ($filePaths as $path) {
-            $fullPath = Storage::disk(config('filesystems.default'))->path($path);
-
-            if (!file_exists($fullPath)) {
-                continue;
+        // images
+        if (!empty($filePaths['images'])) {
+            foreach ($filePaths['images'] as $path) {
+                $finalName = self::moveFromTemp($path, $projectId);
+                if ($finalName) {
+                    $uploadedFiles['images'][] = $finalName;
+                }
             }
+        }
 
-            $targetDir = Storage::disk(config('filesystems.default'))->path(UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/{$projectId}");
-
-            if (!is_dir($targetDir)) {
-                mkdir($targetDir, 0777, true);
+        // og_image
+        if (!empty($filePaths['og_image'])) {
+            $finalName = self::moveFromTemp($filePaths['og_image'], $projectId);
+            if ($finalName) {
+                $uploadedFiles['og_image'] = $finalName;
             }
-
-            copy($fullPath, $targetDir . '/' . basename($fullPath));
-            $uploadedFiles[] = basename($fullPath);
-
-            Storage::disk(config('filesystems.default'))->delete($path);
         }
 
         return $uploadedFiles;
+    }
+
+    private static function moveFromTemp(string $path, int $projectId): ?string
+    {
+        $fullPath = Storage::disk(config('filesystems.default'))->path($path);
+
+        if (!file_exists($fullPath)) {
+            return null;
+        }
+
+        $targetDir = Storage::disk(config('filesystems.default'))->path(
+            UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/{$projectId}"
+        );
+
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0777, true);
+        }
+
+        $finalName = basename($fullPath);
+        copy($fullPath, $targetDir . '/' . $finalName);
+
+        Storage::disk(config('filesystems.default'))->delete($path);
+
+        return $finalName;
     }
 
     public static function clearTempDir(): void

@@ -8,6 +8,7 @@ use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
+use Illuminate\Http\UploadedFile;
 
 class ProjectCreateData extends Data
 {
@@ -19,7 +20,7 @@ class ProjectCreateData extends Data
     public string|Optional|null $meta_keywords;
     public string|Optional|null $og_title;
     public string|Optional|null $og_description;
-    public string|Optional|null $og_image;
+    public UploadedFile|string|Optional|null $og_image; // <- изменено
     public string|Optional|null $og_url;
     public string $og_type;
     public string|Optional|null $canonical_url;
@@ -36,7 +37,7 @@ class ProjectCreateData extends Data
         ?string $meta_keywords,
         ?string $og_title,
         ?string $og_description,
-        ?string $og_image,
+        UploadedFile|string|null $og_image,
         ?string $og_url,
         string $og_type = 'website',
         ?string $canonical_url,
@@ -100,7 +101,16 @@ class ProjectCreateData extends Data
             ],
             'og_image' => [
                 new Nullable(),
-                new StringType(),
+                function ($attribute, $value, $fail) {
+                    if ($value instanceof UploadedFile) {
+                        if (!in_array($value->getClientMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
+                            $fail("The {$attribute} must be a file of type: jpeg, png, webp.");
+                        }
+                        if ($value->getSize() > 2 * 1024 * 1024) { // 2MB
+                            $fail("The {$attribute} file is too large (max 2MB).");
+                        }
+                    }
+                },
             ],
             'og_url' => [
                 new Nullable(),
@@ -123,6 +133,9 @@ class ProjectCreateData extends Data
                 function ($attribute, $value, $fail) {
                     if (is_array($value)) {
                         foreach ($value as $file) {
+                            if (!($file instanceof UploadedFile)) {
+                                continue; // если уже строка — пропускаем
+                            }
                             if (!in_array($file->getClientMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
                                 $fail("The {$attribute} must be a file of type: jpeg, png, webp.");
                             }
