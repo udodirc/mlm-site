@@ -132,7 +132,8 @@ class FileService
 
         // og_image
         if (!empty($filePaths['og_image'])) {
-            $finalName = self::moveFromTemp($filePaths['og_image'], $projectId);
+            $finalName = self::moveFromTemp($filePaths['og_image'], $projectId, true);
+
             if ($finalName) {
                 $uploadedFiles['og_image'] = $finalName;
             }
@@ -141,7 +142,7 @@ class FileService
         return $uploadedFiles;
     }
 
-    private static function moveFromTemp(string $path, int $projectId): ?string
+    private static function moveFromTemp(string $path, int $projectId, $ogImage = false): ?string
     {
         $fullPath = Storage::disk(config('filesystems.default'))->path($path);
 
@@ -150,7 +151,9 @@ class FileService
         }
 
         $targetDir = Storage::disk(config('filesystems.default'))->path(
-            UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/{$projectId}"
+            ($ogImage)
+                ? UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . '/' . UploadEnum::OgImagesDir->value . "/{$projectId}"
+                : UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/{$projectId}"
         );
 
         if (!is_dir($targetDir)) {
@@ -165,12 +168,10 @@ class FileService
         return $finalName;
     }
 
-    public static function clearTempDir(): void
+    public static function clearDir(string $dir): void
     {
-        $tempDir = Storage::disk(config('filesystems.default'))->path(UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/".UploadEnum::TempDir->value);
-
-        if (is_dir($tempDir)) {
-            $files = glob($tempDir . '/*');
+        if (is_dir($dir)) {
+            $files = glob($dir . '/*');
             foreach ($files as $file) {
                 if (is_file($file)) {
                     unlink($file);

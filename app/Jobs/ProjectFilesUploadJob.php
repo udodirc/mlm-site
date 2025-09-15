@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use AllowDynamicProperties;
+use App\Enums\UploadEnum;
 use App\Services\FileService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Project;
+use Illuminate\Support\Facades\Storage;
 
 #[AllowDynamicProperties]
 class ProjectFilesUploadJob implements ShouldQueue
@@ -31,8 +33,9 @@ class ProjectFilesUploadJob implements ShouldQueue
     {
         // Загружаем все файлы из temp в проект
         $uploaded = FileService::uploadFromTemp($this->filePaths, $this->project->id);
+        $tempDir = Storage::disk(config('filesystems.default'))->path(UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . "/".UploadEnum::TempDir->value);
 
-        FileService::clearTempDir();
+        FileService::clearDir($tempDir);
 
         // --- images ---
         if (!empty($uploaded['images'])) {

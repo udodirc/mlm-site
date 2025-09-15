@@ -20,12 +20,12 @@ class ProjectCreateData extends Data
     public string|Optional|null $meta_keywords;
     public string|Optional|null $og_title;
     public string|Optional|null $og_description;
-    public UploadedFile|string|Optional|null $og_image; // <- изменено
+    public ?string $og_image;
     public string|Optional|null $og_url;
     public string $og_type;
     public string|Optional|null $canonical_url;
     public string $robots;
-    public array $images;
+    public string|array|Optional|null $images;
     public ?string $main_page;
 
     public function __construct(
@@ -37,12 +37,12 @@ class ProjectCreateData extends Data
         ?string $meta_keywords,
         ?string $og_title,
         ?string $og_description,
-        UploadedFile|string|null $og_image,
+        ?string $og_image = null,
         ?string $og_url,
         string $og_type = 'website',
         ?string $canonical_url,
         string $robots = 'index, follow',
-        array $images = [],
+        string|array|Optional|null $images = null,
         ?string $main_page
     ){
         $this->name = $name;
@@ -58,7 +58,7 @@ class ProjectCreateData extends Data
         $this->og_type = $og_type;
         $this->canonical_url = $canonical_url;
         $this->robots = $robots;
-        $this->images = $images;
+        $this->images = empty($images) || $images === '' ? null : (is_array($images) ? $images : [$images]);
         $this->main_page = $main_page;
     }
 
@@ -134,7 +134,7 @@ class ProjectCreateData extends Data
                     if (is_array($value)) {
                         foreach ($value as $file) {
                             if (!($file instanceof UploadedFile)) {
-                                continue; // если уже строка — пропускаем
+                                continue;
                             }
                             if (!in_array($file->getClientMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
                                 $fail("The {$attribute} must be a file of type: jpeg, png, webp.");

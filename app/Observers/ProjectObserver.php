@@ -2,10 +2,12 @@
 
 namespace App\Observers;
 
+use App\Enums\UploadEnum;
 use App\Jobs\DeleteProjectFilesJob;
 use App\Jobs\ProjectFilesUploadJob;
 use App\Models\Project;
 use App\Services\FileService;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectObserver
 {
@@ -45,6 +47,13 @@ class ProjectObserver
 
         // Загружаем новые файлы в temp (images + og_image)
         $tempPaths = FileService::uploadInTemp($request);
+
+        if ($hasOgImage) {
+            $dir = Storage::disk(config('filesystems.default'))->path(
+                UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . '/' . UploadEnum::OgImagesDir->value . "/{$project->id}"
+            );
+            FileService::clearDir($dir);
+        }
 
         // Определяем индекс main_page, если указан
         $mainIndex = null;
