@@ -46,6 +46,8 @@ class ProjectResource extends JsonResource
                 "/{$this->id}"),
             'images' => $fileService->files($entity, $this->id),
             'image_dir' => $entity,
+            'image_all_dir' => UploadEnum::All->value,
+            'image_og_dir' => UploadEnum::OgImagesDir->value,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];
