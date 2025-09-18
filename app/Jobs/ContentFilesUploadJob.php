@@ -34,7 +34,6 @@ class ContentFilesUploadJob implements ShouldQueue
         ];
 
         $uploaded = FileService::uploadFromTemp($this->filePaths, $this->content->id, $dirsMap);
-
         $tempDir = Storage::disk(config('filesystems.default'))->path(
             UploadEnum::UploadsDir->value
             . '/' . UploadEnum::ContentDir->value

@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Enums\UploadEnum;
+use App\Jobs\DeleteFilesJob;
 use App\Jobs\DeleteProjectFilesJob;
 use App\Jobs\ProjectFilesUploadJob;
 use App\Models\Project;
@@ -23,12 +24,20 @@ class ProjectObserver
 
     public function deleted(Project $project): void
     {
-        DeleteProjectFilesJob::dispatch($project->id, [UploadEnum::All->value, UploadEnum::OgImagesDir->value]);
+        DeleteFilesJob::dispatch(
+            $project->id,
+            [UploadEnum::All->value, UploadEnum::OgImagesDir->value],
+            UploadEnum::ProjectsDir
+        );
     }
 
     public function forceDeleted(Project $project): void
     {
-        DeleteProjectFilesJob::dispatch($project->id, [UploadEnum::All->value, UploadEnum::OgImagesDir->value]);
+        DeleteFilesJob::dispatch(
+            $project->id,
+            [UploadEnum::All->value, UploadEnum::OgImagesDir->value],
+            UploadEnum::ProjectsDir
+        );
     }
 
     protected function dispatchFilesJob(Project $project): void

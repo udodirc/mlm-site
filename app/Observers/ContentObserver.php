@@ -4,7 +4,7 @@ namespace App\Observers;
 
 use App\Enums\UploadEnum;
 use App\Jobs\ContentFilesUploadJob;
-use App\Jobs\DeleteContentFilesJob;
+use App\Jobs\DeleteFilesJob;
 use App\Models\Content;
 use App\Services\FileService;
 use Illuminate\Support\Facades\Storage;
@@ -32,7 +32,11 @@ class ContentObserver
      */
     public function deleted(Content $content): void
     {
-        DeleteContentFilesJob::dispatch($content->id, [UploadEnum::All->value, UploadEnum::OgImagesDir->value]);
+        DeleteFilesJob::dispatch(
+            $content->id,
+            [UploadEnum::All->value, UploadEnum::OgImagesDir->value],
+            UploadEnum::ContentDir
+        );
     }
 
     /**
@@ -48,7 +52,11 @@ class ContentObserver
      */
     public function forceDeleted(Content $content): void
     {
-        DeleteContentFilesJob::dispatch($content->id, [UploadEnum::All->value, UploadEnum::OgImagesDir->value]);
+        DeleteFilesJob::dispatch(
+            $content->id,
+            [UploadEnum::All->value, UploadEnum::OgImagesDir->value],
+            UploadEnum::ContentDir
+        );
     }
 
     protected function dispatchFilesJob(Content $content): void
