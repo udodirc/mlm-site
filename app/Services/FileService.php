@@ -116,16 +116,12 @@ class FileService
      *   'og_image' => 'uploads/projects/temp/og.jpg' | null,
      * ]
      */
-    public static function uploadInTemp(Request $request): array
+    public static function uploadInTemp(Request $request, string $tempFolder): array
     {
         $tempPaths = [
             'images' => [],
             'og_image' => null,
         ];
-
-        $tempFolder = UploadEnum::UploadsDir->value . '/' .
-            UploadEnum::ProjectsDir->value . '/' .
-            UploadEnum::TempDir->value;
 
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {

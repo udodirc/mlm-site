@@ -40,13 +40,15 @@ class ProjectObserver
         $mainPageInput = $request->input('main_page');
         $ogImageInput = $request->input('og_image');
 
-        // Если вообще нет данных — выходим
         if (!$hasImages && !$hasOgImage && $mainPageInput === null && $ogImageInput === null) {
             return;
         }
 
-        // Загружаем новые файлы в temp (images + og_image)
-        $tempPaths = FileService::uploadInTemp($request);
+        $tempFolder = UploadEnum::UploadsDir->value . '/' .
+            UploadEnum::ProjectsDir->value . '/' .
+            UploadEnum::TempDir->value;
+
+        $tempPaths = FileService::uploadInTemp($request, $tempFolder);
 
         if ($hasOgImage) {
             $dir = Storage::disk(config('filesystems.default'))->path(
@@ -55,16 +57,13 @@ class ProjectObserver
             FileService::clearDir($dir);
         }
 
-        // Определяем индекс main_page, если указан
         $mainIndex = null;
         if ($mainPageInput && preg_match('/^img_(\d+)$/', $mainPageInput, $matches)) {
             $mainIndex = (int) $matches[1];
         }
 
-        // Диспатчим Job для обработки всех файлов
         ProjectFilesUploadJob::dispatch($tempPaths, $project, $mainIndex);
 
-        // Если нет новых файлов, но приходят строки с main_page или og_image
         if (!$hasImages && !$hasOgImage) {
             $updated = false;
 

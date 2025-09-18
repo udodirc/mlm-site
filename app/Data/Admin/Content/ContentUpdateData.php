@@ -3,6 +3,7 @@
 namespace App\Data\Admin\Content;
 
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\UploadedFile;
 use Spatie\LaravelData\Attributes\Validation\BooleanType;
 use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Attributes\Validation\IntegerType;
@@ -23,7 +24,7 @@ class ContentUpdateData extends Data
     public string|Optional|null $meta_keywords;
     public string|Optional|null $og_title;
     public string|Optional|null $og_description;
-    public string|Optional|null $og_image;
+    public ?string $og_image;
     public string|Optional|null $og_url;
     public string $og_type;
     public string|Optional|null $canonical_url;
@@ -105,7 +106,16 @@ class ContentUpdateData extends Data
             ],
             'og_image' => [
                 new Nullable(),
-                new StringType(),
+                function ($attribute, $value, $fail) {
+                    if ($value instanceof UploadedFile) {
+                        if (!in_array($value->getClientMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
+                            $fail("The {$attribute} must be a file of type: jpeg, png, webp.");
+                        }
+                        if ($value->getSize() > 2 * 1024 * 1024) { // 2MB
+                            $fail("The {$attribute} file is too large (max 2MB).");
+                        }
+                    }
+                },
             ],
             'og_url' => [
                 new Nullable(),

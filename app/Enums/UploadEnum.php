@@ -13,4 +13,6 @@ enum UploadEnum: string
     case OgImagesDir = 'og_images';
 
     case ProjectsDir = 'projects';
+
+    case ContentDir = 'content';
 }
