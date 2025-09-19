@@ -77,12 +77,9 @@ class ContentTest extends BaseTest
 
     public function testUpdateContent(): void
     {
-        $menu = Menu::factory()->create();
-
         $dto = new ContentUpdateData(
-            $menu->id,
             'Updated content',
-            status: false,
+            status: 0,
             title: 'Updated title',
             meta_description: 'Updated meta_description',
             meta_keywords: 'Updated meta_keywords',
@@ -96,7 +93,6 @@ class ContentTest extends BaseTest
         );
 
         $content = new Content([
-            'menu_id' => $menu->id,
             'content' => 'Some content',
             'status' => true,
             'title' => 'title',
@@ -111,7 +107,6 @@ class ContentTest extends BaseTest
             'robots' => 'robots'
         ]);
 
-        $content->menu_id = $menu->id;
         $content->content = 'Updated content';
         $content->status = false;
         $content->title = 'Updated title';
@@ -129,7 +124,6 @@ class ContentTest extends BaseTest
             model: $content,
             updateDto: $dto,
             expectedInput: [
-                'menu_id' => $menu->id,
                 'content' => 'Updated content',
                 'status' => false,
                 'title' => 'Updated title',
