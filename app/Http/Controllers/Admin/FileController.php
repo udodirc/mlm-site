@@ -34,11 +34,12 @@ class FileController extends Controller
     public function destroy(Request $request, string $entity, int|string $entityId): JsonResponse
     {
         $request->validate([
+            'dir' => 'required|string',
             'filename' => 'required|string',
         ]);
 
         try {
-            $this->fileService->deleteFile($entity, $entityId, $request->input('filename'));
+            $this->fileService->deleteFile($entity, $entityId, $request->input('filename'), $request->input('dir'));
             return response()->json(['message' => 'Файл удален']);
         } catch (HttpException $e) {
             return response()->json(['message' => $e->getMessage()], $e->getStatusCode());

@@ -10,23 +10,23 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class DeleteProjectFilesJob implements ShouldQueue
+class DeleteContentFilesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public int $projectId;
+    public int $conteId;
     public array $dir;
 
-    public function __construct(int $projectId, array $dir)
+    public function __construct(int $conteId, array $dir)
     {
-        $this->projectId = $projectId;
+        $this->conteId = $conteId;
         $this->dir = $dir;
     }
 
     public function handle(FileService $fileService)
     {
         foreach ($this->dir as $dir) {
-            $fileService->deleteFolder(UploadEnum::ProjectsDir->value, $this->projectId, $dir);
+            $fileService->deleteFolder(UploadEnum::ContentDir->value, $this->conteId, $dir);
         }
     }
 }

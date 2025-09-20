@@ -17,7 +17,6 @@ class ProjectResource extends JsonResource
     {
         $fileService = app(FileService::class);
         $entity = UploadEnum::ProjectsDir->value;
-        $folderUrl = asset("storage/" . UploadEnum::UploadsDir->value . "/{$entity}/{$this->id}");
 
         return [
             'id' => $this->id,
@@ -35,9 +34,20 @@ class ProjectResource extends JsonResource
             'og_url' => $this->og_url,
             'canonical_url' => $this->canonical_url,
             'robots' => $this->robots,
-            'image_url' => $folderUrl,
+            'image_url' =>  asset("storage/" .
+                UploadEnum::UploadsDir->value .
+                "/{$entity}/".
+                UploadEnum::All->value.
+                "/{$this->id}"),
+            'image_og_url' =>  asset("storage/" .
+                UploadEnum::UploadsDir->value .
+                "/{$entity}/".
+                UploadEnum::OgImagesDir->value.
+                "/{$this->id}"),
             'images' => $fileService->files($entity, $this->id),
             'image_dir' => $entity,
+            'image_all_dir' => UploadEnum::All->value,
+            'image_og_dir' => UploadEnum::OgImagesDir->value,
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
         ];

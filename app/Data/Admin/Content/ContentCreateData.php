@@ -2,6 +2,7 @@
 
 namespace App\Data\Admin\Content;
 
+use Illuminate\Http\UploadedFile;
 use Spatie\LaravelData\Attributes\Validation\Exists;
 use Spatie\LaravelData\Attributes\Validation\IntegerType;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
@@ -95,7 +96,16 @@ class ContentCreateData extends Data
             ],
             'og_image' => [
                 new Nullable(),
-                new StringType(),
+                function ($attribute, $value, $fail) {
+                    if ($value instanceof UploadedFile) {
+                        if (!in_array($value->getClientMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
+                            $fail("The {$attribute} must be a file of type: jpeg, png, webp.");
+                        }
+                        if ($value->getSize() > 2 * 1024 * 1024) { // 2MB
+                            $fail("The {$attribute} file is too large (max 2MB).");
+                        }
+                    }
+                },
             ],
             'og_url' => [
                 new Nullable(),

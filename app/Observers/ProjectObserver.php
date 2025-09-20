@@ -2,10 +2,13 @@
 
 namespace App\Observers;
 
+use App\Enums\UploadEnum;
+use App\Jobs\DeleteFilesJob;
 use App\Jobs\DeleteProjectFilesJob;
 use App\Jobs\ProjectFilesUploadJob;
 use App\Models\Project;
 use App\Services\FileService;
+use Illuminate\Support\Facades\Storage;
 
 class ProjectObserver
 {
@@ -21,30 +24,69 @@ class ProjectObserver
 
     public function deleted(Project $project): void
     {
-        DeleteProjectFilesJob::dispatch($project->id);
+        DeleteFilesJob::dispatch(
+            $project->id,
+            [UploadEnum::All->value, UploadEnum::OgImagesDir->value],
+            UploadEnum::ProjectsDir
+        );
     }
 
     public function forceDeleted(Project $project): void
     {
-        DeleteProjectFilesJob::dispatch($project->id);
+        DeleteFilesJob::dispatch(
+            $project->id,
+            [UploadEnum::All->value, UploadEnum::OgImagesDir->value],
+            UploadEnum::ProjectsDir
+        );
     }
 
     protected function dispatchFilesJob(Project $project): void
     {
         $request = request();
 
-        if (!$request->hasFile('images') && !$request->has('main_page')) {
+        $hasImages = $request->hasFile('images');
+        $hasOgImage = $request->hasFile('og_image');
+        $mainPageInput = $request->input('main_page');
+        $ogImageInput = $request->input('og_image');
+
+        if (!$hasImages && !$hasOgImage && $mainPageInput === null && $ogImageInput === null) {
             return;
         }
 
-        $tempPaths = FileService::uploadInTemp($request);
+        $tempFolder = UploadEnum::UploadsDir->value . '/' .
+            UploadEnum::ProjectsDir->value . '/' .
+            UploadEnum::TempDir->value;
 
-        if (!empty($tempPaths)) {
-            $mainIndex = intval(mb_substr($request->input('main_page'), 4, 1));
-            ProjectFilesUploadJob::dispatch($tempPaths, $project, $mainIndex);
-        } else {
-            if ($request->input('main_page')){
-                $project->main_page = $request->input('main_page');
+        $tempPaths = FileService::uploadInTemp($request, $tempFolder);
+
+        if ($hasOgImage) {
+            $dir = Storage::disk(config('filesystems.default'))->path(
+                UploadEnum::UploadsDir->value . '/' . UploadEnum::ProjectsDir->value . '/' . UploadEnum::OgImagesDir->value . "/{$project->id}"
+            );
+            FileService::clearDir($dir);
+        }
+
+        $mainIndex = null;
+        if ($mainPageInput && preg_match('/^img_(\d+)$/', $mainPageInput, $matches)) {
+            $mainIndex = (int) $matches[1];
+        }
+
+        ProjectFilesUploadJob::dispatch($tempPaths, $project, $mainIndex);
+
+        if (!$hasImages && !$hasOgImage) {
+            $updated = false;
+
+            if ($mainPageInput) {
+                $project->main_page = $mainPageInput;
+                $updated = true;
+            }
+
+            if ($ogImageInput) {
+                $project->og_image = $ogImageInput;
+                $updated = true;
+            }
+
+            if ($updated) {
                 $project->saveQuietly();
             }
         }

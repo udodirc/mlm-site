@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use AllowDynamicProperties;
+use App\Enums\UploadEnum;
 use App\Services\FileService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -10,9 +11,10 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\Project;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
-#[AllowDynamicProperties] class ProjectFilesUploadJob implements ShouldQueue
+#[AllowDynamicProperties]
+class ProjectFilesUploadJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -29,14 +31,37 @@ use Illuminate\Support\Facades\Log;
 
     public function handle(): void
     {
-        $uploadedFiles = FileService::uploadFromTemp($this->filePaths, $this->project->id);
-        FileService::clearTempDir();
+        // Подготовка карты директорий
+        $dirsMap = [
+            'images' => UploadEnum::ProjectsDir->value . '/' . UploadEnum::All->value,
+            'og_image' => UploadEnum::ProjectsDir->value . '/' . UploadEnum::OgImagesDir->value,
+        ];
 
-        if ($this->mainIndex !== null) {
-            if ($this->project) {
-                $this->project->main_page = $uploadedFiles[$this->mainIndex];
-                $this->project->saveQuietly();
+        // Загружаем все файлы из temp в проект
+        $uploaded = FileService::uploadFromTemp($this->filePaths, $this->project->id, $dirsMap);
+
+        $tempDir = Storage::disk(config('filesystems.default'))->path(
+            UploadEnum::UploadsDir->value
+            . '/' . UploadEnum::ProjectsDir->value
+            . '/' . UploadEnum::TempDir->value
+        );
+
+        FileService::clearDir($tempDir);
+
+        // --- images ---
+        if (!empty($uploaded['images'])) {
+            //$this->project->images = $uploaded['images'];
+
+            if ($this->mainIndex !== null && isset($uploaded['images'][$this->mainIndex])) {
+                $this->project->main_page = $uploaded['images'][$this->mainIndex];
             }
         }
+
+        // --- og_image ---
+        if (!empty($uploaded['og_image'])) {
+            $this->project->og_image = $uploaded['og_image'];
+        }
+
+        $this->project->saveQuietly();
     }
 }

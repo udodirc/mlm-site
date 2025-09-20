@@ -3,6 +3,7 @@
 namespace App\Data\Admin\Project;
 
 use Illuminate\Database\Query\Builder;
+use Illuminate\Http\UploadedFile;
 use Spatie\LaravelData\Attributes\Validation\BooleanType;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
@@ -28,7 +29,7 @@ class ProjectUpdateData extends Data
     public string $og_type;
     public ?string $canonical_url;
     public string $robots;
-    public array $images;
+    public string|array|Optional|null $images;
     public ?string $main_page;
 
     public function __construct(
@@ -46,9 +47,9 @@ class ProjectUpdateData extends Data
         string $og_type = 'website',
         ?string $canonical_url = null,
         string $robots = 'index, follow',
-        array $images = [],
-        ?string $main_page
-    ){
+        string|array|Optional|null $images = null,
+        ?string $main_page = null
+    ) {
         $this->name = $name;
         $this->content = $content;
         $this->status = $status;
@@ -63,7 +64,7 @@ class ProjectUpdateData extends Data
         $this->og_type = $og_type;
         $this->canonical_url = $canonical_url;
         $this->robots = $robots;
-        $this->images = $images;
+        $this->images = empty($images) || $images === '' ? null : (is_array($images) ? $images : [$images]);
         $this->main_page = $main_page;
     }
 
@@ -115,7 +116,17 @@ class ProjectUpdateData extends Data
             ],
             'og_image' => [
                 new Nullable(),
-                new StringType(),
+                function ($attribute, $value, $fail) {
+                    if ($value instanceof UploadedFile) {
+                        if (!in_array($value->getClientMimeType(), ['image/jpeg', 'image/png', 'image/webp'])) {
+                            $fail("The {$attribute} must be a file of type: jpeg, png, webp.");
+                        }
+                        if ($value->getSize() > 2 * 1024 * 1024) { // 2MB
+                            $fail("The {$attribute} file is too large (max 2MB).");
+                        }
+                    }
+                    // если это строка — пропускаем
+                },
             ],
             'og_url' => [
                 new Nullable(),

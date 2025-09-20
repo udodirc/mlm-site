@@ -41,7 +41,6 @@ class ContentService extends BaseService
     {
         /** @var ContentUpdateData $data */
         return [
-            'menu_id' => $data->menu_id,
             'content' => $data->content,
             'status' => $data->status,
             'title' => $data->title,
