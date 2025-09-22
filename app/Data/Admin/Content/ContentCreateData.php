@@ -21,7 +21,7 @@ class ContentCreateData extends Data
     public string|Optional|null $meta_keywords;
     public string|Optional|null $og_title;
     public string|Optional|null $og_description;
-    public string|Optional|null $og_image;
+    public ?string $og_image;
     public string|Optional|null $og_url;
     public string $og_type;
     public string|Optional|null $canonical_url;
@@ -35,7 +35,7 @@ class ContentCreateData extends Data
         ?string $meta_keywords,
         ?string $og_title,
         ?string $og_description,
-        ?string $og_image,
+        ?string $og_image = null,
         ?string $og_url,
         string $og_type = 'website',
         ?string $canonical_url,
