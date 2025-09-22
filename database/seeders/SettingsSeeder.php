@@ -19,6 +19,7 @@ class SettingsSeeder extends Seeder
             PaginationEnum::Role->value => 'Количество ролей на странице',
             PaginationEnum::Menu->value => 'Количество меню на странице',
             PaginationEnum::Content->value => 'Количество контента на странице',
+            'admin_email' => 'admin@example.com',
         ];
 
         foreach ($settings as $key => $name) {
