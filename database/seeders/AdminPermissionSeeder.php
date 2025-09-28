@@ -45,8 +45,7 @@ class AdminPermissionSeeder extends Seeder
                 'password' => bcrypt($password),
             ]);
             $adminUser->assignRole(RolesEnum::Admin);
+            $this->command->info(__('messages.admin_seeder').' '.$password.'.');
         }
-
-        $this->command->info(__('messages.admin_seeder').' '.$password.'.');
     }
 }
