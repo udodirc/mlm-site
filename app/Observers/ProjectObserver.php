@@ -4,10 +4,10 @@ namespace App\Observers;
 
 use App\Enums\UploadEnum;
 use App\Jobs\DeleteFilesJob;
-use App\Jobs\DeleteProjectFilesJob;
 use App\Jobs\ProjectFilesUploadJob;
 use App\Models\Project;
 use App\Services\FileService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectObserver
@@ -69,6 +69,8 @@ class ProjectObserver
         $mainIndex = null;
         if ($mainPageInput && preg_match('/^img_(\d+)$/', $mainPageInput, $matches)) {
             $mainIndex = (int) $matches[1];
+        } else {
+            $mainIndex = (int) mb_substr($mainPageInput, 4, 1);
         }
 
         ProjectFilesUploadJob::dispatch($tempPaths, $project, $mainIndex);
@@ -79,6 +81,9 @@ class ProjectObserver
             if ($mainPageInput) {
                 $project->main_page = $mainPageInput;
                 $updated = true;
+                Log::info('updated', [
+                    "updated" => $updated
+                ]);
             }
 
             if ($ogImageInput) {

@@ -6,6 +6,7 @@ use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
 use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Attributes\Validation\StringType;
+use Spatie\LaravelData\Attributes\Validation\Unique;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\Optional;
 use Illuminate\Http\UploadedFile;
@@ -77,7 +78,11 @@ class ProjectCreateData extends Data
             'url' => [
                 new Required(),
                 new StringType(),
-                new Max(100)
+                new Max(100),
+                new Unique(
+                    table: 'projects',
+                    column: 'url',
+                ),
             ],
             'title' => [
                 new Nullable(),
