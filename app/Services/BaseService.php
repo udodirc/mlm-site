@@ -29,6 +29,11 @@ abstract class BaseService
         return $this->repository->all($paginate, $filters, $paginationKey);
     }
 
+    public function allWithStatus(): LengthAwarePaginator|Collection
+    {
+        return $this->repository->allWithStatus();
+    }
+
     /**
      * @param int $id
      * @return TModel|null
