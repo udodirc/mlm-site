@@ -92,7 +92,12 @@ class ProjectUpdateData extends Data
             'url' => [
                 new Required(),
                 new StringType(),
-                new Max(100)
+                new Max(100),
+                new Unique(
+                    table: 'projects',
+                    column: 'url',
+                    where: fn (Builder $q): Builder => $q->where('url', '!=', $args[0]->payload['url'])
+                ),
             ],
             'title' => [
                 new Nullable(),

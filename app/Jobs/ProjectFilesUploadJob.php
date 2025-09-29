@@ -50,8 +50,6 @@ class ProjectFilesUploadJob implements ShouldQueue
 
         // --- images ---
         if (!empty($uploaded['images'])) {
-            //$this->project->images = $uploaded['images'];
-
             if ($this->mainIndex !== null && isset($uploaded['images'][$this->mainIndex])) {
                 $this->project->main_page = $uploaded['images'][$this->mainIndex];
             }
