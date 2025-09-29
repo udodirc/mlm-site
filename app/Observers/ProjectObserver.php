@@ -7,7 +7,6 @@ use App\Jobs\DeleteFilesJob;
 use App\Jobs\ProjectFilesUploadJob;
 use App\Models\Project;
 use App\Services\FileService;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 
 class ProjectObserver
@@ -81,9 +80,6 @@ class ProjectObserver
             if ($mainPageInput) {
                 $project->main_page = $mainPageInput;
                 $updated = true;
-                Log::info('updated', [
-                    "updated" => $updated
-                ]);
             }
 
             if ($ogImageInput) {
