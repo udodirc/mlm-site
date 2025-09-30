@@ -34,6 +34,7 @@ class ProjectResource extends JsonResource
             'og_url' => $this->og_url,
             'canonical_url' => $this->canonical_url,
             'robots' => $this->robots,
+            'main_page' => $this->main_page,
             'image_url' =>  asset("storage/" .
                 UploadEnum::UploadsDir->value .
                 "/{$entity}/".
