@@ -21,7 +21,7 @@ class ProjectRepository extends AbstractRepository implements ProjectRepositoryI
     ): LengthAwarePaginator|Collection {
         $filters['status'] = true;
 
-        return parent::all($paginate, $filters, $paginationKey);
+        return parent::all($paginate, $filters, 'per_page_project_in_front');
     }
 
     public function projectByUrl(string $slug): ?Project
