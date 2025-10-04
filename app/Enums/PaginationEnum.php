@@ -9,6 +9,7 @@ enum PaginationEnum: string
     case Content = 'per_page_content';
     case StaticContent = 'per_page_static_content';
     case Project = 'per_page_project';
+    case FrontProject = 'per_page_project_in_front';
 
     public function label(): string
     {
@@ -19,6 +20,7 @@ enum PaginationEnum: string
             self::Content => 'Количество контента на странице',
             self::StaticContent => 'Количество статического контента на странице',
             self::Project => 'Количество проектов на странице',
+            self::FrontProject => 'Количество проектов на фронт странице',
         };
     }
 }
