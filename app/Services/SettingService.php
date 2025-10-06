@@ -4,8 +4,10 @@ namespace App\Services;
 
 use App\Data\Admin\Setting\SettingCreateData;
 use App\Data\Admin\Setting\SettingUpdateData;
+use App\Data\Front\Settings\SettingsByKeysData;
 use App\Models\Setting;
 use App\Repositories\Contracts\SettingRepositoryInterface;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\LaravelData\Data;
 
 /**
@@ -36,5 +38,10 @@ class SettingService extends BaseService
             'key' => $data->key,
             'value' => $data->value
         ];
+    }
+
+    public function getSettingsByKeys(SettingsByKeysData $keys): ?Collection
+    {
+        return $this->repository->getSettingsByKeys($keys);
     }
 }
