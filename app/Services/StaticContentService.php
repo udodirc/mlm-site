@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Data\Admin\StaticContent\StaticContentByNamesData;
 use App\Data\Admin\StaticContent\StaticContentCreateData;
 use App\Data\Admin\StaticContent\StaticContentUpdateData;
+use App\Data\Front\StaticContent\StaticContentByNamesData;
 use App\Models\StaticContent;
 use App\Repositories\Contracts\StaticContentRepositoryInterface;
 use Illuminate\Database\Eloquent\Collection;

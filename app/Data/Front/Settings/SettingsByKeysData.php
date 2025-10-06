@@ -1,27 +1,24 @@
 <?php
 
-namespace App\Data\Admin\StaticContent;
+namespace App\Data\Front\Settings;
 
 use Spatie\LaravelData\Attributes\Validation\ArrayType;
-use Spatie\LaravelData\Attributes\Validation\Max;
-use Spatie\LaravelData\Attributes\Validation\Nullable;
 use Spatie\LaravelData\Attributes\Validation\Required;
-use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Data;
 
-class StaticContentByNamesData extends Data
+class SettingsByKeysData extends Data
 {
-    public array $names = [];
+    public array $keys = [];
     public function __construct(
-        array $names
+        array $keys
     ) {
-        $this->names = $names;
+        $this->keys = $keys;
     }
 
     public static function rules(...$args): array
     {
         return [
-            'names' => [
+            'keys' => [
                 new Required(),
                 new ArrayType(),
             ],

@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Front;
 
-use App\Data\Admin\StaticContent\StaticContentByNamesData;
+use App\Data\Front\StaticContent\StaticContentByNamesData;
 use App\Http\Controllers\Controller;
-
 use App\Resource\StaticContentResource;
 use App\Services\StaticContentService;
 use Illuminate\Http\JsonResponse;

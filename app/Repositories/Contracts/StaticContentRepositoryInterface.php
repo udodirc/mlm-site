@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Contracts;
 
-use App\Data\Admin\StaticContent\StaticContentByNamesData;
+use App\Data\Front\StaticContent\StaticContentByNamesData;
 use App\Models\StaticContent;
 use Illuminate\Database\Eloquent\Collection;
 

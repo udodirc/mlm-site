@@ -16,6 +16,7 @@ use App\Http\Controllers\Front\ContentController as FrontContentController;
 use App\Http\Controllers\Front\StaticContentController as FrontStaticContentController;
 use App\Http\Controllers\Front\ContactController as FrontContactController;
 use App\Http\Controllers\Front\ProjectController as FrontProjectController;
+use App\Http\Controllers\Front\SettingsController as FrontSettingsController;
 use App\Http\Middleware\LoadAdminSettings;
 use Illuminate\Support\Facades\Route;
 
@@ -91,3 +92,4 @@ Route::get('/static_content/{name}', [FrontStaticContentController::class, 'cont
 Route::post('/static_content', [FrontStaticContentController::class, 'contentByNames'])->name('static-content.content-by-names');
 Route::post('/contacts', [FrontContactController::class, 'send'])->name('contacts.send');
 Route::get('/{slug}', [FrontContentController::class, 'contentByMenu'])->name('content.content-by-menu');
+Route::post('/settings', [FrontSettingsController::class, 'settingsByKeys'])->name('settings.settings-by-keys');
